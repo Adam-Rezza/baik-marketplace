@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 # RESERVED ROUTES
 $route['default_controller']   = 'LoginController/index';
@@ -11,3 +11,9 @@ $route['logout'] = 'LoginController/logout';
 
 # DASHBOARD
 $route['dashboard'] = 'DashboardController/index';
+
+# ADMINS
+$route['admins']            = 'AdminsController/index';
+$route['admins/reset']      = 'AdminsController/reset';
+$route['admins/destroy']    = 'AdminsController/destroy';
+$route['datatables/admins'] = 'AdminsController/datatables';

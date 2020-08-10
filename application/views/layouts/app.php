@@ -21,6 +21,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
+
 <body class="hold-transition skin-yellow-light sidebar-collapse sidebar-mini">
 	<div class="wrapper">
 
@@ -36,24 +37,26 @@ desired effect
 
 			<!-- Main content -->
 			<section class="content container-fluid">
-				<?php $this->load->view('pages/'.$content); ?>
+				<?php $this->load->view('pages/' . $content); ?>
 			</section>
 		</div>
 
 		<!-- Footer -->
 		<?php $this->load->view('layouts/_footer'); ?>
-		
+
 	</div>
 
 	<!-- REQUIRED JS SCRIPTS -->
-	<script src="<?=base_url();?>vendor/almasaeed2010/adminlte/bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="<?=base_url();?>vendor/almasaeed2010/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script src="<?=base_url();?>vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js"></script>
+	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70.0-2014.11.23/jquery.blockUI.min.js" integrity="sha512-Z84iqqN8wVpPeBsDTKA6zWs3nguaCk7bvDD+KNLbDFNmWVLHsRDJd0Xr/wKrl95o7mSvN8YF69hXuZVzMGzgGw==" crossorigin="anonymous"></script>
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
+	<!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. -->
 
-     <?php $this->load->view('pages/'.$vitamin); ?>
- </body>
- </html>
+	<?php $this->load->view('pages/' . $vitamin); ?>
+</body>
+
+</html>
