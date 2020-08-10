@@ -1,0 +1,21 @@
+{
+	"description": "Backend untuk Marketplace BAIK",
+	"name": "manasama77/admin.baik.marketplace",
+	"type": "project",
+	"homepage": "https://baytulikhtiar.com",
+	"license": "",
+	"support": {
+		"Rezza Anwary": "+62 823-2940-9419"
+	},
+	"require": {
+		"php": ">=5.3.7",
+		"chriskacerguis/codeigniter-restserver": "^3.1",
+		"almasaeed2010/adminlte": "~2.4"
+	},
+	"suggest": {
+		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
+	},
+	"require-dev": {
+		
+	}
+}
