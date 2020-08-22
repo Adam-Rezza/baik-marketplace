@@ -94,11 +94,16 @@ define('VERSION_APP', '1.0.0 Alpha');
 
 ## DEFINE TABLES
 define('TABLE_ADMINS', 'admins');
+define('TABLE_TOKO', 'toko');
+define('TABLE_PRODUK', 'produk');
+define('TABLE_KATEGORI', 'kategori');
 
 ## DEFINE MESSAGES
 define('FIRST_LOGIN_MSG', 'Pastikan kamu menjaga Username & Password kamu.');
 define('EXPIRED_MSG', 'Sesi telah berakhir, silahkan login kembali.');
-define('ERROR_500_MSG', 'Tidak dapat terhubung dengan Database, silahkan coba kembali.');
+define('ERROR_400_MSG', '404 | Halaman Tidak dapat ditemukan, silahkan coba kembali');
+define('ERROR_500_MSG', '500 | Tidak dapat terhubung dengan Database, silahkan coba kembali.');
+define('ERROR_503_MSG', '503 | Koneksi terputus, silahkan cek koneksi internet kamu');
 define('LOGOUT_MSG', 'Logout Berhasil.');
 define('USERNAME_SALAH_MSG', '{field} tidak ditemukan');
 define('PASSWORD_SALAH_MSG', '{field} Salah, silahkan cek kembali');

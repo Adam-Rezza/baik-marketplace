@@ -8,6 +8,11 @@
 				</a>
 			</li>
 			<li class="">
+				<a href="<?= site_url('toko'); ?>">
+					<i class="fa fa-home"></i> <span>Toko Management</span>
+				</a>
+			</li>
+			<li class="">
 				<a href="<?= site_url('admins'); ?>">
 					<i class="fa fa-user-secret"></i> <span>Admin Management</span>
 				</a>

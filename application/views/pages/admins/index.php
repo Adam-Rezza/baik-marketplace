@@ -2,7 +2,7 @@
 	<h1><?= $title; ?></h1>
 	<ol class="breadcrumb">
 		<li><a href="<?= site_url(); ?>admin/account/index"><i class="fa fa-home"></i> Home</a></li>
-		<li class="active"><i class="fa fa-table"></i> Admin Management</a></li>
+		<li class="active"><i class="fa fa-table"></i> <?= $title; ?></a></li>
 	</ol>
 </section>
 

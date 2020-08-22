@@ -17,3 +17,9 @@ $route['admins']            = 'AdminsController/index';
 $route['admins/reset']      = 'AdminsController/reset';
 $route['admins/destroy']    = 'AdminsController/destroy';
 $route['datatables/admins'] = 'AdminsController/datatables';
+
+# TOKO
+$route['toko']                      = 'TokoController/index';
+$route['toko/show']                 = 'TokoController/show';
+$route['toko/change_status/(:any)'] = 'TokoController/change_status/$1';
+$route['datatables/toko']           = 'TokoController/datatables';
