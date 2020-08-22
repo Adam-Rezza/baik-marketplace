@@ -160,6 +160,7 @@ class TokoController extends CI_Controller
 
 		echo json_encode([
 			'code'       => $code,
+			'nama_toko'  => $nama_toko,
 			'data'       => $produk,
 			'total_data' => $exec->num_rows()
 		]);

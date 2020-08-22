@@ -192,6 +192,7 @@
 					`;
 					no++;
 				});
+				$('#modal_lihat_produk #nama_toko').html(res.nama_toko);
 				$('#modal_lihat_produk .modal-body').html(htmlnya);
 				$('#modal_lihat_produk').modal('show');
 
