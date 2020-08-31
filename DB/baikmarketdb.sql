@@ -11,7 +11,7 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 04/08/2020 01:59:06
+ Date: 01/09/2020 01:49:19
 */
 
 SET NAMES utf8mb4;
@@ -31,11 +31,91 @@ CREATE TABLE `admins`  (
   `cookies` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `remember` enum('yes','no') CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT 'no',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of admins
 -- ----------------------------
-INSERT INTO `admins` VALUES (1, 'admin', '$2y$10$cQEWoJvO4hOUJ28jGjFKzuz3Gp/vtAW5cVFanJXOVNnjlhsinpPbq', '2020-08-03 16:19:35', '2020-08-03 16:19:35', NULL, 'UMRZVLMqFKp8R9TjYll7NJ3aNCWGwiodOJGe5mv24diuzCFV9XOeDDLc3QI6ot2Q', 'yes');
+INSERT INTO `admins` VALUES (1, 'admin', '$2y$10$cQEWoJvO4hOUJ28jGjFKzuz3Gp/vtAW5cVFanJXOVNnjlhsinpPbq', '2020-08-03 16:19:35', '2020-08-03 16:19:35', NULL, 'gcYqId4kln1Dtfb2GXgVwHWOn09lKOEZirhpSFievNa0mTjSmJQCLrVFCP2Qsyzd', 'yes');
+INSERT INTO `admins` VALUES (2, 'test', '09a9922c001f7f65bea539ec3eecfe15bb60b008', '2020-08-10 18:49:50', '2020-08-10 18:49:50', '2020-08-10 19:08:54', NULL, 'no');
+
+-- ----------------------------
+-- Table structure for gambar_produk
+-- ----------------------------
+DROP TABLE IF EXISTS `gambar_produk`;
+CREATE TABLE `gambar_produk`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `produk_id` int(11) NULL DEFAULT NULL,
+  `gambar` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `del` smallint(1) NULL DEFAULT NULL,
+  `urutan` smallint(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for kategori
+-- ----------------------------
+DROP TABLE IF EXISTS `kategori`;
+CREATE TABLE `kategori`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `urutan` int(11) NULL DEFAULT NULL,
+  `created_date` datetime(0) NULL DEFAULT NULL,
+  `active` smallint(1) NULL DEFAULT NULL,
+  `del` smallint(1) NULL DEFAULT NULL,
+  `parent` int(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of kategori
+-- ----------------------------
+INSERT INTO `kategori` VALUES (1, 'Sembako', 1, '2020-08-23 02:55:04', 1, NULL, NULL);
+INSERT INTO `kategori` VALUES (2, 'Beras', 1, '2020-08-23 02:56:02', 1, NULL, 1);
+
+-- ----------------------------
+-- Table structure for produk
+-- ----------------------------
+DROP TABLE IF EXISTS `produk`;
+CREATE TABLE `produk`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `toko_id` int(11) NULL DEFAULT NULL,
+  `kategori_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `nama` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `harga_asli` int(11) NULL DEFAULT NULL,
+  `harga_disc` int(11) NULL DEFAULT NULL,
+  `terjual` int(11) NULL DEFAULT NULL,
+  `rating` decimal(3, 2) NULL DEFAULT NULL,
+  `del` smallint(1) NULL DEFAULT NULL,
+  `created_date` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of produk
+-- ----------------------------
+INSERT INTO `produk` VALUES (1, 1, '2', 'Beras Rojo Lele', 10000, 9000, 0, 0.00, NULL, '2020-08-23 02:56:56');
+
+-- ----------------------------
+-- Table structure for toko
+-- ----------------------------
+DROP TABLE IF EXISTS `toko`;
+CREATE TABLE `toko`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NULL DEFAULT NULL,
+  `nama` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `alamat` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `telp` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `gambar` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `active` smallint(1) NULL DEFAULT 1,
+  `ban` smallint(1) NULL DEFAULT 0,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of toko
+-- ----------------------------
+INSERT INTO `toko` VALUES (1, 1, 'Toko Adam', 'Test', '082114578976', 'logo.png', 1, 0);
+INSERT INTO `toko` VALUES (2, 1, 'Toko Nurul', 'Test1', '0821145789761', 'logo.png', 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
