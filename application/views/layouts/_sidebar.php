@@ -13,6 +13,11 @@
 				</a>
 			</li>
 			<li class="">
+				<a href="<?= site_url('kategori'); ?>">
+					<i class="fa fa-tags"></i> <span>Kategori Management</span>
+				</a>
+			</li>
+			<li class="">
 				<a href="<?= site_url('admins'); ?>">
 					<i class="fa fa-user-secret"></i> <span>Admin Management</span>
 				</a>
