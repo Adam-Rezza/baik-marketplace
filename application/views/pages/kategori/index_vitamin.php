@@ -224,13 +224,13 @@
 				$.each(res.items, function(i, k) {
 
 					if (k.urutan == 1) {
-						updown = `<button class="btn btn-warning btn-xs" onclick="downData('${k.id}');"><i class="fa fa-arrow-down fa-fw"></i></button>`;
+						updown = `<button class="btn btn-warning btn-xs" onclick="downData('${k.id}', 'child');"><i class="fa fa-arrow-down fa-fw"></i></button>`;
 					} else if (k.urutan == totalData) {
-						updown = `<button class="btn btn-success btn-xs" onclick="upData('${k.id}');"><i class="fa fa-arrow-up fa-fw"></i></button>`;
+						updown = `<button class="btn btn-success btn-xs" onclick="upData('${k.id}', 'child');"><i class="fa fa-arrow-up fa-fw"></i></button>`;
 					} else {
 						updown = `
-						<button class="btn btn-success btn-xs" onclick="upData('${k.id}');"><i class="fa fa-arrow-up fa-fw"></i></button>
-						<button class="btn btn-warning btn-xs" onclick="downData('${k.id}');"><i class="fa fa-arrow-down fa-fw"></i></button>
+						<button class="btn btn-success btn-xs" onclick="upData('${k.id}', 'child');"><i class="fa fa-arrow-up fa-fw"></i></button>
+						<button class="btn btn-warning btn-xs" onclick="downData('${k.id}', 'child');"><i class="fa fa-arrow-down fa-fw"></i></button>
 						`;
 					}
 
@@ -292,7 +292,7 @@
 
 	function upData(id, type) {
 		if (id == null) {
-			alert("ID tidak ditmeukan");
+			alert("ID tidak ditemukan");
 		} else {
 			if (type == 'parent') {
 				url = `<?= site_url(); ?>kategori/up_parent`;
@@ -316,6 +316,9 @@
 				console.log(res);
 				if (res.code == 200) {
 					table.draw();
+					if (type != 'parent') {
+						detailData(res.id_parent);
+					}
 				} else {
 					alert(res.msg)
 				}

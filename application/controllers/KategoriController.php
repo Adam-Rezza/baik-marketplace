@@ -14,7 +14,7 @@ class KategoriController extends CI_Controller
 
 	public function index()
 	{
-		$data['title']    = 'kategori Management';
+		$data['title']    = 'Kategori Management';
 		$data['content']  = 'kategori/index';
 		$data['vitamin']  = 'kategori/index_vitamin';
 
@@ -340,6 +340,43 @@ class KategoriController extends CI_Controller
 				$ret = ['code' => 200, 'msg' => ""];
 			} else {
 				$ret = ['code' => 500, 'msg' => "Update urutan gagal, silahkan coba kembali"];
+			}
+		}
+
+		echo json_encode($ret);
+	}
+
+	public function up_child()
+	{
+		$id = $this->input->get('id');
+		$count = $this->mcore->count('kategori', ['id' => $id]);
+
+		if ($count == 0) {
+			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
+		} else {
+			$cur = $this->mcore->get('kategori', 'id, urutan, parent', ['id' => $id]);
+			$cur_urutan = $cur->row()->urutan;
+			$parent = $cur->row()->parent;
+			$prev_urutan = $cur_urutan - 1;
+			if ($prev_urutan <= 0) {
+				$prev_urutan = 1;
+			}
+			$where_prev = [
+				'urutan' => $prev_urutan,
+				'parent' => $parent,
+				'del'    => NULL
+			];
+			$prev = $this->mcore->get('kategori', 'id, urutan', $where_prev);
+			$id_prev = $prev->row()->id;
+
+			$update_prev = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $id_prev]);
+
+			$update_cur = $this->mcore->update('kategori', ['urutan' => $prev_urutan], ['id' => $id]);
+
+			if ($update_prev && $update_cur) {
+				$ret = ['code' => 200, 'msg' => "", 'id_parent' => $parent];
+			} else {
+				$ret = ['code' => 500, 'msg' => "Update urutan gagal, silahkan coba kembali", 'id_parent' => $parent];
 			}
 		}
 
