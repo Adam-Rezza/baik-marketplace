@@ -18,6 +18,11 @@
 				</a>
 			</li>
 			<li class="">
+				<a href="<?= site_url('banner'); ?>">
+					<i class="fa fa-image"></i> <span>Banner Management</span>
+				</a>
+			</li>
+			<li class="">
 				<a href="<?= site_url('admins'); ?>">
 					<i class="fa fa-user-secret"></i> <span>Admin Management</span>
 				</a>

@@ -37,3 +37,7 @@ $route['kategori/down_parent'] = 'KategoriController/down_parent';
 $route['kategori/up_child']    = 'KategoriController/up_child';
 $route['kategori/down_child']  = 'KategoriController/down_child';
 $route['datatables/kategori']  = 'KategoriController/datatables';
+
+# BANNER
+$route['banner'] = 'BannerController/index';
+$route['datatables/banner']  = 'BannerController/datatables';
