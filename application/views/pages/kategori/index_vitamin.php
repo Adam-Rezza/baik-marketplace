@@ -33,28 +33,19 @@
 					}
 				},
 				{
-					"data": null,
-					"render": function(res) {
-						let vdel = `<button class="btn btn-danger btn-xs" onclick="deleteData('${res.id}');"><i class="fa fa-trash fa-fw"></i> Delete</button>`;
-						let vedit = `<button class="btn btn-info btn-xs" onclick="editData('${res.id}');"><i class="fa fa-pencil fa-fw"></i> Edit</button>`;
-						let vdetail = `<button class="btn btn-primary btn-xs" onclick="detailData('${res.id}');"><i class="fa fa-list fa-fw"></i> Sub Kategori</button>`;
-						html = `
-						<div class="text-center">
-							<div class="btn-group">
-								${vdel}
-								${vedit}
-								${vdetail}
-							</div>
-						</div>
-						`;
-						return html;
-					}
+					"data": "urutan"
+				},
+				{
+					"data": "actions",
 				},
 			],
 			"columnDefs": [{
 				"targets": [3],
 				"orderable": false,
-			}, ],
+			}, {
+				"targets": [0, 2, 3, 4],
+				"class": "text-center"
+			}],
 		});
 
 		$('#form_add').on('submit', function(e) {
@@ -297,5 +288,73 @@
 		});
 
 
+	}
+
+	function upData(id, type) {
+		if (id == null) {
+			alert("ID tidak ditmeukan");
+		} else {
+			if (type == 'parent') {
+				url = `<?= site_url(); ?>kategori/up_parent`;
+			} else {
+				url = `<?= site_url(); ?>kategori/up_child`;
+			}
+			$.ajax({
+				url: url,
+				method: 'get',
+				dataType: 'json',
+				data: {
+					id: id
+				},
+				beforeSend: function() {
+					$.blockUI();
+				},
+				error: function(res) {
+					$.unblockUI();
+				}
+			}).done(function(res) {
+				console.log(res);
+				if (res.code == 200) {
+					table.draw();
+				} else {
+					alert(res.msg)
+				}
+				$.unblockUI();
+			});
+		}
+	}
+
+	function downData(id, type) {
+		if (id == null) {
+			alert("ID tidak ditmeukan");
+		} else {
+			if (type == 'parent') {
+				url = `<?= site_url(); ?>kategori/down_parent`;
+			} else {
+				url = `<?= site_url(); ?>kategori/down_child`;
+			}
+			$.ajax({
+				url: url,
+				method: 'get',
+				dataType: 'json',
+				data: {
+					id: id
+				},
+				beforeSend: function() {
+					$.blockUI();
+				},
+				error: function(res) {
+					$.unblockUI();
+				}
+			}).done(function(res) {
+				console.log(res);
+				if (res.code == 200) {
+					table.draw();
+				} else {
+					alert(res.msg)
+				}
+				$.unblockUI();
+			});
+		}
 	}
 </script>

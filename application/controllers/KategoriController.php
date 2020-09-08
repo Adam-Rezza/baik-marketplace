@@ -4,9 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class KategoriController extends CI_Controller
 {
-	private $form_delimiter_open   = '<span class="help-block text-red">';
-	private $form_delimiter_close  = "</span>";
-	private $msg_kategori_duplikat = "{field} sama ditemukan, silahkan gunakan username lain";
 
 	public function __construct()
 	{
@@ -225,6 +222,7 @@ class KategoriController extends CI_Controller
 		$list = $this->mless->get_datatables();
 		$data = array();
 		$no   = $_POST['start'];
+		$total_data = $this->mless->count_filtered();
 		foreach ($list as $field) {
 			$no++;
 			$row             = array();
@@ -233,7 +231,34 @@ class KategoriController extends CI_Controller
 			$row['id']     = $field->id;
 			$row['nama']   = $field->nama;
 			$row['active'] = $field->active;
-			$row['parent'] = $field->parent;
+
+			if ($field->urutan == 1) {
+				$updown = '<button class="btn btn-warning btn-xs" onclick="downData(\'' . $field->id . '\', \'parent\');"><i class="fa fa-arrow-down fa-fw"></i></button>';
+			} elseif ($field->urutan == $total_data) {
+				$updown = '
+				<button class="btn btn-success btn-xs" onclick="upData(\'' . $field->id . '\', \'parent\');"><i class="fa fa-arrow-up fa-fw"></i></button>
+				';
+			} else {
+				$updown = '
+				<button class="btn btn-success btn-xs" onclick="upData(\'' . $field->id . '\', \'parent\');"><i class="fa fa-arrow-up fa-fw"></i></button>
+				<button class="btn btn-warning btn-xs" onclick="downData(\'' . $field->id . '\', \'parent\');"><i class="fa fa-arrow-down fa-fw"></i></button>
+				';
+			}
+			$row['urutan'] = $field->urutan . " " . $updown;
+
+			$delete = '<button class="btn btn-danger btn-xs" onclick="deleteData(\'' . $field->id . '\');"><i class="fa fa-trash fa-fw"></i> Delete</button>';
+			$edit = '<button class="btn btn-info btn-xs" onclick="editData(\'' . $field->id . '\');"><i class="fa fa-pencil fa-fw"></i> Edit</button>';
+			$detail = '<button class="btn btn-primary btn-xs" onclick="detailData(\'' . $field->id . '\');"><i class="fa fa-list fa-fw"></i> Sub Kategori</button>';
+
+			$row['actions'] = '
+			<div class="text-center">
+				<div class="btn-group">
+				' . $delete . '
+				' . $edit . '
+				' . $detail . '
+				</div>
+			</div>
+			';
 
 			$data[]          = $row;
 		}
@@ -246,6 +271,79 @@ class KategoriController extends CI_Controller
 		);
 
 		echo json_encode($output);
+	}
+
+	public function up_parent()
+	{
+		$id = $this->input->get('id');
+		$count = $this->mcore->count('kategori', ['id' => $id]);
+
+		if ($count == 0) {
+			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
+		} else {
+			$cur = $this->mcore->get('kategori', 'id, urutan', ['id' => $id]);
+			$cur_urutan = $cur->row()->urutan;
+			$prev_urutan = $cur_urutan - 1;
+			if ($prev_urutan <= 0) {
+				$prev_urutan = 1;
+			}
+			$where_prev = [
+				'urutan' => $prev_urutan,
+				'parent' => NULL,
+				'del'    => NULL
+			];
+			$prev = $this->mcore->get('kategori', 'id, urutan', $where_prev);
+			$id_prev = $prev->row()->id;
+
+			$update_prev = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $id_prev]);
+
+			$update_cur = $this->mcore->update('kategori', ['urutan' => $prev_urutan], ['id' => $id]);
+
+			if ($update_prev && $update_cur) {
+				$ret = ['code' => 200, 'msg' => ""];
+			} else {
+				$ret = ['code' => 500, 'msg' => "Update urutan gagal, silahkan coba kembali"];
+			}
+		}
+
+		echo json_encode($ret);
+	}
+
+	public function down_parent()
+	{
+		$id = $this->input->get('id');
+		$count = $this->mcore->count('kategori', ['id' => $id]);
+
+		if ($count == 0) {
+			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
+		} else {
+			$cur = $this->mcore->get('kategori', 'id, urutan', ['id' => $id]);
+			$cur_urutan = $cur->row()->urutan;
+			$next_urutan = $cur_urutan + 1;
+			$where_next = [
+				'urutan' => $next_urutan,
+				'parent' => NULL,
+				'del'    => NULL
+			];
+			$next = $this->mcore->get('kategori', 'id, urutan', $where_next);
+
+			$update_next = TRUE;
+			if ($next->num_rows() != 0) {
+				$id_next = $next->row()->id;
+				$update_next = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $id_next]);
+			}
+
+
+			$update_cur = $this->mcore->update('kategori', ['urutan' => $next_urutan], ['id' => $id]);
+
+			if ($update_next && $update_cur) {
+				$ret = ['code' => 200, 'msg' => ""];
+			} else {
+				$ret = ['code' => 500, 'msg' => "Update urutan gagal, silahkan coba kembali"];
+			}
+		}
+
+		echo json_encode($ret);
 	}
 }
         

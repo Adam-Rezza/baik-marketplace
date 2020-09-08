@@ -15,10 +15,11 @@
 						<table id="datatables" class="table table-bordered small" style="width: 100%;">
 							<thead>
 								<tr>
-									<th>ID</th>
+									<th class="text-center">ID</th>
 									<th>Kategori</th>
-									<th>Status</th>
-									<th class="text-center" style="min-width: 210px;"><i class="fa fa-cogs"></i></th>
+									<th class="text-center">Status</th>
+									<th class="text-center">Urutan</th>
+									<th class="text-center" style="min-width: 240px;"><i class="fa fa-cogs"></i></th>
 								</tr>
 							</thead>
 						</table>

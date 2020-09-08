@@ -25,11 +25,15 @@ $route['toko/change_status/(:any)'] = 'TokoController/change_status/$1';
 $route['datatables/toko']           = 'TokoController/datatables';
 
 # KATEGORI
-$route['kategori']            = 'KategoriController/index';
-$route['kategori/show']       = 'KategoriController/show';
-$route['kategori/store']      = 'KategoriController/store';
-$route['kategori/update']     = 'KategoriController/update';
-$route['kategori/destroy']    = 'KategoriController/destroy';
-$route['kategori/sub']        = 'KategoriController/sub';
-$route['kategori/get_parent'] = 'KategoriController/get_parent';
-$route['datatables/kategori'] = 'KategoriController/datatables';
+$route['kategori']             = 'KategoriController/index';
+$route['kategori/show']        = 'KategoriController/show';
+$route['kategori/store']       = 'KategoriController/store';
+$route['kategori/update']      = 'KategoriController/update';
+$route['kategori/destroy']     = 'KategoriController/destroy';
+$route['kategori/sub']         = 'KategoriController/sub';
+$route['kategori/get_parent']  = 'KategoriController/get_parent';
+$route['kategori/up_parent']   = 'KategoriController/up_parent';
+$route['kategori/down_parent'] = 'KategoriController/down_parent';
+$route['kategori/up_child']    = 'KategoriController/up_child';
+$route['kategori/down_child']  = 'KategoriController/down_child';
+$route['datatables/kategori']  = 'KategoriController/datatables';

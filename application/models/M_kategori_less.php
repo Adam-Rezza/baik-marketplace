@@ -6,9 +6,9 @@ class M_kategori_less extends CI_Model
 {
 
 	var $table         = 'kategori';
-	var $column_order  = array('id', 'nama', 'active', 'parent');
+	var $column_order  = array('id', 'nama', 'active', 'urutan');
 	var $column_search = array('nama', 'active');
-	var $order         = array('id' => 'asc');
+	var $order         = array('urutan' => 'asc');
 
 	public function __construct()
 	{
@@ -50,6 +50,9 @@ class M_kategori_less extends CI_Model
 			$order = $this->order;
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
+
+		$this->db->where('del', NULL);
+		$this->db->where('parent', NULL);
 	}
 
 	function get_datatables()
@@ -57,8 +60,6 @@ class M_kategori_less extends CI_Model
 		$this->_get_datatables_query();
 		if ($_POST['length'] != -1)
 			$this->db->limit($_POST['length'], $_POST['start']);
-		$this->db->where('del', NULL);
-		$this->db->where('parent', NULL);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -73,6 +74,8 @@ class M_kategori_less extends CI_Model
 	public function count_all()
 	{
 		$this->db->from($this->table);
+		$this->db->where('del', NULL);
+		$this->db->where('parent', NULL);
 		return $this->db->count_all_results();
 	}
 }
