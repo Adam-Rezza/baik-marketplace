@@ -20,6 +20,56 @@ class BannerController extends CI_Controller
 		$this->template->template($data);
 	}
 
+	public function store()
+	{
+		$cur_date = new DateTime('now');
+		$url      = $this->input->post('url');
+		$active   = $this->input->post('active');
+
+		if (in_array($url, ['', NULL])) {
+			$url = "#";
+		}
+
+		$config['upload_path']      = './public/img/banner/';
+		$config['allowed_types']    = 'gif|jpg|png';
+		$config['overwrite']        = TRUE;
+		$config['file_ext_tolower'] = TRUE;
+		$config['encrypt_name']     = TRUE;
+
+
+		$this->load->library('upload', $config);
+
+		if (!$this->upload->do_upload('gambar')) {
+			$ret = ['code' => 500, 'msg' => $this->upload->display_errors()];
+		} else {
+			$gambar_name = $this->upload->data('file_name');
+			$last_urutan = $this->mcore->get('banner', 'urutan', ['del' => NULL, 'active' => '1'], 'urutan', 'DESC');
+
+			if ($last_urutan->num_rows() == 0) {
+				$last_urutan = 1;
+			} else {
+				$last_urutan = $last_urutan->row()->urutan + 1;
+			}
+			$data = [
+				'gambar' => $gambar_name,
+				'url'    => $url,
+				'urutan' => $last_urutan,
+				'active' => $active,
+				'del'    => NULL,
+			];
+
+			$exec = $this->mcore->store('banner', $data);
+
+			if (!$exec) {
+				$ret = ['code' => 500, 'msg' => 'Proses tambah banner gagal, silahkan coba kembali'];
+			} else {
+				$ret = ['code' => 200, 'msg' => 'Proses tambah banner berhasil'];
+			}
+		}
+
+		echo json_encode($ret);
+	}
+
 	public function datatables()
 	{
 		$list = $this->mless->get_datatables();
@@ -32,7 +82,7 @@ class BannerController extends CI_Controller
 
 			$row['no']     = $no;
 			$row['id']     = $field->id;
-			$row['gambar'] = $field->gambar;
+			$row['gambar'] = '<img src="' . base_url('public/img/banner/' . $field->gambar) . '" class="img-thumbnail" />';
 			$row['url']    = $field->url;
 			$row['active'] = $field->active;
 

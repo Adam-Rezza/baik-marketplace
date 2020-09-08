@@ -4,7 +4,6 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap.min.js"></script>
 <script>
 	$(document).ready(function() {
-		getListParent();
 
 		table = $('#datatables').DataTable({
 			"destroy": true,
@@ -26,6 +25,9 @@
 					"data": "url"
 				},
 				{
+					"data": "urutan"
+				},
+				{
 					"data": null,
 					"render": function(res) {
 						let active = `Tidak Aktif`;
@@ -35,9 +37,7 @@
 						return active;
 					}
 				},
-				{
-					"data": "urutan"
-				},
+
 				{
 					"data": "actions",
 				},
@@ -58,7 +58,7 @@
 			let formData = new FormData(isiData);
 
 			$.ajax({
-				url: `<?= site_url(); ?>kategori/store`,
+				url: `<?= site_url(); ?>banner/store`,
 				method: 'post',
 				contentType: false,
 				processData: false,
@@ -70,15 +70,14 @@
 				}
 			}).done(function(res) {
 				if (res.code == 200) {
-					$('#nama').val(null);
-					$('#parent').val('no').trigger('change');
+					$('#gambar').val(null);
+					$('#url').val("#");
 					$('#active').val('1').trigger('change');
 					table.draw();
 				}
 				alert(res.msg);
 				$('#add_submit').attr('disabled', false);
 				$.unblockUI();
-				getListParent();
 			});
 		});
 
@@ -89,7 +88,7 @@
 			let formData = new FormData(isiData);
 
 			$.ajax({
-				url: `<?= site_url(); ?>kategori/update`,
+				url: `<?= site_url(); ?>banner/update`,
 				method: 'post',
 				dataType: 'json',
 				data: formData,
@@ -112,40 +111,12 @@
 
 	});
 
-	function getListParent(id = null) {
-		$.ajax({
-			url: `<?= site_url(); ?>kategori/get_parent`,
-			method: 'get',
-			dataType: 'json',
-			beforeSend: function() {
-				$('#form_add').block();
-				$('#form_edit').block();
-			}
-		}).done(function(res) {
-			let list_parent = `<option value="no">No Parent</option>`;
-
-			if (res.code == 200) {
-				$.each(res.data, function(i, k) {
-					if (k.id != id) {
-						list_parent += `<option value="${k.id}">${k.nama}</option>`;
-					}
-				});
-			}
-
-			$('#parent').html(list_parent);
-			$('#parent_edit').html(list_parent);
-
-			$('#form_add').unblock();
-			$('#form_edit').unblock();
-		});
-	}
-
 	function deleteData(id) {
 		let c = confirm('Hapus Kategori ?');
 
 		if (c == true) {
 			$.ajax({
-					url: `<?= site_url(); ?>kategori/destroy`,
+					url: `<?= site_url(); ?>banner/destroy`,
 					method: 'post',
 					data: {
 						id: id
@@ -174,7 +145,7 @@
 
 	function editData(id) {
 		$.ajax({
-			url: `<?= site_url(); ?>kategori/show`,
+			url: `<?= site_url(); ?>banner/show`,
 			method: 'get',
 			dataType: 'JSON',
 			data: {
@@ -204,7 +175,7 @@
 
 	function detailData(id) {
 		$.ajax({
-			url: `<?= site_url(); ?>kategori/sub`,
+			url: `<?= site_url(); ?>banner/sub`,
 			method: 'get',
 			dataType: 'JSON',
 			data: {
@@ -268,7 +239,7 @@
 			// 	let formData = new FormData(isiData);
 
 			// 	$.ajax({
-			// 		url: `<?= site_url(); ?>kategori/update`,
+			// 		url: `<?= site_url(); ?>banner/update`,
 			// 		method: 'post',
 			// 		dataType: 'json',
 			// 		data: formData,
@@ -298,9 +269,9 @@
 			alert("ID tidak ditemukan");
 		} else {
 			if (type == 'parent') {
-				url = `<?= site_url(); ?>kategori/up_parent`;
+				url = `<?= site_url(); ?>banner/up_parent`;
 			} else {
-				url = `<?= site_url(); ?>kategori/up_child`;
+				url = `<?= site_url(); ?>banner/up_child`;
 			}
 			$.ajax({
 				url: url,
@@ -335,9 +306,9 @@
 			alert("ID tidak ditmeukan");
 		} else {
 			if (type == 'parent') {
-				url = `<?= site_url(); ?>kategori/down_parent`;
+				url = `<?= site_url(); ?>banner/down_parent`;
 			} else {
-				url = `<?= site_url(); ?>kategori/down_child`;
+				url = `<?= site_url(); ?>banner/down_child`;
 			}
 			$.ajax({
 				url: url,
