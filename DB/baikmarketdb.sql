@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : Mysql Local
+ Source Server         : Laragon MySql
  Source Server Type    : MySQL
- Source Server Version : 50724
+ Source Server Version : 100410
  Source Host           : localhost:3306
  Source Schema         : baikmarketdb
 
  Target Server Type    : MySQL
- Target Server Version : 50724
+ Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 01/09/2020 01:49:19
+ Date: 09/09/2020 13:41:48
 */
 
 SET NAMES utf8mb4;
@@ -38,6 +38,26 @@ CREATE TABLE `admins`  (
 -- ----------------------------
 INSERT INTO `admins` VALUES (1, 'admin', '$2y$10$cQEWoJvO4hOUJ28jGjFKzuz3Gp/vtAW5cVFanJXOVNnjlhsinpPbq', '2020-08-03 16:19:35', '2020-08-03 16:19:35', NULL, 'gcYqId4kln1Dtfb2GXgVwHWOn09lKOEZirhpSFievNa0mTjSmJQCLrVFCP2Qsyzd', 'yes');
 INSERT INTO `admins` VALUES (2, 'test', '09a9922c001f7f65bea539ec3eecfe15bb60b008', '2020-08-10 18:49:50', '2020-08-10 18:49:50', '2020-08-10 19:08:54', NULL, 'no');
+
+-- ----------------------------
+-- Table structure for banner
+-- ----------------------------
+DROP TABLE IF EXISTS `banner`;
+CREATE TABLE `banner`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gambar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `active` bit(1) NULL DEFAULT b'0',
+  `urutan` int(11) NULL DEFAULT NULL,
+  `del` bit(1) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of banner
+-- ----------------------------
+INSERT INTO `banner` VALUES (1, 'a3afcb806fc3ff7685b3dc58be5f9df5.jpg', '#', b'1', 1, NULL);
+INSERT INTO `banner` VALUES (2, '3f2e5d89e28f982aca4f375c3bea8b2f.jpg', '#', b'1', 2, b'1');
 
 -- ----------------------------
 -- Table structure for gambar_produk
