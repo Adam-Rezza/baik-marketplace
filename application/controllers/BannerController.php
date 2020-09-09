@@ -70,6 +70,23 @@ class BannerController extends CI_Controller
 		echo json_encode($ret);
 	}
 
+	public function destroy()
+	{
+		$id = $this->input->post('id');
+
+		$object = ['del' => '1'];
+		$where  = ['id' => $id];
+		$exec   = $this->mcore->update('banner', $object, $where);
+
+		if ($exec) {
+			$ret = ['code' => 200, 'msg' => 'Hapus Banner Berhasil'];
+		} else {
+			$ret = ['code' => 500, 'msg' => 'Hapus Banner Gagal'];
+		}
+
+		echo json_encode($ret);
+	}
+
 	public function datatables()
 	{
 		$list = $this->mless->get_datatables();

@@ -41,4 +41,5 @@ $route['datatables/kategori']  = 'KategoriController/datatables';
 # BANNER
 $route['banner']            = 'BannerController/index';
 $route['banner/store']      = 'BannerController/store';
+$route['banner/destroy']    = 'BannerController/destroy';
 $route['datatables/banner'] = 'BannerController/datatables';

@@ -112,7 +112,7 @@
 	});
 
 	function deleteData(id) {
-		let c = confirm('Hapus Kategori ?');
+		let c = confirm('Hapus Banner ?');
 
 		if (c == true) {
 			$.ajax({
@@ -135,8 +135,8 @@
 						table.draw();
 						$('#modal-sub').modal('hide');
 					}
+
 					alert(res.msg);
-					getListParent();
 					$.unblockUI();
 
 				});
