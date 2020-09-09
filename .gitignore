@@ -16,7 +16,8 @@ user_guide_src/cilexer/dist/*
 user_guide_src/cilexer/pycilexer.egg-info/*
 vendor/*
 
-!public/img/banner
+!/public/img/banner
+/public/img/banner/*
 
 # IDE Files
 #-------------------------
