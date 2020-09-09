@@ -71,7 +71,7 @@
 	</div>
 </section>
 
-<form id="form_edit">
+<form id="form_edit" enctype="multipart/form-data">
 	<div class="modal fade" id="modal-edit">
 		<div class="modal-dialog">
 			<div class="modal-content">

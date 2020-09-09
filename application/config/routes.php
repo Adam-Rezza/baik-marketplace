@@ -40,6 +40,10 @@ $route['datatables/kategori']  = 'KategoriController/datatables';
 
 # BANNER
 $route['banner']            = 'BannerController/index';
+$route['banner/show']       = 'BannerController/show';
 $route['banner/store']      = 'BannerController/store';
+$route['banner/update']     = 'BannerController/update';
 $route['banner/destroy']    = 'BannerController/destroy';
+$route['banner/up']         = 'BannerController/up';
+$route['banner/down']       = 'BannerController/down';
 $route['datatables/banner'] = 'BannerController/datatables';
