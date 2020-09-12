@@ -70,29 +70,28 @@
 
 		if (c == true) {
 			$.ajax({
-					url: `<?= site_url(); ?>produk/destroy`,
-					method: 'post',
-					data: {
-						id: id
-					},
-					dataType: 'json',
-					beforeSend: function() {
-						$.blockUI();
-					},
-					errors: function() {
-						$.unblockUI();
-						alert("<?= ERROR_500_MSG; ?>");
-					}
-				})
-				.done(function(res) {
-					if (res.code == 200) {
-						table.draw();
-					}
-
-					alert(res.msg);
+				url: `<?= site_url(); ?>produk/destroy`,
+				method: 'post',
+				data: {
+					id: id
+				},
+				dataType: 'json',
+				beforeSend: function() {
+					$.blockUI();
+				},
+				errors: function() {
 					$.unblockUI();
+					alert("<?= ERROR_500_MSG; ?>");
+				}
+			}).done(function(res) {
+				if (res.code == 200) {
+					table.draw();
+				}
 
-				});
+				alert(res.msg);
+				$.unblockUI();
+
+			});
 		}
 	}
 
@@ -107,30 +106,100 @@
 
 		if (c == true) {
 			$.ajax({
-					url: `<?= site_url(); ?>produk/ban`,
-					method: 'post',
-					data: {
-						id: id,
-						ban: ban,
-					},
-					dataType: 'json',
-					beforeSend: function() {
-						$.blockUI();
-					},
-					errors: function() {
-						$.unblockUI();
-						alert("<?= ERROR_500_MSG; ?>");
-					}
-				})
-				.done(function(res) {
-					if (res.code == 200) {
-						table.draw();
-					}
-
-					alert(res.msg);
+				url: `<?= site_url(); ?>produk/ban`,
+				method: 'post',
+				data: {
+					id: id,
+					ban: ban,
+				},
+				dataType: 'json',
+				beforeSend: function() {
+					$.blockUI();
+				},
+				errors: function() {
 					$.unblockUI();
+					alert("<?= ERROR_500_MSG; ?>");
+				}
+			}).done(function(res) {
+				if (res.code == 200) {
+					table.draw();
+				}
 
+				alert(res.msg);
+				$.unblockUI();
+
+			});
+		}
+	}
+
+	function showDetail(id) {
+		$.ajax({
+			url: `<?= site_url(); ?>produk/show`,
+			method: 'get',
+			data: {
+				id: id,
+			},
+			dataType: 'json',
+			beforeSend: function() {
+				$.blockUI();
+			},
+			errors: function() {
+				$.unblockUI();
+				alert("<?= ERROR_500_MSG; ?>");
+			}
+		}).done(function(res) {
+			let html = ``;
+			if (res.code == 404) {
+				html = `<tr><td colspan="2" class="text-center">${res.msg}</td></tr>`;
+			} else if (res.code == 200) {
+				$.each(res.data, function(i, k) {
+					html += `
+					<tr>
+					<td class="text-center"><img src="${k.gambar}" class="img-thumbnail img-responsive" style="width: 180px;" /></td>
+					<td class="text-center" style="vertical-align: middle;">${k.actions}</td>
+					</tr>
+					`;
 				});
+			}
+
+			console.log(html);
+
+			$('#vdetail').html(html);
+			$('#modal_detail').modal('show');
+
+			$.unblockUI();
+
+		});
+
+	}
+
+	function deleteDataGambar(id, id_produk) {
+		let c = confirm('Hapus Gambar Produk ?');
+
+		if (c == true) {
+			$.ajax({
+				url: `<?= site_url(); ?>produk/destroy_gambar`,
+				method: 'post',
+				data: {
+					id: id
+				},
+				dataType: 'json',
+				beforeSend: function() {
+					$('#modal_detail').block();
+				},
+				errors: function() {
+					$('#modal_detail').unblock();
+					alert("<?= ERROR_500_MSG; ?>");
+				}
+			}).done(function(res) {
+				if (res.code == 200) {
+					showDetail(id_produk);
+				}
+
+				alert(res.msg);
+				$('#modal_detail').unblock();
+
+			});
 		}
 	}
 </script>

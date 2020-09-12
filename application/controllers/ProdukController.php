@@ -22,125 +22,31 @@ class ProdukController extends CI_Controller
 
 	public function show()
 	{
-		$id = $this->input->get('id');
-		$exec = $this->mcore->get('banner', '*', ['id' => $id, 'del' => NULL]);
+		$id   = $this->input->get('id');
+		$exec = $this->mcore->get('gambar_produk', '*', ['produk_id' => $id, 'del' => NULL], 'urutan', 'ASC');
 
 		if ($exec->num_rows() == 0) {
 			echo json_encode([
 				'code' => '404',
-				'msg' => 'Data tidak ditemukan'
+				'msg' => 'Data tidak ditemukan',
+				'lq' => $this->db->last_query()
 			]);
 			exit;
 		}
+
+		$data = [];
+		foreach ($exec->result() as $key) {
+			$nested['gambar'] = base_url() . 'public/img/produk/' . $key->gambar;
+			$nested['actions'] = '<button class="btn btn-danger" onclick="deleteDataGambar(\'' . $key->id . '\', \'' . $id . '\');"><i class="fa fa-trash fa-fw"></i> Delete</button>';
+			array_push($data, $nested);
+		}
+
 
 		echo json_encode([
-			'code'   => 200,
-			'id'     => $id,
-			'gambar' => base_url() . 'public/img/banner/' . $exec->row()->gambar,
-			'url'    => $exec->row()->url,
-			'active' => $exec->row()->active,
+			'code' => 200,
+			'id'   => $id,
+			'data' => $data,
 		]);
-	}
-
-	public function store()
-	{
-		$cur_date = new DateTime('now');
-		$url      = $this->input->post('url');
-		$active   = $this->input->post('active');
-
-		if (in_array($url, ['', NULL])) {
-			$url = "#";
-		}
-
-		$config['upload_path']      = './public/img/banner/';
-		$config['allowed_types']    = 'gif|jpg|png';
-		$config['overwrite']        = TRUE;
-		$config['file_ext_tolower'] = TRUE;
-		$config['encrypt_name']     = TRUE;
-
-
-		$this->load->library('upload', $config);
-
-		if (!$this->upload->do_upload('gambar')) {
-			$ret = ['code' => 500, 'msg' => $this->upload->display_errors()];
-		} else {
-			$gambar_name = $this->upload->data('file_name');
-			$last_urutan = $this->mcore->get('banner', 'urutan', ['del' => NULL, 'active' => '1'], 'urutan', 'DESC');
-
-			if ($last_urutan->num_rows() == 0) {
-				$last_urutan = 1;
-			} else {
-				$last_urutan = $last_urutan->row()->urutan + 1;
-			}
-			$data = [
-				'gambar' => $gambar_name,
-				'url'    => $url,
-				'urutan' => $last_urutan,
-				'active' => $active,
-				'del'    => NULL,
-			];
-
-			$exec = $this->mcore->store('banner', $data);
-
-			if (!$exec) {
-				$ret = ['code' => 500, 'msg' => 'Proses tambah banner gagal, silahkan coba kembali'];
-			} else {
-				$ret = ['code' => 200, 'msg' => 'Proses tambah banner berhasil'];
-			}
-		}
-
-		echo json_encode($ret);
-	}
-
-	public function update()
-	{
-		$id     = $this->input->post('id_edit');
-		$url    = $this->input->post('url_edit');
-		$active = $this->input->post('active_edit');
-
-		$check = $this->mcore->count('banner', ['id' => $id]);
-
-		if ($check == 0) {
-			echo json_encode([
-				'code' => 404,
-				'msg' => 'Data Banner Tidak ditemukan, proses update dibatalkan',
-			]);
-			exit;
-		}
-
-		if (in_array($url, ['', NULL])) {
-			$url = "#";
-		}
-
-		$config['upload_path']      = './public/img/banner/';
-		$config['allowed_types']    = 'gif|jpg|png';
-		$config['overwrite']        = TRUE;
-		$config['file_ext_tolower'] = TRUE;
-		$config['encrypt_name']     = TRUE;
-
-
-		$this->load->library('upload', $config);
-
-		if (!$this->upload->do_upload('gambar_edit')) {
-			$ret = ['code' => 500, 'msg' => $this->upload->display_errors()];
-		} else {
-			$gambar_name = $this->upload->data('file_name');
-			$data = [
-				'gambar' => $gambar_name,
-				'url'    => $url,
-				'active' => $active,
-			];
-
-			$exec = $this->mcore->update('banner', $data, ['id' => $id]);
-
-			if (!$exec) {
-				$ret = ['code' => 500, 'msg' => 'Proses update banner gagal, silahkan coba kembali'];
-			} else {
-				$ret = ['code' => 200, 'msg' => 'Proses update banner berhasil'];
-			}
-		}
-
-		echo json_encode($ret);
 	}
 
 	public function destroy()
@@ -155,6 +61,23 @@ class ProdukController extends CI_Controller
 			$ret = ['code' => 200, 'msg' => 'Hapus Produk Berhasil'];
 		} else {
 			$ret = ['code' => 500, 'msg' => 'Hapus Produk Gagal'];
+		}
+
+		echo json_encode($ret);
+	}
+
+	public function destroy_gambar()
+	{
+		$id = $this->input->post('id');
+
+		$object = ['del' => '1'];
+		$where  = ['id' => $id];
+		$exec   = $this->mcore->update('gambar_produk', $object, $where);
+
+		if ($exec) {
+			$ret = ['code' => 200, 'msg' => 'Hapus Gambar Produk Berhasil'];
+		} else {
+			$ret = ['code' => 500, 'msg' => 'Hapus Gambar Produk Gagal'];
 		}
 
 		echo json_encode($ret);
@@ -223,11 +146,14 @@ class ProdukController extends CI_Controller
 			}
 			$ban = '<button class="btn btn-' . $color . ' btn-xs" onclick="banData(\'' . $field->id . '\', ' . $field->ban . ');"><i class="fa ' . $icon . ' fa-fw"></i> ' . $text . '</button>';
 
+			$detail = '<button class="btn btn-info btn-xs" onclick="showDetail(\'' . $field->id . '\');"><i class="fa fa-search fa-fw"></i> Detail</button>';
+
 			$row['actions'] = '
 			<div class="text-center">
 				<div class="btn-group">
 				' . $delete . '
 				' . $ban . '
+				' . $detail . '
 				</div>
 			</div>
 			';

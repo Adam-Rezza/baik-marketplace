@@ -22,7 +22,7 @@
 									<th>Terjual</th>
 									<th>Rating</th>
 									<th class="text-center" style="min-width: 80px;">Status</th>
-									<th class="text-center" style="min-width: 170px;"><i class="fa fa-cogs"></i></th>
+									<th class="text-center" style="min-width: 220px;"><i class="fa fa-cogs"></i></th>
 								</tr>
 							</thead>
 						</table>
@@ -32,3 +32,28 @@
 		</div>
 	</div>
 </section>
+
+<div id="modal_detail" class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Detail Produk <span id="nama_produk"></span></h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-bordered table-sm">
+					<thead>
+						<tr>
+							<th class="text-center">Gambar</th>
+							<th class="text-center"><i class="fa fa-cog"></i></th>
+						</tr>
+					</thead>
+					<tbody id="vdetail"></tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

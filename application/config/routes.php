@@ -39,10 +39,12 @@ $route['kategori/down_child']  = 'KategoriController/down_child';
 $route['datatables/kategori']  = 'KategoriController/datatables';
 
 # PRODUK
-$route['produk']            = 'ProdukController/index';
-$route['produk/destroy']    = 'ProdukController/destroy';
-$route['produk/ban']        = 'ProdukController/ban';
-$route['datatables/produk'] = 'ProdukController/datatables';
+$route['produk']                = 'ProdukController/index';
+$route['produk/show']           = 'ProdukController/show';
+$route['produk/destroy']        = 'ProdukController/destroy';
+$route['produk/destroy_gambar'] = 'ProdukController/destroy_gambar';
+$route['produk/ban']            = 'ProdukController/ban';
+$route['datatables/produk']     = 'ProdukController/datatables';
 
 # BANNER
 $route['banner']            = 'BannerController/index';
