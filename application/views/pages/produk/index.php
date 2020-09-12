@@ -21,8 +21,8 @@
 									<th>Harga Disc</th>
 									<th>Terjual</th>
 									<th>Rating</th>
-									<th class="text-center">Status</th>
-									<th class="text-center" style="min-width: 240px;"><i class="fa fa-cogs"></i></th>
+									<th class="text-center" style="min-width: 80px;">Status</th>
+									<th class="text-center" style="min-width: 80px;"><i class="fa fa-cogs"></i></th>
 								</tr>
 							</thead>
 						</table>
