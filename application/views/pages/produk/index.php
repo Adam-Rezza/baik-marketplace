@@ -15,14 +15,14 @@
 						<table id="datatables" class="table table-bordered small" style="width: 100%;">
 							<thead>
 								<tr>
-									<th class="text-center">Toko</th>
+									<th>Toko</th>
 									<th>Nama</th>
 									<th>Harga Asli</th>
 									<th>Harga Disc</th>
 									<th>Terjual</th>
 									<th>Rating</th>
 									<th class="text-center" style="min-width: 80px;">Status</th>
-									<th class="text-center" style="min-width: 80px;"><i class="fa fa-cogs"></i></th>
+									<th class="text-center" style="min-width: 170px;"><i class="fa fa-cogs"></i></th>
 								</tr>
 							</thead>
 						</table>

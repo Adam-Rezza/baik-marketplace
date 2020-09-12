@@ -149,12 +149,37 @@ class ProdukController extends CI_Controller
 
 		$object = ['del' => '1'];
 		$where  = ['id' => $id];
-		$exec   = $this->mcore->update('banner', $object, $where);
+		$exec   = $this->mcore->update('produk', $object, $where);
 
 		if ($exec) {
-			$ret = ['code' => 200, 'msg' => 'Hapus Banner Berhasil'];
+			$ret = ['code' => 200, 'msg' => 'Hapus Produk Berhasil'];
 		} else {
-			$ret = ['code' => 500, 'msg' => 'Hapus Banner Gagal'];
+			$ret = ['code' => 500, 'msg' => 'Hapus Produk Gagal'];
+		}
+
+		echo json_encode($ret);
+	}
+
+	public function ban()
+	{
+		$id = $this->input->post('id');
+		$old_ban = $this->input->post('ban');
+
+		$ban = 0;
+		$msg = 'Aktifkan produk berhasil';
+		if ($old_ban == 0) {
+			$ban = 1;
+			$msg = 'Non Aktifkan produk berhasil';
+		}
+
+		$object = ['ban' => $ban];
+		$where  = ['id' => $id];
+		$exec   = $this->mcore->update('produk', $object, $where);
+
+		if ($exec) {
+			$ret = ['code' => 200, 'msg' => $msg];
+		} else {
+			$ret = ['code' => 500, 'msg' => 'Update Status Produk Gagal'];
 		}
 
 		echo json_encode($ret);
@@ -179,18 +204,30 @@ class ProdukController extends CI_Controller
 			$row['nama']          = $field->nama;
 			$row['desc']          = $field->desc;
 			$row['harga_asli']    = $field->harga_asli;
+			$row['harga_asli_rp'] = 'Rp.' . number_format($field->harga_asli, 0, ',', '.');
 			$row['harga_disc']    = $field->harga_disc;
+			$row['harga_disc_rp'] = 'Rp.' . number_format($field->harga_disc, 0, ',', '.');
 			$row['terjual']       = $field->terjual;
 			$row['rating']        = $field->rating;
 			$row['ban']           = $field->ban;
 
 			$delete = '<button class="btn btn-danger btn-xs" onclick="deleteData(\'' . $field->id . '\');"><i class="fa fa-trash fa-fw"></i> Delete</button>';
-			$edit = '<button class="btn btn-info btn-xs" onclick="editData(\'' . $field->id . '\');"><i class="fa fa-pencil fa-fw"></i> Edit</button>';
+
+			$icon = 'fa fa-times';
+			$text = 'Non Aktifkan';
+			$color = 'warning';
+			if ($field->ban == '1') {
+				$icon = 'fa fa-check';
+				$text = 'Aktifkan';
+				$color = 'success';
+			}
+			$ban = '<button class="btn btn-' . $color . ' btn-xs" onclick="banData(\'' . $field->id . '\', ' . $field->ban . ');"><i class="fa ' . $icon . ' fa-fw"></i> ' . $text . '</button>';
 
 			$row['actions'] = '
 			<div class="text-center">
 				<div class="btn-group">
 				' . $delete . '
+				' . $ban . '
 				</div>
 			</div>
 			';

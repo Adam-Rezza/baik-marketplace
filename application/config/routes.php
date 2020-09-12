@@ -40,6 +40,8 @@ $route['datatables/kategori']  = 'KategoriController/datatables';
 
 # PRODUK
 $route['produk']            = 'ProdukController/index';
+$route['produk/destroy']    = 'ProdukController/destroy';
+$route['produk/ban']        = 'ProdukController/ban';
 $route['datatables/produk'] = 'ProdukController/datatables';
 
 # BANNER
