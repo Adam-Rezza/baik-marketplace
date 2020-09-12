@@ -18,6 +18,11 @@
 				</a>
 			</li>
 			<li class="">
+				<a href="<?= site_url('produk'); ?>">
+					<i class="fa fa-cubes"></i> <span>Produk Management</span>
+				</a>
+			</li>
+			<li class="">
 				<a href="<?= site_url('banner'); ?>">
 					<i class="fa fa-image"></i> <span>Banner Management</span>
 				</a>

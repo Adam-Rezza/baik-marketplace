@@ -8,7 +8,7 @@ class ProdukController extends CI_Controller
     {
         parent::__construct();
         $this->load->library('TemplateAdmin', NULL, 'template');
-        $this->load->model('M_banner_less', 'mless');
+        $this->load->model('M_produk_less', 'mless');
     }
 
     public function index()

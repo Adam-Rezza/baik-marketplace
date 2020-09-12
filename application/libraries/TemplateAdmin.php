@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class TemplateAdmin
 {
@@ -7,7 +7,7 @@ class TemplateAdmin
 
 	public function __construct()
 	{
-		$this->ci =& get_instance();
+		$this->ci = &get_instance();
 		$this->ci->load->model('M_core', 'mcore');
 		$this->ci->load->helper(['cookie', 'string']);
 	}
@@ -16,20 +16,18 @@ class TemplateAdmin
 	{
 		$check_cookies = $this->check_cookies();
 
-		if($check_cookies === TRUE){
+		if ($check_cookies === TRUE) {
 
 			$this->render_view($data);
-
-		}else{
+		} else {
 
 			$check_session = $this->check_session();
 
-			if($check_session === TRUE){
+			if ($check_session === TRUE) {
 				$this->render_view($data);
-			}else{
+			} else {
 				$this->reject();
 			}
-
 		}
 	}
 
@@ -37,17 +35,17 @@ class TemplateAdmin
 	{
 		$cookies = get_cookie(COOK);
 
-		if($cookies === NULL){
+		if ($cookies === NULL) {
 			return FALSE;
-		}else{
+		} else {
 			$arr        = $this->ci->mcore->get(TABLE_ADMINS, '*', ['cookies' => $cookies]);
 			$id         = $arr->row()->id;
 			$username   = $arr->row()->username;
 			$remember   = $arr->row()->remember;
 			$cookies_db = $arr->row()->cookies;
 
-			if($remember == 'yes'){
-				if($cookies == $cookies_db){
+			if ($remember == 'yes') {
+				if ($cookies == $cookies_db) {
 					$this->reset_session($id, $username);
 					return TRUE;
 				}
@@ -59,10 +57,10 @@ class TemplateAdmin
 
 	public function check_session()
 	{
-		$id       = $this->ci->session->userdata(SESS.'id');
-		$username = $this->ci->session->userdata(SESS.'username');
+		$id       = $this->ci->session->userdata(SESS . 'id');
+		$username = $this->ci->session->userdata(SESS . 'username');
 
-		if($id && $username){
+		if ($id && $username) {
 			return TRUE;
 		}
 		return FALSE;
@@ -70,26 +68,25 @@ class TemplateAdmin
 
 	public function render_view($data)
 	{
-		if(file_exists(APPPATH.'views/pages/'.$data['content'].'.php')){
+		if (file_exists(APPPATH . 'views/pages/' . $data['content'] . '.php')) {
 			$this->ci->load->view('layouts/app', $data, FALSE);
-		}else{
+		} else {
 			show_404();
 		}
 	}
 
 	public function reject()
 	{
-		$this->session->set_flashdata('expired', EXPIRED_MSG);
-		redirect('logout/admin');
+		$this->ci->session->set_flashdata('expired', EXPIRED_MSG);
+		redirect('logout');
 		exit;
 	}
 
 	public function reset_session($id, $username)
 	{
-		$this->ci->session->set_userdata(SESS.'id', $id);
-		$this->ci->session->set_userdata(SESS.'username', $username);
+		$this->ci->session->set_userdata(SESS . 'id', $id);
+		$this->ci->session->set_userdata(SESS . 'username', $username);
 	}
-
 }
 
 /* End of file TemplateAdmin.php */

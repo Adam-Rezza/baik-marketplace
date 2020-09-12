@@ -12,20 +12,26 @@
 			"serverSide": true,
 			"order": [],
 			"ajax": {
-				"url": `<?= site_url('datatables/banner') ?>`,
+				"url": `<?= site_url('datatables/produk') ?>`,
 				"type": "POST"
 			},
 			"columns": [{
-					"data": "id"
+					"data": "nama_toko"
 				},
 				{
-					"data": "gambar"
+					"data": "nama"
 				},
 				{
-					"data": "url"
+					"data": "harga_asli"
 				},
 				{
-					"data": "urutan"
+					"data": "harga_disc"
+				},
+				{
+					"data": "terjual"
+				},
+				{
+					"data": "rating"
 				},
 				{
 					"data": null,
@@ -43,12 +49,18 @@
 				},
 			],
 			"columnDefs": [{
-				"targets": [1, 3, 4],
-				"orderable": false,
-			}, {
-				"targets": [0, 1, 3, 4],
-				"class": "text-center"
-			}],
+					"targets": [7],
+					"orderable": false,
+				},
+				{
+					"targets": [5, 6, 7],
+					"class": "text-center"
+				},
+				{
+					"targets": [2, 3, 4],
+					"class": "text-right"
+				}
+			],
 		});
 
 		$('#form_add').on('submit', function(e) {
