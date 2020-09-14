@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : Mysql Local
+ Source Server         : Laragon MySql
  Source Server Type    : MySQL
- Source Server Version : 50724
+ Source Server Version : 100410
  Source Host           : localhost:3306
  Source Schema         : baikmarketdb
 
  Target Server Type    : MySQL
- Target Server Version : 50724
+ Target Server Version : 100410
  File Encoding         : 65001
 
- Date: 13/09/2020 06:03:24
+ Date: 14/09/2020 09:53:38
 */
 
 SET NAMES utf8mb4;
@@ -38,6 +38,22 @@ CREATE TABLE `admins`  (
 -- ----------------------------
 INSERT INTO `admins` VALUES (1, 'admin', '$2y$10$cQEWoJvO4hOUJ28jGjFKzuz3Gp/vtAW5cVFanJXOVNnjlhsinpPbq', '2020-08-03 16:19:35', '2020-08-03 16:19:35', NULL, 'wT1GZgUVpOikaqEiMov30vp9Rzd2GFtu1LmI0y7xwkqLu5C57mUIfND8chWgMxes', 'yes');
 INSERT INTO `admins` VALUES (2, 'test', '09a9922c001f7f65bea539ec3eecfe15bb60b008', '2020-08-10 18:49:50', '2020-08-10 18:49:50', '2020-08-10 19:08:54', NULL, 'no');
+
+-- ----------------------------
+-- Table structure for alamat
+-- ----------------------------
+DROP TABLE IF EXISTS `alamat`;
+CREATE TABLE `alamat`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NULL DEFAULT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `kota` int(11) NULL DEFAULT NULL,
+  `provinsi` int(11) NULL DEFAULT NULL,
+  `kode_pos` int(11) NULL DEFAULT NULL,
+  `def` bit(1) NULL DEFAULT b'0',
+  `del` bit(1) NULL DEFAULT b'0',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for banner
@@ -117,7 +133,7 @@ CREATE TABLE `produk`  (
   `harga_asli` int(11) NULL DEFAULT NULL,
   `harga_disc` int(11) NULL DEFAULT NULL,
   `terjual` int(11) NULL DEFAULT NULL,
-  `rating` decimal(3, 2) NULL DEFAULT 0.00,
+  `rating` decimal(3, 2) NULL DEFAULT 0,
   `del` bit(1) NULL DEFAULT b'0',
   `ban` bit(1) NULL DEFAULT b'0',
   `created_date` datetime(0) NULL DEFAULT NULL,
@@ -151,5 +167,22 @@ CREATE TABLE `toko`  (
 -- ----------------------------
 INSERT INTO `toko` VALUES (1, 1, 'Toko Adam', 'Test', '082114578976', 'logo.png', 1, 0);
 INSERT INTO `toko` VALUES (2, 1, 'Toko Nurul', 'Test1', '0821145789761', 'logo.png', 1, 0);
+
+-- ----------------------------
+-- Table structure for user
+-- ----------------------------
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `telp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `gambar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `active` bit(1) NULL DEFAULT b'0',
+  `ban` bit(1) NULL DEFAULT b'0',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -55,3 +55,6 @@ $route['banner/destroy']    = 'BannerController/destroy';
 $route['banner/up']         = 'BannerController/up';
 $route['banner/down']       = 'BannerController/down';
 $route['datatables/banner'] = 'BannerController/datatables';
+
+# USER
+$route['user'] = 'UsersController/index';
