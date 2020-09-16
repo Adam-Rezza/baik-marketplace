@@ -57,4 +57,5 @@ $route['banner/down']       = 'BannerController/down';
 $route['datatables/banner'] = 'BannerController/datatables';
 
 # USER
-$route['user'] = 'UsersController/index';
+$route['user']            = 'UsersController/index';
+$route['datatables/user'] = 'UsersController/datatables';

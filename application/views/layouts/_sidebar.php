@@ -23,6 +23,11 @@
 				</a>
 			</li>
 			<li class="">
+				<a href="<?= site_url('user'); ?>">
+					<i class="fa fa-users"></i> <span>User Management</span>
+				</a>
+			</li>
+			<li class="">
 				<a href="<?= site_url('banner'); ?>">
 					<i class="fa fa-image"></i> <span>Banner Management</span>
 				</a>
