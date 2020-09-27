@@ -24,13 +24,13 @@ $route['save_address']         = 'CustomerController/save_address';
 // $route['category'] = 'CustomerController/category';
 // $route['category/(:any)'] = 'CustomerController/category/$1';
 // $route['category/(:any)/(:any)'] = 'CustomerController/category/$1/$2';
-$route['category=(:any)%26page=(:any)']                      = 'CustomerController/category/$1//$2';
-$route['category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/category/$1/$2/$3';
+$route['category=(:any)&page=(:any)']                      = 'CustomerController/category/$1//$2';
+$route['category=(:any)&subcategory=(:any)&page=(:any)'] = 'CustomerController/category/$1/$2/$3';
 
 // $route['search'] = 'CustomerController/search';
-$route['search%26keyword=(:any)%26category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/search/$1/$2/$3/$4';
-$route['search%26keyword=(:any)%26category=(:any)%26page=(:any)']                      = 'CustomerController/search/$1/$2//$3';
-$route['search%26keyword=(:any)%26page=(:any)']                                        = 'CustomerController/search/$1///$2';
+$route['search&keyword=(:any)&category=(:any)&subcategory=(:any)&page=(:any)'] = 'CustomerController/search/$1/$2/$3/$4';
+$route['search&keyword=(:any)&category=(:any)&page=(:any)']                    = 'CustomerController/search/$1/$2//$3';
+$route['search&keyword=(:any)&page=(:any)']                                    = 'CustomerController/search/$1///$2';
 
 $route['product']         = 'CustomerController/product';
 $route['product/(:any)']  = 'CustomerController/product/$1';
@@ -58,7 +58,9 @@ $route['process_order/(:any)']              = 'TransactionController/process_ord
 $route['send_order/(:any)']                 = 'TransactionController/send_order/$1';
 $route['delivered_order/(:any)']            = 'TransactionController/delivered_order/$1';
 
-# ADMIN MODUL
+#########################################################################
+############################## ADMIN MODUL ##############################
+#########################################################################
 # DASHBOARD
 $route['dashboard'] = 'DashboardController/index';
 
