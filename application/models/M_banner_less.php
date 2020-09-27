@@ -51,7 +51,7 @@ class M_banner_less extends CI_Model
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
 
-		$this->db->where('del', NULL);
+		$this->db->where('del', '0');
 	}
 
 	function get_datatables()
