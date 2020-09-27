@@ -6,8 +6,8 @@ class M_kategori_less extends CI_Model
 {
 
 	var $table         = 'kategori';
-	var $column_order  = array('id', 'nama', 'active', 'urutan');
-	var $column_search = array('nama', 'active');
+	var $column_order  = array('id', 'nama', 'urutan', 'active', 'gambar');
+	var $column_search = array('nama', 'urutan', 'active');
 	var $order         = array('urutan' => 'asc');
 
 	public function __construct()
@@ -27,9 +27,9 @@ class M_kategori_less extends CI_Model
 			if ($_POST['search']['value']) {
 				$keyword = $_POST['search']['value'];
 				if (in_array($keyword, ['aktif', 'Aktif', 'AKTIF'])) {
-					$keyword = 1;
+					$keyword = TRUE;
 				} elseif (in_array($keyword, ['tidak aktif', 'Tidak Aktif', 'TIDAK AKTIF'])) {
-					$keyword = 0;
+					$keyword = FALSE;
 				}
 				if ($i === 0) {
 					$this->db->group_start();
@@ -51,8 +51,7 @@ class M_kategori_less extends CI_Model
 			$this->db->order_by(key($order), $order[key($order)]);
 		}
 
-		$this->db->where('del', NULL);
-		$this->db->where('parent', NULL);
+		$this->db->where('del', FALSE);
 	}
 
 	function get_datatables()
@@ -74,8 +73,7 @@ class M_kategori_less extends CI_Model
 	public function count_all()
 	{
 		$this->db->from($this->table);
-		$this->db->where('del', NULL);
-		$this->db->where('parent', NULL);
+		$this->db->where('del', FALSE);
 		return $this->db->count_all_results();
 	}
 }

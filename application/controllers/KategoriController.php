@@ -23,8 +23,8 @@ class KategoriController extends CI_Controller
 
 	public function show()
 	{
-		$id = $this->input->get('id');
-		$exec = $this->mcore->get('kategori', '*', ['id' => $id, 'del' => NULL]);
+		$id   = $this->input->get('id');
+		$exec = $this->mcore->get('kategori', '*', ['id' => $id, 'del' => FALSE]);
 
 		if ($exec->num_rows() == 0) {
 			echo json_encode([
@@ -34,26 +34,34 @@ class KategoriController extends CI_Controller
 			exit;
 		}
 
-		if ($exec->row()->parent != NULL) {
-			$data_parent = $this->mcore->get('kategori', '*', ['parent' => $exec->row()->parent]);
-			$nama_parent = $data_parent->row()->nama;
-		} else {
-			$nama_parent = 'No Parent';
-		}
+		echo json_encode([
+			'code'   => 200,
+			'id'     => $id,
+			'nama'   => $exec->row()->nama,
+			'active' => $exec->row()->active,
+			'gambar' => $exec->row()->gambar,
+		]);
+	}
 
-		if ($exec->row()->parent != NULL) {
-			$parent = $exec->row()->parent;
-		} else {
-			$parent = 'no';
+	public function show_sub()
+	{
+		$id   = $this->input->get('id');
+		$exec = $this->mcore->get('sub_kategori', '*', ['id' => $id, 'del' => FALSE]);
+
+		if ($exec->num_rows() == 0) {
+			echo json_encode([
+				'code' => '404',
+				'msg' => 'Data tidak ditemukan'
+			]);
+			exit;
 		}
 
 		echo json_encode([
-			'code'        => 200,
-			'id'          => $id,
-			'nama'        => $exec->row()->nama,
-			'active'      => $exec->row()->active,
-			'parent'      => $parent,
-			'nama_parent' => $nama_parent,
+			'code'   => 200,
+			'id'     => $id,
+			'nama'   => $exec->row()->nama,
+			'parent' => $exec->row()->parent,
+			'active' => $exec->row()->active,
 		]);
 	}
 
@@ -65,57 +73,96 @@ class KategoriController extends CI_Controller
 		$active = $this->input->post('active');
 
 		if ($parent == 'no') {
-			$parent = NULL;
-		}
+			$check = $this->mcore->count('kategori', ['nama' => $nama, 'del' => FALSE, 'active' => TRUE]);
 
-		$check = $this->mcore->count('kategori', ['nama' => $nama, 'del' => NULL, 'parent' => $parent]);
+			if ($check > 0) {
+				echo json_encode([
+					'code' => 500,
+					'msg' => 'Kategori telah terdaftar, silahkan gunakan nama kategori lain'
+				]);
+				exit;
+			}
 
-		if ($check > 0) {
-			echo json_encode([
-				'code' => 500,
-				'msg' => 'Kategori telah terdaftar, silahkan gunakan nama kategori lain'
-			]);
-			exit;
-		}
+			$last_no_urut = $this->mcore->get('kategori', 'urutan', ['del' => FALSE, 'active' => TRUE], 'urutan', 'DESC', 1);
 
-		$last_no_urut = $this->mcore->get('kategori', 'urutan', ['del' => NULL, 'parent' => $parent], 'urutan', 'DESC', 1);
+			if ($last_no_urut->num_rows() == 0) {
+				$last_no_urut = 1;
+			} else {
+				$last_no_urut = $last_no_urut->row()->urutan + 1;
+			}
 
-		if ($last_no_urut->num_rows() == 0) {
-			$last_no_urut = 1;
+			$data = [
+				'nama'         => $nama,
+				'urutan'       => $last_no_urut,
+				'created_date' => $cur_date->format('Y-m-d H:i:s'),
+				'active'       => ($active == '1') ? TRUE : FALSE,
+				'del'          => FALSE,
+				'gambar'       => NULL,
+			];
+			$exec = $this->mcore->store('kategori', $data);
+
+			if ($exec) {
+				echo json_encode([
+					'code' => 200,
+					'msg' => 'Proses Tambah Kategori Berhasil'
+				]);
+				exit;
+			} else {
+				echo json_encode([
+					'code' => 500,
+					'msg' => 'Proses Tambah Kategori Gagal, Gagal terhubung dengan Database'
+				]);
+				exit;
+			}
 		} else {
-			$last_no_urut = $last_no_urut->row()->urutan + 1;
-		}
+			$check = $this->mcore->count('sub_kategori', ['parent' => $parent, 'nama' => $nama, 'active' => TRUE, 'del' => FALSE]);
 
-		$data = [
-			'nama'         => $nama,
-			'urutan'       => $last_no_urut,
-			'created_date' => $cur_date->format('Y-m-d H:i:s'),
-			'active'       => $active,
-			'del'          => NULL,
-			'parent'       => $parent
-		];
-		$exec = $this->mcore->store('kategori', $data);
+			if ($check > 0) {
+				echo json_encode([
+					'code' => 500,
+					'msg' => 'Sub Kategori telah terdaftar, silahkan gunakan nama Sub kategori lain'
+				]);
+				exit;
+			}
 
-		if ($exec) {
-			echo json_encode([
-				'code' => 200,
-				'msg' => 'Proses Tambah Kategori Berhasil'
-			]);
-			exit;
-		} else {
-			echo json_encode([
-				'code' => 500,
-				'msg' => 'Proses Tambah Kategori Gagal, Gagal terhubung dengan Database'
-			]);
-			exit;
+			$last_no_urut = $this->mcore->get('sub_kategori', 'urutan', ['parent' => $parent, 'del' => FALSE, 'active' => TRUE], 'urutan', 'DESC', 1);
+
+			if ($last_no_urut->num_rows() == 0) {
+				$last_no_urut = 1;
+			} else {
+				$last_no_urut = $last_no_urut->row()->urutan + 1;
+			}
+
+			$data = [
+				'parent'       => $parent,
+				'nama'         => $nama,
+				'urutan'       => $last_no_urut,
+				'created_date' => $cur_date->format('Y-m-d H:i:s'),
+				'active'       => ($active == '1') ? TRUE : FALSE,
+				'del'          => FALSE,
+			];
+			$exec = $this->mcore->store('sub_kategori', $data);
+
+			if ($exec) {
+				echo json_encode([
+					'code' => 200,
+					'msg' => 'Proses Tambah Sub Kategori Berhasil'
+				]);
+				exit;
+			} else {
+				echo json_encode([
+					'code' => 500,
+					'msg' => 'Proses Tambah Sub Kategori Gagal, Gagal terhubung dengan Database'
+				]);
+				exit;
+			}
 		}
 	}
 
 	public function update()
 	{
-		$id = $this->input->post('id_edit');
-		$nama = $this->input->post('nama_edit');
-		$parent = $this->input->post('parent_edit');
+		$id     = $this->input->post('id_edit');
+		$nama   = $this->input->post('nama_edit');
 		$active = $this->input->post('active_edit');
 
 		$check = $this->mcore->count('kategori', ['id' => $id]);
@@ -128,14 +175,9 @@ class KategoriController extends CI_Controller
 			exit;
 		}
 
-		if ($parent == 'no') {
-			$parent = NULL;
-		}
-
 		$data = [
 			'nama'   => $nama,
-			'parent' => $parent,
-			'active' => $active,
+			'active' => ($active == '1') ? TRUE : FALSE,
 		];
 
 		$exec = $this->mcore->update('kategori', $data, ['id' => $id]);
@@ -155,11 +197,51 @@ class KategoriController extends CI_Controller
 		echo json_encode($ret);
 	}
 
+	public function update_sub()
+	{
+		$id     = $this->input->post('id_edit_sub');
+		$nama   = $this->input->post('nama_edit_sub');
+		$parent = $this->input->post('parent_edit_sub');
+		$active = $this->input->post('active_edit_sub');
+
+		$check = $this->mcore->count('sub_kategori', ['id' => $id]);
+
+		if ($check == 0) {
+			echo json_encode([
+				'code' => 404,
+				'msg' => 'Data Kategori Tidak ditemukan, proses update dibatalkan',
+			]);
+			exit;
+		}
+
+		$data = [
+			'nama'   => $nama,
+			'parent' => $parent,
+			'active' => ($active == '1') ? TRUE : FALSE,
+		];
+
+		$exec = $this->mcore->update('sub_kategori', $data, ['id' => $id]);
+
+		if ($exec) {
+			$ret = [
+				'code' => 200,
+				'msg' => 'Update Sub Kategori Berhasil',
+			];
+		} else {
+			$ret = [
+				'code' => 500,
+				'msg' => 'Update Sub Kategori Gagal',
+			];
+		}
+
+		echo json_encode($ret);
+	}
+
 	public function destroy()
 	{
 		$id = $this->input->post('id');
 
-		$object = ['del' => '1'];
+		$object = ['del' => TRUE];
 		$where  = ['id' => $id];
 		$exec   = $this->mcore->update('kategori', $object, $where);
 
@@ -172,18 +254,35 @@ class KategoriController extends CI_Controller
 		echo json_encode($ret);
 	}
 
+	public function destroy_sub()
+	{
+		$id = $this->input->post('id');
+
+		$object = ['del' => TRUE];
+		$where  = ['id' => $id];
+		$exec   = $this->mcore->update('sub_kategori', $object, $where);
+
+		if ($exec) {
+			$ret = ['code' => 200, 'msg' => 'Hapus Sub Kategori Berhasil'];
+		} else {
+			$ret = ['code' => 500, 'msg' => 'Hapus Sub Kategori Gagal'];
+		}
+
+		echo json_encode($ret);
+	}
+
 	public function sub()
 	{
 		$id = $this->input->get('id');
 
-		$items = $this->mcore->get('kategori', '*', ['parent' => $id, 'del' => NULL], 'urutan', 'ASC');
+		$items = $this->mcore->get('sub_kategori', '*', ['parent' => $id, 'del' => FALSE], 'urutan', 'ASC');
 
 		if ($items->num_rows() == 0) {
 			$ret = ['code' => 404, 'msg' => 'Tidak memiliki Sub Kategori'];
 		} else {
 			$data = [];
 			foreach ($items->result() as $key) {
-				if ($key->active == '1') {
+				if ($key->active == TRUE) {
 					$aktif = "Aktif";
 				} else {
 					$aktif = "Tidak Aktif";
@@ -206,7 +305,7 @@ class KategoriController extends CI_Controller
 
 	public function get_parent()
 	{
-		$data = $this->mcore->get('kategori', '*', ['parent' => NULL, 'del' => NULL]);
+		$data = $this->mcore->get('kategori', '*', ['active' => TRUE, 'del' => FALSE]);
 
 		if ($data->num_rows() == 0) {
 			$ret = ['code' => 404];

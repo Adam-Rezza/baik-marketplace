@@ -81,9 +81,12 @@ $route['datatables/toko']           = 'TokoController/datatables';
 # KATEGORI
 $route['kategori']             = 'KategoriController/index';
 $route['kategori/show']        = 'KategoriController/show';
+$route['kategori/show_sub']    = 'KategoriController/show_sub';
 $route['kategori/store']       = 'KategoriController/store';
 $route['kategori/update']      = 'KategoriController/update';
+$route['kategori/update_sub']  = 'KategoriController/update_sub';
 $route['kategori/destroy']     = 'KategoriController/destroy';
+$route['kategori/destroy_sub'] = 'KategoriController/destroy_sub';
 $route['kategori/sub']         = 'KategoriController/sub';
 $route['kategori/get_parent']  = 'KategoriController/get_parent';
 $route['kategori/up_parent']   = 'KategoriController/up_parent';
