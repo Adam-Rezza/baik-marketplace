@@ -12,64 +12,77 @@
         </div>
     </div>
     <!-- Product Content Category -->
-    <div class="relative clearfix">
-        <?php foreach ($product as $f) {  ?>
-            <div class="col-md-12 clear-padding border no-border-t no-border-l no-border-r product-category bottom-margin-default product-category-list relative">
-                <div class="image-product image-product-merhcant relative overfollow-hidden">
-                    <div class="center-vertical-image">
-                        <?php if ($f->gambar) { ?>
-                            <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Product">
-                        <?php } else { ?>
-                            <img src="<?= base_url(); ?>public/megastore/img/no-image-available.png" alt="No image">
-                        <?php } ?>
-                    </div>
-                    <ul class="option-product animate-default clear-margin">
-                        <li class="relative">
-                            <a href="#" class="edit-image-product" data-id="<?= $f->id ?>" data-product-name="<?= $f->nama ?>">
-                                <i class="fa fa-edit" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="relative overfollow-hidden info-product-list">
-                    <h3 class="title-product clearfix full-width title-hover-black clear-margin">
-                        <a href="#"><?= $f->nama ?></a>
-                        <?php if (!$f->gambar) { ?>
-                            <span>(Belum aktif, tambah gambar)</span>
-                        <?php } ?>
-                    </h3>
-
-                    <p class="clearfix price-product">
-                        <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
-                        Rp <?= number_format($f->harga_disc, 0, ",", ".") ?>
-                    </p>
-                    <p class="intro-product-category"><?= $f->desc ?></p>
-                    <div class="relative button-product-list clearfix">
-                        <ul class="clear-margin">
-                            <li class=""><a href="#" class="animate-default edit-product" data-id="<?= $f->id ?>">Edit</a></li>
+    <div class="relative">
+        <?php
+        if (count($product) > 0) {
+        ?>
+            <?php foreach ($product as $f) {  ?>
+                <div class="col-md-12 clear-padding border no-border-t no-border-l no-border-r product-category bottom-margin-default product-category-list relative">
+                    <div class="image-product image-product-merhcant relative overfollow-hidden">
+                        <div class="center-vertical-image">
+                            <?php if ($f->gambar) { ?>
+                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Product">
+                            <?php } else { ?>
+                                <img src="<?= base_url(); ?>public/megastore/img/no-image-available.png" alt="No image">
+                            <?php } ?>
+                        </div>
+                        <ul class="option-product animate-default clear-margin">
+                            <li class="relative">
+                                <a href="#" class="edit-image-product" data-id="<?= $f->id ?>" data-product-name="<?= $f->nama ?>">
+                                    <i class="fa fa-edit" aria-hidden="true"></i>
+                                </a>
+                            </li>
                         </ul>
                     </div>
+                    <div class="relative overfollow-hidden info-product-list">
+                        <h3 class="title-product clearfix full-width title-hover-black clear-margin">
+                            <a href="#"><?= $f->nama ?></a>
+                            <?php if (!$f->gambar) { ?>
+                                <span>(Belum aktif, tambah gambar)</span>
+                            <?php } ?>
+                        </h3>
+
+                        <p class="clearfix price-product">
+                            <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
+                            Rp <?= number_format($f->harga_disc, 0, ",", ".") ?>
+                        </p>
+                        <p class="intro-product-category"><?= $f->desc ?></p>
+                        <div class="relative button-product-list clearfix">
+                            <ul class="clear-margin">
+                                <li class=""><a href="#" class="animate-default edit-product" data-id="<?= $f->id ?>">Edit</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+            <?php } ?>
+        <?php } else { ?>
+            <div class="col-md-12 clear-padding product-category left-margin-default product-category-list relative" style="color: grey">
+                <h3>Tidak ada data</h3>
             </div>
         <?php } ?>
     </div>
-    <div class="row">
-        <div class="pagging relative">
-            <ul>
-                <li><a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i> First</a></li>
-                <li class="active-pagging"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li class="dots-pagging">. . .</li>
-                <li><a href="#">102</a></li>
-                <li><a href="#">Last <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
-            </ul>
+    <?php
+    //disable sementara
+    if (count($product) > 0 && false) {
+    ?>
+        <div class="row">
+            <div class="pagging relative">
+                <ul>
+                    <li><a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i> First</a></li>
+                    <li class="active-pagging"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li class="dots-pagging">. . .</li>
+                    <li><a href="#">102</a></li>
+                    <li><a href="#">Last <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
         </div>
-    </div>
+    <?php } ?>
     <!-- End Product Content Category -->
 </div>
 
-<div class="modal fade bs-example-modal-lg out" id="modalAddProduct" tabindex="-1" role="dialog" aria-hidden="true" style="display: none">
+<div class="modal fade bs-example-modal-lg out" id="modalAddProduct" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -127,7 +140,7 @@
     </div>
 </div>
 
-<div class="modal fade bs-example-modal-lg out" id="modalImageProduct" tabindex="-1" role="dialog" aria-hidden="true" style="display: none">
+<div class="modal fade bs-example-modal-lg out" id="modalImageProduct" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document" style="min-height: 229.25px;">
         <div class="modal-content">
             <div class="modal-body">
@@ -168,7 +181,7 @@
     </div>
 </div>
 
-<div class="modal fade bs-example-modal-lg out" id="modalCropImage" tabindex="-1" role="dialog" aria-hidden="true" style="display: none">
+<div class="modal fade bs-example-modal-lg out" id="modalCropImage" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document" style="min-height: 229.25px; width: 830px!important">
         <div class="modal-content">
             <div class="modal-body">

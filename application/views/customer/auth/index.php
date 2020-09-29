@@ -21,6 +21,33 @@
                             <label>Alamat *</label>
                             <textarea class="full-width" type="text" name="alamat" id="alamat" style="resize:none"></textarea>
                         </div>
+                        <div class="form-input full-width clearfix relative">
+                            <label>Provinsi *</label>
+                            <select class="full-width" type="password" name="provinsi" id="provinsi">
+                                <option value="">--Pilih Provinsi--</option>
+                                <?php foreach ($province as $f) { ?>
+                                    <option value="<?= $f->id_prov ?>"><?= $f->nama ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="form-input full-width clearfix relative">
+                            <label>Kota *</label>
+                            <select class="full-width" type="password" name="kabupaten" id="kabupaten">
+                                <option value="">--Pilih Kota--</option>
+                            </select>
+                        </div>
+                        <div class="form-input full-width clearfix relative">
+                            <label>Kecamatan *</label>
+                            <select class="full-width" type="password" name="kecamatan" id="kecamatan">
+                                <option value="">--Pilih Kecamatan--</option>
+                            </select>
+                        </div>
+                        <div class="form-input full-width clearfix relative">
+                            <label>Kelurahan *</label>
+                            <select class="full-width" type="password" name="kelurahan" id="kelurahan">
+                                <option value="">--Pilih Kelurahan--</option>
+                            </select>
+                        </div>
                         <!-- <div class="form-input full-width clearfix relative">
                             <label>Provinsi *</label>
                             <select class="full-width" name="alamat" id="alamat">

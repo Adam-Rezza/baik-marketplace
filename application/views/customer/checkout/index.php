@@ -41,6 +41,10 @@
                             <h3 style="color: #777">Keranjang belanja anda kosong</h3>
                         </div>
                     <?php } ?>
+                    
+					<div class="text-center top-margin-15-default">
+						<a class="btn-daftar-toko" href="<?=base_url()?>">Lanjut Belanja</a>
+					</div>
 
                 </div>
                 <!-- End Content Shoping Cart -->

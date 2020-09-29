@@ -43,76 +43,14 @@
     $(document).ready(function() {
         var grid
         var gridLength
-        validator = $("#productForm").validate({
-            rules: {
-                nama: {
-                    required: true
-                },
-                harga_asli: {
-                    required: true
-                },
-                disc: {
-                    required: true,
-                    min: 0,
-                    max: 100
-                },
-                harga_disc: {
-                    required: true
-                }
-            },
-            messages: {
-                nama: {
-                    required: 'Masukkan nama produk'
-                },
-                harga_asli: {
-                    required: 'Masukkan harga produk'
-                },
-                disc: {
-                    required: 'Masukkan disc produk'
-                },
-                harga_disc: {
-                    required: 'Masukkan harga produk'
-                }
-            },
-            submitHandler: function(form, e) {
-                e.preventDefault()
-                data = $(form).serialize()
-                // console.log(data)
-                $.ajax({
-                    type: "post",
-                    url: "<?= base_url('insert_update_product') ?>",
-                    data: data,
-                    success: function(res) {
-                        // console.log('success', res)
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil',
-                            text: 'Produk berhasil ditambahkan',
-                            showConfirmButton: false,
-                            timer: 0,
-                            onBeforeOpen: () => {
-                                Swal.showLoading()
-                            },
-                        })
-                        setTimeout(() => {
-                            window.location.href = '<?= base_url('merchant') ?>'
-                        }, 1000)
-                    },
-                    error: function(res) {
-                        // console.log('error', res)
-                        console.log(res)
-                    }
-                })
-            }
-        })
         $('#modalAddProduct').on('shown.bs.modal', () => {
             $("#productForm").find('input.error').removeClass('error')
         })
         $('.add-product').click(function() {
             $('.title-modal-product').html('Tambah Produk');
-            validator.resetForm();
-            validator.reset();
-            $("#productForm").find('input, textarea, option').val('')
+            validator.resetForm()
+            validator.reset()
+            $("#productForm").find('input, textarea, select').val('')
             $("#productForm").find('input.error').removeClass('error')
             $('#modalAddProduct').modal('show')
         })
@@ -165,7 +103,7 @@
                 dataType: "json",
                 success: function(res) {
                     // console.log(res)
-                    gridLength = (res.length + 1) * 3
+                    // gridLength = (res.length + 1) * 3
                     imageProduct = ''
                     if (grid) {
                         grid.removeAll()
@@ -215,7 +153,8 @@
                                 handles: 's'
                             },
                             column: 12,
-                            row: gridLength
+                            row: 12
+                            // row: gridLength
                         })
                     }
                     $.unblockUI()
@@ -224,13 +163,14 @@
         })
         $('#kategori').change(function(e) {
             e.preventDefault()
-            kategori = $('#kategori').val()
+            kategori = $( "#kategori option:selected" ).val()
+            // console.log(kategori)
             if (kategori > 0) {
                 $.ajax({
                     url: "<?= base_url() ?>on_change_category/" + kategori,
                     dataType: "json",
                     success: function(res) {
-                        // console.log(response)
+                        // console.log(res)
                         subKategori = '<option value="">Semua Sub Kategori</option>'
                         if (res.length) {
                             $.each(res, function(i, v) {
@@ -269,6 +209,7 @@
             var file
             var url
 
+            // console.log(files)
             if (files && files.length > 0) {
                 file = files[0]
 
@@ -395,6 +336,68 @@
                     })
                 }
             })
+        })
+        validator = $("#productForm").validate({
+            rules: {
+                nama: {
+                    required: true
+                },
+                harga_asli: {
+                    required: true
+                },
+                disc: {
+                    required: true,
+                    min: 0,
+                    max: 100
+                },
+                harga_disc: {
+                    required: true
+                }
+            },
+            messages: {
+                nama: {
+                    required: 'Masukkan nama produk'
+                },
+                harga_asli: {
+                    required: 'Masukkan harga produk'
+                },
+                disc: {
+                    required: 'Masukkan disc produk'
+                },
+                harga_disc: {
+                    required: 'Masukkan harga produk'
+                }
+            },
+            submitHandler: function(form, e) {
+                e.preventDefault()
+                data = $(form).serialize()
+                // console.log(data)
+                $.ajax({
+                    type: "post",
+                    url: "<?= base_url('insert_update_product') ?>",
+                    data: data,
+                    success: function(res) {
+                        // console.log('success', res)
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Produk berhasil ditambahkan',
+                            showConfirmButton: false,
+                            timer: 0,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        })
+                        setTimeout(() => {
+                            window.location.href = '<?= base_url('merchant') ?>'
+                        }, 1000)
+                    },
+                    error: function(res) {
+                        // console.log('error', res)
+                        console.log(res)
+                    }
+                })
+            }
         })
         // END CROP IMAGE
     })

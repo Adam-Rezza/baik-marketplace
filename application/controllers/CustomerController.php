@@ -31,6 +31,8 @@ class CustomerController extends CI_Controller
 		$data['search_sub_category'] = null;
 		if (($this->session->userdata(SESS . 'id'))) {
 			$data['cart'] = $this->customer->findCartByUserIdAndNotTransactionId($this->session->userdata(SESS . 'id'))->result();
+			$data['notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESS . 'id')], 'datetime', 'desc', 100, 0)->result();
+			$data['unread_notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESS . 'id'), 'read' => 0], 'datetime', 'desc', 100, 0)->num_rows();
 		}
 		return $data;
 	}
@@ -61,7 +63,7 @@ class CustomerController extends CI_Controller
 
 		$where_category = ['id' => $category];
 		$data['search_category'] = $this->customer->get('kategori', '*', $where_category)->row();
-		
+
 		$where_sub_category = ['id' => $sub_category, 'parent' => $category];
 		$data['search_sub_category'] =  $sub_category ? $this->customer->get('sub_kategori', '*', $where_sub_category)->row() : null;
 
@@ -71,8 +73,8 @@ class CustomerController extends CI_Controller
 			$data['url'] .= $sub_category ? '%26sub_category=' . $sub_category : "";
 
 			$data['page'] = $page;
-			$data['page_max'] = round($this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1)*20)->num_rows() / 20) + 1;
-			$data['product'] = $this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1)*20)->result();
+			$data['page_max'] = round($this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1) * 20)->num_rows() / 20) + 1;
+			$data['product'] = $this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1) * 20)->result();
 
 			$this->template->template($data);
 		} else {
@@ -91,7 +93,7 @@ class CustomerController extends CI_Controller
 
 		$where_category = ['id' => $category];
 		$data['search_category'] = $this->customer->get('kategori', '*', $where_category)->row();
-		
+
 		$where_sub_category = ['id' => $sub_category, 'parent' => $category];
 		$data['search_sub_category'] =  $sub_category ? $this->customer->get('sub_kategori', '*', $where_sub_category)->row() : null;
 
@@ -102,8 +104,8 @@ class CustomerController extends CI_Controller
 			$data['url'] .= $sub_category ? '%26sub_category=' . $sub_category : "";
 
 			$data['page'] = $page;
-			$data['page_max'] = round($this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1)*20)->num_rows() / 20) + 1;
-			$data['product'] = $this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1)*20)->result();
+			$data['page_max'] = round($this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1) * 20)->num_rows() / 20) + 1;
+			$data['product'] = $this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1) * 20)->result();
 			// var_dump($data['page_max']);
 			$this->template->template($data);
 		} else {
@@ -124,6 +126,17 @@ class CustomerController extends CI_Controller
 		$where_product_pictures = ['del' => 0, 'produk_id' => $id];
 		$data['product_pictures'] = $this->customer->get('gambar_produk', '*', $where_product_pictures, 'urutan', 'ASC')->result();
 
+		$where_qna = ['del' => 0, 'produk_id' => $id, 'parent' => '0'];
+		$data['qna'] = $this->customer->getQna($where_qna, 'created', 'DESC')->result();
+		foreach ($data['qna'] as $f) {
+			$where_reply_qna = ['del' => 0, 'produk_id' => $id, 'parent' => $f->id];
+			$data['reply_qna'][$f->id] = $this->customer->getQna($where_reply_qna, 'created', 'ASC')->result();
+		}
+
+		$where_review = ['del' => 0, 'produk_id' => $id];
+		$data['review'] = $this->customer->getReview($where_review, 'created', 'DESC')->result();
+		$data['review_qualified'] = $this->review_qualified($this->session->userdata(SESS . 'id'), $id);
+
 		$this->template->template($data);
 	}
 
@@ -140,7 +153,7 @@ class CustomerController extends CI_Controller
 		$this->template->template($data);
 	}
 
-	public function my_account()
+	public function my_account($on_shopping = null)
 	{
 		$this->session_check();
 		$data = $this->init();
@@ -149,31 +162,11 @@ class CustomerController extends CI_Controller
 		$data['vitamin'] = 'account/index_vitamin';
 		$data['address'] = $this->customer->findAddressByUserId($this->session->userdata(SESS . 'id'))->row();
 		$data['province'] = $this->customer->get('provinsi', '*')->result();
+		$data['user'] = $this->customer->get('user','id, username, nama, telp, gambar',['id'=>$this->session->userdata(SESS.'id')])->row();
+		$data['on_shopping'] = $on_shopping != null ? true : false;
+		$this->session->set_flashdata('checkout', $on_shopping != null ? true : false);
 		// print_r($data['address']);
-
 		$this->template->template($data);
-	}
-
-	public function save_address()
-	{
-		$data = [
-			'user_id' => $this->session->userdata(SESS . 'id'),
-			'alamat' => $this->input->post('alamat'),
-			'provinsi' => $this->input->post('provinsi'),
-			'kota' => $this->input->post('kabupaten'),
-			'kecamatan' => $this->input->post('kecamatan'),
-			'kelurahan' => $this->input->post('kelurahan'),
-			'def' => 1,
-			'del' => 0
-		];
-		$id = $this->input->post('alamat_id');
-		if ($id) {
-			$result = $this->customer->update('alamat', $data, $id);
-			echo $result ? 'true' : 'false';
-		} else {
-			$result = $this->customer->insert('alamat', $data);
-			echo $result ? 'true' : 'false';
-		}
 	}
 
 	public function my_order()
@@ -183,10 +176,11 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'order/index';
 		$data['vitamin'] = 'order/index_vitamin';
 
-		$data['transaction'] = $this->customer->findOrderByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'id'))->result();
+		$data['transaction'] = $this->customer->findTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'id'))->result();
 		foreach ($data['transaction'] as $f) {
-			$data['order'][$f->id] = $this->customer->findOrderByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
+			$data['order'][$f->id] = $this->customer->findTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
 		}
+		$data['user'] = $this->customer->get('user','id, username, nama, telp, gambar',['id'=>$this->session->userdata(SESS.'id')])->row();
 		// var_dump($data['transaction']);
 		$this->template->template($data);
 	}
@@ -198,33 +192,124 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'order/index';
 		$data['vitamin'] = 'order/index_vitamin';
 
-		$data['transaction'] = $this->customer->findCompleteOrderByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'id'))->result();
+		$data['transaction'] = $this->customer->findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'id'))->result();
 		foreach ($data['transaction'] as $f) {
-			$data['order'][$f->id] = $this->customer->findCompleteOrderByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
+			$data['order'][$f->id] = $this->customer->findCompleteTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
 		}
+		$data['user'] = $this->customer->get('user','id, username, nama, telp, gambar',['id'=>$this->session->userdata(SESS.'id')])->row();
 		// var_dump($data['transaction']);
 		$this->template->template($data);
 	}
 
-	public function get_kabupaten($id_prov)
+	//QNA and REVIEW
+
+	public function insert_qna($product_id)
 	{
-		$where = ['id_prov' => $id_prov];
-		$result = $this->customer->get('kabupaten', '*', $where)->result();
-		echo json_encode($result);
+		if ($this->session->userdata(SESS . 'id')) {
+			$data = [
+				'user_id' => $this->session->userdata(SESS . 'id'),
+				'produk_id' => $product_id,
+				'created' => date('Y-m-d H:i:s'),
+				'msg' => $this->input->post('discuss-input'),
+			];
+			if ($this->session->userdata(SESS . 'id')) {
+				$product = $this->customer->get('produk', '*', ['id' => $product_id])->row();
+				if ($this->session->userdata(SESS . 'merchant_id') == $product->toko_id) {
+					$data['toko_id'] = $this->session->userdata(SESS . 'merchant_id');
+				}
+				$this->customer->insert('qna', $data);
+			}
+			redirect(base_url('product/' . $product_id));
+		}
 	}
 
-	public function get_kecamatan($id_kab)
+	public function reply_qna($product_id, $qna_id)
 	{
-		$where = ['id_kab' => $id_kab];
-		$result = $this->customer->get('kecamatan', '*', $where)->result();
-		echo json_encode($result);
+		if ($this->session->userdata(SESS . 'id')) {
+			$data = [
+				'user_id' => $this->session->userdata(SESS . 'id'),
+				'produk_id' => $product_id,
+				'created' => date('Y-m-d H:i:s'),
+				'msg' => $this->input->post('discuss-input'),
+				'parent' => $qna_id,
+			];
+			if ($this->session->userdata(SESS . 'id')) {
+				$product = $this->customer->get('produk', '*', ['id' => $product_id])->row();
+				if ($this->session->userdata(SESS . 'merchant_id') == $product->toko_id) {
+					$data['toko_id'] = $this->session->userdata(SESS . 'merchant_id');
+				}
+				$this->customer->insert('qna', $data);
+			}
+			redirect(base_url('product/' . $product_id));
+		}
 	}
 
-	public function get_kelurahan($id_kec)
+	public function edit_qna($product_id, $qna_id)
 	{
-		$where = ['id_kec' => $id_kec];
-		$result = $this->customer->get('kelurahan', '*', $where)->result();
-		echo json_encode($result);
+		if ($this->session->userdata(SESS . 'id')) {
+			$data = [
+				'msg' => $this->input->post('discuss-input'),
+			];
+			$verifUser = $this->customer->get('qna', 'user_id', ['id' => $qna_id])->row();
+			if ($this->session->userdata(SESS . 'id') == $verifUser->user_id) {
+				$this->customer->update('qna', $data, $qna_id);
+			}
+			redirect(base_url('product/' . $product_id));
+		}
+	}
+
+	public function insert_review($product_id)
+	{
+		$review_qualified = $this->review_qualified($this->session->userdata(SESS . 'id'), $product_id);
+		$product = $this->customer->get('produk', '*', ['id' => $product_id])->row();
+		// var_dump($review_qualified);
+		if ($review_qualified) {
+			$config['upload_path']          = './public/img/review/';
+			$config['allowed_types']        = 'gif|jpg|png';
+			$config['file_name']            = $product_id . uniqid();
+			$config['overwrite']			= true;
+			$config['max_size']             = 1024; // 1MB
+			// $config['max_width']            = 1024;
+			// $config['max_height']           = 768;
+
+			$this->load->library('upload', $config);
+
+			$data = [
+				'user_id' => $this->session->userdata(SESS . 'id'),
+				'produk_id' => $product_id,
+				'rating' => $this->input->post('star-review'),
+				'msg' => $this->input->post('msg-review'),
+				'transaksi_id' => $review_qualified,
+				'created' => date('Y-m-d H:i:s'),
+			];
+			if ($this->upload->do_upload('image-review')) {
+				$data['gambar'] = $this->upload->data("file_name");
+			}
+			$this->customer->insert('review', $data);
+
+			$data_produk = [
+				'rating' => ((($product->rating * $product->rating_count) + $this->input->post('star-review')) / ($product->rating_count + 1)),
+				'rating_count' => $product->rating_count + 1
+			];
+			$this->customer->update('produk', $data_produk, $product_id);
+			redirect(base_url('product/' . $product_id));
+		}
+	}
+
+	private function review_qualified($user_id, $product_id)
+	{
+		$transaksi = $this->customer->findLatestCompleteTransactionByUserIdAndProductIdLastWeek($user_id, $product_id)->row();
+		if ($transaksi) {
+			$where_review = [
+				'user_id' => $user_id,
+				'produk_id' => $product_id,
+				'transaksi_id' => $transaksi->id
+			];
+			$review = $this->customer->get('review', '*', $where_review)->num_rows();
+			return $review > 0 ? false : $transaksi->id;
+		} else {
+			return false;
+		}
 	}
 }
 

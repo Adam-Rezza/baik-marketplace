@@ -4,46 +4,48 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link
-        href="https://fonts.googleapis.com/css?family=Montserrat%7CRoboto:100,300,400,500,700,900%7CRoboto+Condensed:100,300,400,500,700"
-        rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/icon-font-linea.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/themify-icons.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/style.css?12">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/effect.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/home.css?12">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/owl.theme.default.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/owl.carousel.min.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/responsive.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/multirange.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/slick-theme.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/slick.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/category.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/product.css">
-    <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/cartpage.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat%7CRoboto:100,300,400,500,700,900%7CRoboto+Condensed:100,300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/icon-font-linea.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/themify-icons.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/style.css?12">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/effect.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/home.css?12">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/owl.theme.default.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/owl.carousel.min.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/responsive.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/multirange.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/slick-theme.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/slick.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/category.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/product.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/cartpage.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" integrity="sha256-jKV9n9bkk/CTP8zbtEtnKaKf+ehRovOYeKoyfthwbC8=" crossorigin="anonymous" />
-    
-	<!-- <link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/icon-font-linea.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/multirange.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/themify-icons.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/style.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/effect.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/product.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/slick.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/slick-theme.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/category.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/owl.theme.default.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/owl.carousel.min.css">
-	<link rel="stylesheet" type="text/css" href="<?=base_url();?>public/megastore/css/responsive.css"> -->
+
+    <!-- <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/icon-font-linea.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/multirange.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/themify-icons.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/style.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/effect.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/product.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/slick.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/slick-theme.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/category.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/owl.theme.default.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/owl.carousel.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/responsive.css"> -->
 </head>
 <style>
+    p {
+        margin: 0;
+    }
+
     .clearfix .logo img {
         height: 38px;
         width: auto;
@@ -54,20 +56,21 @@
         width: 100%;
     }
 
-    .category-title, .name-title-box{
+    .category-title,
+    .name-title-box {
         font-size: 20px !important;
     }
 
-    .title-product a{
+    .title-product a {
         text-transform: none;
         display: inline-block;
     }
 
-    .title-merchant{
+    .title-merchant {
         margin: 0px;
     }
 
-    .title-merchant a{
+    .title-merchant a {
         font-weight: none;
         color: #2b2b2b;
         font-size: 12px;
@@ -76,7 +79,7 @@
         margin: 0px;
     }
 
-    .title-merchant .icon-merchant{
+    .title-merchant .icon-merchant {
         font-size: small;
     }
 
@@ -88,12 +91,14 @@
     .product-sold {
         font-size: 11px;
     }
-    
+
     .image-product {
         margin-bottom: 0px;
     }
 
-    .btn-sub-qty, .btn-add-qty, .btn-qty{
+    .btn-sub-qty,
+    .btn-add-qty,
+    .btn-qty {
         width: 30px;
         height: 30px;
         font-size: 20px;
@@ -101,7 +106,7 @@
         font-weight: bold;
     }
 
-    .btn-qty{
+    .btn-qty {
         width: 30px;
         font-weight: normal !important;
     }
@@ -114,7 +119,8 @@
         margin-bottom: 0px;
     }
 
-    .menu-web > ul li p, .menu-mobile-left-content > ul li p {
+    .menu-web>ul li p,
+    .menu-mobile-left-content>ul li p {
         padding-left: 30px;
     }
 
@@ -145,12 +151,12 @@
         height: auto;
     }
 
-    .ranking-product-category{
+    .ranking-product-category {
         position: absolute;
         bottom: 5px;
         right: 15px;
     }
-    
+
     .product-card {
         background-color: #fff;
         padding: 15px;
@@ -163,7 +169,7 @@
         padding-bottom: 5px;
     }
 
-    .msg-discuss{
+    .msg-discuss {
         padding: 25px 10px 0px 10px;
         border: 1px solid #999999;
         border-radius: 20px;
@@ -172,7 +178,7 @@
         position: relative;
     }
 
-    .msg-discuss:first-child(){
+    .msg-discuss:first-child() {
         margin-top: none;
     }
 
@@ -186,7 +192,7 @@
         color: #fff;
     }
 
-    .msg-discuss-reply:nth-child(2n){
+    .msg-discuss-reply:nth-child(2n) {
         background-color: #659dfc;
     }
 
@@ -198,7 +204,7 @@
         font-size: 12px;
     }
 
-    .msg-time{
+    .msg-time {
         float: right;
         position: absolute;
         top: 5px;
@@ -206,25 +212,25 @@
         font-size: 12px;
     }
 
-    .msg-content{
+    .msg-content {
         clear: both;
         bottom: 0px;
     }
 
-    .msg-content-reply{
+    .msg-content-reply {
         position: absolute;
         bottom: 5px;
         right: 12px;
     }
 
-    .msg-content-star{
+    .msg-content-star {
         position: absolute;
         bottom: 5px;
         right: 12px;
         color: #f68e56;
     }
 
-    .msg-content-reply:hover{
+    .msg-content-reply:hover {
         cursor: pointer;
     }
 
@@ -244,17 +250,17 @@
     .btn-daftar-toko:hover {
         background: #c14e00;
     }
-    
-    .form-input .auth-redirect{
+
+    .form-input .auth-redirect {
         clear: both;
         display: block;
     }
-    
-    .form-input input.error{
+
+    .form-input input.error {
         border: 1px solid #ff0000;
     }
-    
-    .form-input label.error{
+
+    .form-input label.error {
         color: #ff0000;
         font-size: 12px;
         margin: 0px;
@@ -280,11 +286,23 @@
         border: 2px #ff0000;
     }
 
-    @media only screen and (max-width: 480px){
+    .total-order {
+        text-align: center;
+        margin-left: 7px;
+        padding: 5px 7px;
+        background: #fe6600;
+        border-radius: 50%;
+        font-family: 'Montserrat', sans-serif;
+        color: #fff;
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 480px) {
         .price-product {
             margin-bottom: 0;
         }
-        .ranking-product-category{
+
+        .ranking-product-category {
             margin-top: 0;
         }
 

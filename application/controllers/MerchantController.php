@@ -13,16 +13,29 @@ class MerchantController extends CI_Controller
 
 	public function init()
 	{
-		$where_category = ['active' => 1, 'del' => 0];
-		$data['category'] = $this->merchant->get('kategori', '*', $where_category, 'urutan', 'ASC')->result();
-		foreach ($data['category'] as $f) {
-			$where_sub_category = ['active' => 1, 'del' => 0, 'parent' => $f->id];
-			$data['sub_category'][$f->id] = $this->merchant->get('sub_kategori', '*', $where_sub_category, 'urutan', 'ASC')->result();
+		if ($this->session->userdata(SESS . 'merchant_id')) {
+			$where_category = ['active' => 1, 'del' => 0];
+			$data['category'] = $this->merchant->get('kategori', '*', $where_category, 'urutan', 'ASC')->result();
+			foreach ($data['category'] as $f) {
+				$where_sub_category = ['active' => 1, 'del' => 0, 'parent' => $f->id];
+				$data['sub_category'][$f->id] = $this->merchant->get('sub_kategori', '*', $where_sub_category, 'urutan', 'ASC')->result();
+			}
+			$data['order_1'] = $this->merchant->get('transaksi', '*', ['toko_id' => $this->session->userdata(SESS . 'merchant_id'), 'status' => 1])->num_rows();
+			$data['order_2'] = $this->merchant->get('transaksi', '*', ['toko_id' => $this->session->userdata(SESS . 'merchant_id'), 'status' => 2])->num_rows();
+			$data['order_3'] = $this->merchant->get('transaksi', '*', ['toko_id' => $this->session->userdata(SESS . 'merchant_id'), 'status' => 3])->num_rows();
+			$data['order_9'] = $this->merchant->get('transaksi', '*', ['toko_id' => $this->session->userdata(SESS . 'merchant_id'), 'status' => 9])->num_rows();
+			$data['order_10'] = $this->merchant->get('transaksi', '*', ['toko_id' => $this->session->userdata(SESS . 'merchant_id'), 'status' => 10])->num_rows();
+
+			$data['keyword'] = '';
+			$data['search_category'] = null;
+			$data['search_sub_category'] = null;
+
+			$data['merchant'] = $this->merchant->get('toko', 'id, user_id, nama, telp, gambar', ['id' => $this->session->userdata(SESS . 'merchant_id')])->row();
+
+			return $data;
+		} else {
+			redirect(base_url());
 		}
-		$data['keyword'] = '';
-		$data['search_category'] = null;
-		$data['search_sub_category'] = null;
-		return $data;
 	}
 
 	public function index()
@@ -37,6 +50,7 @@ class MerchantController extends CI_Controller
 			$data['title']   = 'Daftar Toko';
 			$data['content'] = 'auth/index';
 			$data['vitamin'] = 'auth/index_vitamin';
+			$data['province'] = $this->customer->get('provinsi', '*')->result();
 
 			// var_dump($this->session->userdata());
 			$this->customer_template->template($data);
@@ -65,25 +79,33 @@ class MerchantController extends CI_Controller
 		$data['vitamin'] = 'order/index_vitamin';
 
 		$data['status'] = $status;
-		$data['transaction'] = $this->merchant->findOrderByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'merchant_id'), $status)->result();
+		$data['transaction'] = $this->merchant->findTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'merchant_id'), $status)->result();
 		foreach ($data['transaction'] as $f) {
-			$data['order'][$f->id] = $this->merchant->findOrderByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'merchant_id'), $status, $f->id)->result();
+			$data['order'][$f->id] = $this->merchant->findTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'merchant_id'), $status, $f->id)->result();
 		}
 		// var_dump($data['transaction']);
 		$this->template->template($data);
 	}
 
+	public function get_transaction_detail($transaction_id)
+	{
+		$result = $this->merchant->findTransactionByMerchantIdAndTransactionId($this->session->userdata(SESS . 'merchant_id'), $transaction_id)->result();
+		echo json_encode($result);
+	}
+
 	public function get_product_detail($id)
 	{
-		$result = $this->merchant->findProductById($id)->row();
-		echo json_encode($result);
+		$where_product = ['del' => 0, 'ban' => 0, 'id' => $id];
+		$product = $this->merchant->get('produk', '*', $where_product)->row();
+
+		echo json_encode($product);
 	}
 
 	public function on_change_category($category_id)
 	{
 		$where_sub_category = ['active' => 1, 'del' => 0, 'parent' => $category_id];
 		$sub_category = $this->merchant->get('sub_kategori', '*', $where_sub_category, 'urutan', 'ASC')->result();
-		// $sub_category = $this->merchant->findSubCategoriByParent($CategoriId)->result();
+
 		echo json_encode($sub_category);
 	}
 
@@ -91,7 +113,7 @@ class MerchantController extends CI_Controller
 	{
 		$where_images = ['del' => 0, 'produk_id' => $product_id];
 		$images = $this->merchant->get('gambar_produk', '*', $where_images, 'urutan', 'ASC')->result();
-		// $images = $this->merchant->findImagesByProductId($product_id)->result();
+
 		echo json_encode($images);
 	}
 
@@ -106,21 +128,25 @@ class MerchantController extends CI_Controller
 		$data['kategori_id'] = $this->input->post('kategori');
 		$data['sub_kategori_id'] = $this->input->post('sub_kategori');
 		$data['desc'] = $this->input->post('desc');
-		if ($id) {
-			$data['modified_date'] = date('Y-m-d h:i:s');
-			if ($result = $this->merchant->update('produk', $data, $id) > 0) {
-				echo "true";
+		if ($this->session->userdata(SESS . 'merchant_id')) {
+			if ($id) {
+				$data['modified_date'] = date('Y-m-d h:i:s');
+				if ($result = $this->merchant->update_product('produk', $data, $id, $this->session->userdata(SESS . 'merchant_id')) > 0) {
+					echo "true";
+				} else {
+					echo 'false';
+				}
 			} else {
-				echo 'false';
+				$data['created_date'] = date('Y-m-d h:i:s');
+				if ($result = $this->merchant->insert('produk', $data) > 0) {
+					$data['id'] = $result;
+					echo "true";
+				} else {
+					echo 'false';
+				}
 			}
 		} else {
-			$data['created_date'] = date('Y-m-d h:i:s');
-			if ($result = $this->merchant->insert('produk', $data) > 0) {
-				$data['id'] = $result;
-				echo "true";
-			} else {
-				echo 'false';
-			}
+			echo 'false';
 		}
 	}
 

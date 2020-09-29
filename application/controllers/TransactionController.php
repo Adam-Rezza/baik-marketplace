@@ -27,29 +27,34 @@ class TransactionController extends CI_Controller
 	{
 		$user_id = $this->session->userdata(SESS . 'id');
 		$cart = $this->ci->transaction->findCartByUserIdAndNotTransactionId($user_id)->row();
-		echo json_encode($cart);
+		if ($user_id && $cart) {
+			echo json_encode($cart);
+		} else {
+			echo 'false';
+		}
 	}
 
-	public function add_to_cart($produk_id, $qty)
+	public function add_to_cart($product_id, $qty)
 	{
 		$user_id = $this->session->userdata(SESS . 'id');
-		$produk = $this->ci->transaction->findProductById($produk_id)->row();
-		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $produk_id)->row();
-		if ($cart && $produk) {
+		$where_product = ['id' => $product_id];
+		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
+		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
+		if ($user_id && $cart && $product) {
 			$data = [
 				'user_id' => $user_id,
-				'produk_id' => $produk->id,
-				'harga' => $produk->harga_disc,
-				'qty' => $cart->qty + $qty,
+				'produk_id' => $product->id,
+				'harga' => $product->harga_disc,
+				'qty' => $cart->qty + intval($qty),
 				'created_date' => date('Y-m-d h:i:s')
 			];
 			$result = $this->ci->transaction->update('keranjang', $data, $cart->id);
 			echo $result ? 'true' : 'false';
-		} else if ($produk) {
+		} else if ($user_id && $product) {
 			$data = [
 				'user_id' => $user_id,
-				'produk_id' => $produk->id,
-				'harga' => $produk->harga_disc,
+				'produk_id' => $product->id,
+				'harga' => $product->harga_disc,
 				'qty' => $qty,
 				'created_date' => date('Y-m-d h:i:s')
 			];
@@ -60,26 +65,27 @@ class TransactionController extends CI_Controller
 		}
 	}
 
-	public function update_product_cart($produk_id, $qty)
+	public function update_product_cart($product_id, $qty)
 	{
 		$user_id = $this->session->userdata(SESS . 'id');
-		$produk = $this->ci->transaction->findProductById($produk_id)->row();
-		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $produk_id)->row();
-		if ($cart && $produk) {
+		$where_product = ['id' => $product_id];
+		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
+		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
+		if ($user_id && $cart && $product) {
 			$data = [
 				'user_id' => $user_id,
-				'produk_id' => $produk->id,
-				'harga' => $produk->harga_disc,
+				'produk_id' => $product->id,
+				'harga' => $product->harga_disc,
 				'qty' => $qty,
 				'created_date' => date('Y-m-d h:i:s')
 			];
 			$result = $this->ci->transaction->update('keranjang', $data, $cart->id);
 			echo $result ? 'true' : 'false';
-		} else if ($produk) {
+		} else if ($user_id && $product) {
 			$data = [
 				'user_id' => $user_id,
-				'produk_id' => $produk->id,
-				'harga' => $produk->harga_disc,
+				'produk_id' => $product->id,
+				'harga' => $product->harga_disc,
 				'qty' => $qty,
 				'created_date' => date('Y-m-d h:i:s')
 			];
@@ -93,51 +99,131 @@ class TransactionController extends CI_Controller
 	public function checkout_transaction()
 	{
 		$user_id = $this->session->userdata(SESS . 'id');
-		$where = ['user_id' => $user_id];
 		$alamat = $this->ci->transaction->findAddressByUserId($user_id)->row();
-		// $toko_transaksi = $this->ci->transaction->getToko('keranjang', '*', $where, null, null, null, null, 'toko_id');
-		// foreach ($toko_transaksi as $f) {
-		// }
-		if ($alamat) {
-			$alamat_lengkap = $alamat->alamat . ", " . $alamat->kel . ", " . $alamat->kec . ", " . $alamat->kab . ", " . $alamat->prov;
-			$data = [
-				'penerima' => $this->session->userdata(SESS . 'nama'),
-				'telp_penerima' => $this->session->userdata(SESS . 'nama'),
-				'alamat' => $alamat_lengkap,
-				'status' => 1,
-				'created_date' => date('Y-m-d h:i:s')
-			];
-			$transaction = $this->ci->transaction->insert('transaksi', $data);
-			if($transaction){
-				$data = ['transaksi_id' => $transaction];
-				$keranjang = $this->ci->transaction->updateKeranjangByUserId($data, $user_id);
-				echo $keranjang ? 'true' : '3';
-			} else {
-				echo '2';
+
+		if ($user_id && $alamat) {
+			$toko_pemilik_keranjang = $this->ci->transaction->findMerchantOwnerCartByUserIdGroupByMerchantId($user_id)->result();
+			// echo json_encode($toko_pemilik_keranjang);
+			$status = true;
+			foreach ($toko_pemilik_keranjang as $f) {
+				$alamat_lengkap = $alamat->alamat . ", " . $alamat->kel . ", " . $alamat->kec . ", " . $alamat->kab . ", " . $alamat->prov;
+				$data = [
+					'toko_id' => $f->id,
+					'pengirim' => $f->nama,
+					'telp_pengirim' => $f->telp,
+					'user_id' => $this->session->userdata(SESS . 'id'),
+					'penerima' => $this->session->userdata(SESS . 'nama'),
+					'telp_penerima' => $this->session->userdata(SESS . 'telp'),
+					'alamat' => $alamat_lengkap,
+					'kelurahan' => $alamat->kel,
+					'kecamatan' => $alamat->kec,
+					'kota' => $alamat->kab,
+					'provinsi' => $alamat->prov,
+					'status' => 1,
+					'created_date' => date('Y-m-d h:i:s')
+				];
+				$transaction = $this->ci->transaction->insert('transaksi', $data);
+				if ($transaction) {
+					$data = ['transaksi_id' => $transaction];
+					$keranjang = $this->ci->transaction->updateKeranjangByUserIdAndMerchantId($transaction, $user_id, $f->id);
+					$msg = "Pesanan anda di teruskan ke <b>" . $f->nama . "</b>";
+					$url = "my_order";
+					$this->create_notification($user_id, $msg, $url);
+					$status = ($status && $keranjang) ? true : false;
+				} else {
+					//rollback disini
+					$status = false;
+				}
 			}
+			echo json_encode($status ? 'true' : '1');
 		} else {
-			echo '1';
+			$this->session->set_flashdata('checkout', true);
+			echo json_encode('2');
 		}
 	}
 
-	public function process_order($transaksi_id)
+	public function process_order($transaction_id)
 	{
-		$data = ['status' => 2];
-		$result = $this->transaction->update('transaksi',$data,$transaksi_id);
-		echo $result ? 'true' : 'false';
+		$data = ['status' => 2, 'proccess_date' => date('Y-m-d H:i:s')];
+		$result = $this->transaction->update('transaksi', $data, $transaction_id);
+		if ($result) {
+			$transaction = $this->transaction->get('transaksi', '*', ['id' => $transaction_id])->row();
+			$msg = "Pesanan anda sedang di proses oleh <b>" . $transaction->pengirim . "</b>";
+			$url = "my_order";
+			$this->create_notification($transaction->user_id, $msg, $url);
+		}
+		echo json_encode($result ? 'true' : 'false');
 	}
 
-	public function send_order($transaksi_id)
+	public function send_order($transaction_id)
 	{
-		$data = ['status' => 3];
-		$result = $this->transaction->update('transaksi',$data,$transaksi_id);
-		echo $result ? 'true' : 'false';
+		$data = ['status' => 3, 'shipment_date' => date('Y-m-d H:i:s')];
+		$result = $this->transaction->update('transaksi', $data, $transaction_id);
+		if ($result) {
+			$transaction = $this->transaction->get('transaksi', '*', ['id' => $transaction_id])->row();
+			$msg = "Pesanan anda sedang dikirimkan oleh <b>" . $transaction->pengirim . "</b>";
+			$url = "my_order";
+			$this->create_notification($transaction->user_id, $msg, $url);
+		}
+		echo json_encode($result ? 'true' : 'false');
 	}
 
-	public function delivered_order($transaksi_id)
+	public function delivered_order($transaction_id)
 	{
-		$data = ['status' => 9];
-		$result = $this->transaction->update('transaksi',$data,$transaksi_id);
+		$data = ['status' => 9, 'delivery_date' => date('Y-m-d H:i:s')];
+		$result = $this->transaction->update('transaksi', $data, $transaction_id);
+		$result2 = true;
+		if ($result) {
+			$product = $this->transaction->findProductByUserIdAndTransactionId($this->session->userdata(SESS . 'id'), $transaction_id)->result();
+			foreach ($product as $f) {
+				$qty_produk = ['terjual' => $f->terjual + $f->qty];
+				$update = $this->transaction->update('produk', $qty_produk, $f->produk_id);
+				$result2 = $result2 && $update ? true : false;
+			}
+			$transaction = $this->transaction->get('transaksi', '*', ['id' => $transaction_id])->row();
+			$msg = "Pesanan anda pada <b>" . $transaction->pengirim . "</b> sudah selesai";
+			$url = "my_recent_order";
+			$this->create_notification($transaction->user_id, $msg, $url);
+		}
+		echo json_encode($result && $result2 ? 'true' : 'false');
+	}
+
+	public function cancel_order($transaction_id)
+	{
+		$data = [
+			'status' => 10,
+			'failed_date' => date('Y-m-d H:i:s'),
+			'failed_reason' => $this->input->post('alasan')
+		];
+		$result = $this->transaction->update('transaksi', $data, $transaction_id);
+		if ($result) {
+			$transaction = $this->transaction->get('transaksi', '*', ['id' => $transaction_id])->row();
+			$msg = "Pesanan anda pada <b>" . $transaction->pengirim . "</b> dibatalkan";
+			$url = "my_recent_order";
+			$this->create_notification($transaction->user_id, $msg, $url);
+		}
+		echo json_encode($result ? 'true' : 'false');
+	}
+
+	// NOTIFIKASI
+
+	private function create_notification($for_user_id, $msg, $url)
+	{
+		$data = [
+			'user_id' => $for_user_id,
+			'msg' => $msg,
+			'url' => $url,
+			'read' => 0,
+			'datetime' => Date('Y-m-d H:i:s')
+		];
+		$result = $this->transaction->insert('notifikasi', $data);
+		return $result ? true : false;
+	}
+
+	public function read_notification($notification_id)
+	{
+		$data = ['read' => 1];
+		$result = $this->transaction->update('notifikasi', $data, $notification_id);
 		echo $result ? 'true' : 'false';
 	}
 }
