@@ -9,5 +9,11 @@
 	<link rel="stylesheet" href="<?= base_url(); ?>vendor/almasaeed2010/adminlte/bower_components/Ionicons/css/ionicons.min.css">
 	<link rel="stylesheet" href="<?= base_url(); ?>vendor/almasaeed2010/adminlte/dist/css/AdminLTE.css">
 	<link rel="stylesheet" href="<?= base_url(); ?>vendor/almasaeed2010/adminlte/dist/css/skins/skin-yellow-light.min.css">
+	<link rel="stylesheet" href="<?= base_url(); ?>public/css/sweetalert2.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+	<style>
+		.swal2-popup {
+			font-size: 1.2rem !important;
+		}
+	</style>
 </head>

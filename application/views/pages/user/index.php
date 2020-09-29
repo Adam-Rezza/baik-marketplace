@@ -1,7 +1,7 @@
 <section class="content-header">
 	<h1><?= $title; ?></h1>
 	<ol class="breadcrumb">
-		<li><a href="<?= site_url(); ?>admin/account/index"><i class="fa fa-home"></i> Home</a></li>
+		<li><a href="<?= site_url('dashboard'); ?>"><i class="fa fa-home"></i> Home</a></li>
 		<li class="active"><i class="fa fa-table"></i> <?= $title; ?></a></li>
 	</ol>
 </section>
@@ -41,23 +41,27 @@
 	</div>
 </section>
 
-<!-- modal lihat produk -->
-<div class="modal fade" id="modal_lihat_produk">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">×</span></button>
-				<h4 class="modal-title">List Produk - <span id="nama_toko">nama toko</span></h4>
-			</div>
-			<div class="modal-body">
-				<!-- isi list produk -->
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+<form id="form_reset">
+	<div class="modal fade" id="modal_reset">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span></button>
+					<h4 class="modal-title">Reset Password - <span id="nama_user"></span></h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="new_password">New Password</label>
+						<input type="password" class="form-control" id="new_password" name="new_password" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" id="id_user" name="id_user">
+					<button type="submit" class="btn btn-success">Update Password</button>
+					<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+				</div>
 			</div>
 		</div>
-		<!-- /.modal-content -->
 	</div>
-	<!-- /.modal-dialog -->
-</div>
+</form>

@@ -51,6 +51,7 @@ desired effect
 	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js"></script>
 	<script src="<?= base_url(); ?>public/js/jquery.blockUI.js"></script>
+	<script src="<?= base_url(); ?>public/js/sweetalert2.all.min.js"></script>
 
 	<!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
