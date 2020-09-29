@@ -72,7 +72,7 @@
 	</div>
 </section>
 
-<form id="form_edit">
+<form id="form_edit" method="post" enctype="multipart/form-data">
 	<div class="modal fade" id="modal-edit">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -86,12 +86,6 @@
 						<input type="text" class="form-control" id="nama_edit" name="nama_edit" required>
 					</div>
 					<div class="form-group">
-						<label for="parent_edit">Parent</label>
-						<select class="form-control" id="parent_edit" name="parent_edit" required>
-							<option value="no">No Parent</option>
-						</select>
-					</div>
-					<div class="form-group">
 						<label for="active_edit">Status</label>
 						<select class="form-control" id="active_edit" name="active_edit" required>
 							<option value="1">Aktif</option>
@@ -102,6 +96,43 @@
 				<div class="modal-footer">
 					<input type="hidden" id="id_edit" name="id_edit">
 					<button type="submit" id="edit_submit" class="btn btn-primary">Edit</button>
+					<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
+
+<form id="form_edit_sub">
+	<div class="modal fade" id="modal-edit_sub">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Edit Sub Kategori</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="nama_edit">Sub Kategori</label>
+						<input type="text" class="form-control" id="nama_edit_sub" name="nama_edit_sub" required>
+					</div>
+					<div class="form-group">
+						<label for="parent_edit">Parent</label>
+						<select class="form-control" id="parent_edit_sub" name="parent_edit_sub" required>
+							<option value="no">No Parent</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="active_edit">Status</label>
+						<select class="form-control" id="active_edit_sub" name="active_edit_sub" required>
+							<option value="1">Aktif</option>
+							<option value="0">Tidak Aktif</option>
+						</select>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" id="id_edit_sub" name="id_edit_sub">
+					<button type="submit" id="edit_submit_sub" class="btn btn-primary">Edit</button>
 					<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
 				</div>
 			</div>

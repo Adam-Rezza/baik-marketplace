@@ -7,10 +7,10 @@ $route['404_override']         = 'My404';
 $route['translate_uri_dashes'] = FALSE;
 
 # AUTH
-$route['user/register'] = 'AuthController/register';
-$route['user/login'] = 'AuthController/index';
-$route['user/logout'] = 'AuthController/logout';
-$route['username_check_r'] = 'AuthController/unique_username';
+$route['user/register']     = 'AuthController/register';
+$route['user/login']        = 'AuthController/index';
+$route['user/logout']       = 'AuthController/logout';
+$route['username_check_r']  = 'AuthController/unique_username';
 $route['merchant_register'] = 'AuthController/register';
 $route['register_merchant'] = 'AuthController/register_merchant';
 $route['get_kabupaten/(:any)'] = 'AuthController/get_kabupaten/$1';
@@ -58,8 +58,8 @@ $route['upload_image_product'] = 'MerchantController/upload_image_product';
 $route['get_transaction_detail/(:any)'] = 'MerchantController/get_transaction_detail/$1';
 
 # TRANSAKSI
-$route['get_cart_detail'] = 'TransactionController/get_cart_detail';
-$route['add_to_cart/(:any)/(:any)'] = 'TransactionController/add_to_cart/$1/$2';
+$route['get_cart_detail']                   = 'TransactionController/get_cart_detail';
+$route['add_to_cart/(:any)/(:any)']         = 'TransactionController/add_to_cart/$1/$2';
 $route['update_product_cart/(:any)/(:any)'] = 'TransactionController/update_product_cart/$1/$2';
 $route['checkout_transaction'] = 'TransactionController/checkout_transaction';
 
@@ -68,17 +68,20 @@ $route['send_order/(:any)'] = 'TransactionController/send_order/$1';
 $route['delivered_order/(:any)'] = 'TransactionController/delivered_order/$1';
 $route['cancel_order/(:any)'] = 'TransactionController/cancel_order/$1';
 
-#NOTIFIKASI
+# NOTIFIKASI
 $route['read_notification/(:any)'] = 'TransactionController/read_notification/$1';
 
 
-# ADMIN MODUL
+
+#########################################################################
+############################## ADMIN MODUL ##############################
+#########################################################################
 # DASHBOARD
 $route['dashboard'] = 'DashboardController/index';
 
 # AUTH
+$route['login']  = 'LoginController/index';
 $route['logout'] = 'LoginController/logout';
-$route['admins/login']   = 'LoginController/login';
 
 # ADMINS
 $route['admins']            = 'AdminsController/index';
@@ -95,9 +98,12 @@ $route['datatables/toko']           = 'TokoController/datatables';
 # KATEGORI
 $route['kategori']             = 'KategoriController/index';
 $route['kategori/show']        = 'KategoriController/show';
+$route['kategori/show_sub']    = 'KategoriController/show_sub';
 $route['kategori/store']       = 'KategoriController/store';
 $route['kategori/update']      = 'KategoriController/update';
+$route['kategori/update_sub']  = 'KategoriController/update_sub';
 $route['kategori/destroy']     = 'KategoriController/destroy';
+$route['kategori/destroy_sub'] = 'KategoriController/destroy_sub';
 $route['kategori/sub']         = 'KategoriController/sub';
 $route['kategori/get_parent']  = 'KategoriController/get_parent';
 $route['kategori/up_parent']   = 'KategoriController/up_parent';

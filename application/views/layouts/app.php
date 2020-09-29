@@ -50,7 +50,7 @@ desired effect
 	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="<?= base_url(); ?>vendor/almasaeed2010/adminlte/dist/js/adminlte.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70.0-2014.11.23/jquery.blockUI.min.js" integrity="sha512-Z84iqqN8wVpPeBsDTKA6zWs3nguaCk7bvDD+KNLbDFNmWVLHsRDJd0Xr/wKrl95o7mSvN8YF69hXuZVzMGzgGw==" crossorigin="anonymous"></script>
+	<script src="<?= base_url(); ?>public/js/jquery.blockUI.js"></script>
 
 	<!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the

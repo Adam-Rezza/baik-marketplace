@@ -23,7 +23,7 @@ class BannerController extends CI_Controller
 	public function show()
 	{
 		$id = $this->input->get('id');
-		$exec = $this->mcore->get('banner', '*', ['id' => $id, 'del' => NULL]);
+		$exec = $this->mcore->get('banner', '*', ['id' => $id, 'del' => FALSE]);
 
 		if ($exec->num_rows() == 0) {
 			echo json_encode([
@@ -65,7 +65,7 @@ class BannerController extends CI_Controller
 			$ret = ['code' => 500, 'msg' => $this->upload->display_errors()];
 		} else {
 			$gambar_name = $this->upload->data('file_name');
-			$last_urutan = $this->mcore->get('banner', 'urutan', ['del' => NULL, 'active' => '1'], 'urutan', 'DESC');
+			$last_urutan = $this->mcore->get('banner', 'urutan', ['del' => '0', 'active' => '1'], 'urutan', 'DESC');
 
 			if ($last_urutan->num_rows() == 0) {
 				$last_urutan = 1;
@@ -76,8 +76,8 @@ class BannerController extends CI_Controller
 				'gambar' => $gambar_name,
 				'url'    => $url,
 				'urutan' => $last_urutan,
-				'active' => $active,
-				'del'    => NULL,
+				'active' => ($active == '1') ? TRUE : FALSE,
+				'del'    => FALSE,
 			];
 
 			$exec = $this->mcore->store('banner', $data);
@@ -128,7 +128,7 @@ class BannerController extends CI_Controller
 			$data = [
 				'gambar' => $gambar_name,
 				'url'    => $url,
-				'active' => $active,
+				'active' => ($active == '1') ? TRUE : FALSE,
 			];
 
 			$exec = $this->mcore->update('banner', $data, ['id' => $id]);
@@ -147,7 +147,7 @@ class BannerController extends CI_Controller
 	{
 		$id = $this->input->post('id');
 
-		$object = ['del' => '1'];
+		$object = ['del' => TRUE];
 		$where  = ['id' => $id];
 		$exec   = $this->mcore->update('banner', $object, $where);
 

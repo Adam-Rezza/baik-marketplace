@@ -33,7 +33,7 @@
 			}
 			?>
 
-			<form class="form" action="<?=site_url();?>" method="post">
+			<form class="form" action="<?=site_url();?>login" method="post">
 				<div class="form-group has-feedback">
 					<input type="text" class="form-control" placeholder="Username" name="username" value="<?=set_value('username');?>" required>
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>

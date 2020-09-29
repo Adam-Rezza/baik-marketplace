@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class DashboardController extends CI_Controller {
+class DashboardController extends CI_Controller
+{
 
 	public function __construct()
 	{
@@ -15,11 +16,11 @@ class DashboardController extends CI_Controller {
 		$data['content'] = 'dashboard/index';
 		$data['vitamin'] = 'dashboard/index_vitamin';
 
-		$data['admin_count'] = $this->mcore->count(TABLE_ADMINS, ['deleted_at' => NULL]);
+		$data['admin_count'] = $this->mcore->count("admins", ['deleted_at' => NULL]);
+		$data['toko_count']  = $this->mcore->count("toko", ['active' => TRUE, 'ban' => FALSE]);
 
 		$this->template->template($data);
 	}
-
 }
 
 /* End of file DashboardController.php */
