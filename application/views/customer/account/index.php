@@ -43,15 +43,15 @@
 						<form method="post" action="" id="basicInfoForm" enctype="multipart/form-data">
 							<div class="form-input full-width clearfix relative">
 								<label>Nama *</label>
-								<input class="full-width" type="text" name="name_u" id="name_u">
+								<input class="full-width" type="text" name="name_u" id="name_u" value="<?=$user->nama?>">
 							</div>
 							<div class="form-input full-width clearfix relative">
 								<label>Username *</label>
-								<input class="full-width" type="text" name="username_u" id="username_u">
+								<input class="full-width" type="text" name="username_u" id="username_u" value="<?=$user->username?>" disabled readonly>
 							</div>
 							<div class="form-input full-width clearfix relative">
 								<label>Nomor Telepon *</label>
-								<input class="full-width" type="phone" name="phone_u" id="phone_u">
+								<input class="full-width" type="phone" name="phone_u" id="phone_u" value="<?=$user->telp?>">
 							</div>
 							<div class="form-input full-width clearfix relative text-center top-padding-15-default">
 								<button class="btn-daftar-toko full-width" id="saveBasicInfo">Simpan</button>

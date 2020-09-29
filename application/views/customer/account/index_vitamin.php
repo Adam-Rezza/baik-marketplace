@@ -87,7 +87,7 @@
             }
         })
         // Basic Info ///////////////////////////////////////////////////////
-        $("#saveBasicInfo").validate({
+        $("#basicInfoForm").validate({
             rules: {
                 name_u: {
                     required: true,
@@ -117,12 +117,13 @@
                     type: "post",
                     url: "<?= base_url('save_basic_info') ?>",
                     data: data,
+                    dataType: 'json',
                     success: function(res) {
                         // console.log('success', res)
                         if (res == 'true') {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Alamat tersimpan',
+                                title: 'Berhasil menyimpan informasi',
                                 showConfirmButton: false,
                                 timer: 0,
                                 onBeforeOpen: () => {
@@ -132,6 +133,71 @@
                             setTimeout(() => {
                                 window.location.href = (window.location.href).replaceAll('#', '')
                             }, 1000);
+                        }
+                    },
+                    error: function(res) {
+                        console.log('error', res)
+                    }
+                })
+            }
+        })
+        // Change Password ///////////////////////////////////////////////////////
+        $("#passwordForm").validate({
+            rules: {
+                password_old_u: {
+                    required: true,
+                },
+                password_u: {
+                    required: true,
+                    minlength: 5
+                },
+                password2_u: {
+                    equalTo: "#password_u"
+                }
+            },
+            messages: {
+                password_old_u: {
+                    required: "Masukkan Password lama",
+                },
+                password_u: {
+                    required: "Masukkan Password",
+                    minlength: "Password minimal 5 digit character"
+                },
+                password2_u:  "Password tidak sama",
+            },
+            submitHandler: function(form, e) {
+                e.preventDefault()
+                data = $(form).serialize()
+                $.ajax({
+                    type: "post",
+                    url: "<?= base_url('change_password') ?>",
+                    data: data,
+                    dataType: 'json',
+                    success: function(res) {
+                        // console.log('success', res == "true")
+                        if (res == "true") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Password berhasil diganti',
+                                showConfirmButton: false,
+                                timer: 0,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            })
+                            setTimeout(() => {
+                                window.location.href = (window.location.href).replaceAll('#', '')
+                            }, 1000);
+                        } else if (res == "false") {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Password lama yang anda masukan salah',
+                                showConfirmButton: false,
+                                timer: 0,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            })
                         }
                     },
                     error: function(res) {
@@ -183,6 +249,7 @@
                     type: "post",
                     url: "<?= base_url('save_address') ?>",
                     data: data,
+                    dataType: 'json',
                     success: function(res) {
                         console.log('success<?= $on_shopping ?>', res)
                         if (<?= $on_shopping ? "true" : "false" ?>) {

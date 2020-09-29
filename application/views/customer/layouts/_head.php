@@ -402,6 +402,10 @@
         margin-top: 10px;
     }
 
+    .form-input input[type="text"]:disabled {
+        background: #dedede;
+    }
+
     .form-input input.error,
     .form-input textarea.error {
         border: 1px solid #ff0000;

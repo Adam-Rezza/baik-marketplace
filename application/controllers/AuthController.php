@@ -128,7 +128,47 @@ class AuthController extends CI_Controller
 		$this->session->set_userdata(SESS . 'telp', $data['telp']);
 	}
 
-	//ALAMAT
+	################--------Change_Password--------##############################################
+
+	public function change_password()
+	{
+		$password_old = $this->input->post('password_old_u');
+		$password_new = $this->input->post('password_u');
+		$where = [
+			'id'   => $this->session->userdata(SESS . 'id'),
+		];
+		$arr = $this->authorized->get('user', 'password', $where);
+		if ($arr->num_rows() == 1) {
+			$db_pass  = $arr->row()->password;
+			if (password_verify($password_old, $db_pass)) {
+				$data = [
+					'password' => password_hash($password_new, PASSWORD_BCRYPT)
+				];
+				$result = $this->authorized->update('user', $data, $this->session->userdata(SESS . 'id'));
+				echo json_encode($result > 0 ? 'true' : 'false');
+			} else {
+				echo json_encode('false');
+			}
+		} else {
+			echo json_encode('false');
+		}
+	}
+
+	################--------Basic_Info--------##############################################
+
+	public function save_basic_info()
+	{
+		$data = [
+			'nama' => $this->input->post('name_u'),
+			'telp' => $this->input->post('phone_u'),
+		];
+		if ($this->session->userdata(SESS.'id')) {
+			$result = $this->authorized->update('user', $data, $this->session->userdata(SESS.'id'));
+			echo json_encode($result > 0 ? 'true' : 'false');
+		}
+	}
+
+	################--------Alamat--------##############################################
 
 	public function save_address()
 	{
@@ -173,7 +213,7 @@ class AuthController extends CI_Controller
 		echo json_encode($result);
 	}
 
-	// ################--------Merchant--------##############################################
+	################--------Merchant--------##############################################
 
 	public function login_merchant($user_id)
 	{
@@ -235,7 +275,7 @@ class AuthController extends CI_Controller
 		$this->session->set_userdata(SESS . 'merchant_telp', $data['telp']);
 	}
 
-	// ################--------Foto-profil--------##############################################
+	################--------Foto_Profil--------##############################################
 
 	public function upload_image_profile()
 	{

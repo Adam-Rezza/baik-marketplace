@@ -16,7 +16,9 @@ $route['register_merchant'] = 'AuthController/register_merchant';
 $route['get_kabupaten/(:any)'] = 'AuthController/get_kabupaten/$1';
 $route['get_kecamatan/(:any)'] = 'AuthController/get_kecamatan/$1';
 $route['get_kelurahan/(:any)'] = 'AuthController/get_kelurahan/$1';
+$route['save_basic_info'] = 'AuthController/save_basic_info';
 $route['save_address'] = 'AuthController/save_address';
+$route['change_password'] = 'AuthController/change_password';
 $route['upload_image_profile'] = 'AuthController/upload_image_profile';
 
 # CUSTOMER
