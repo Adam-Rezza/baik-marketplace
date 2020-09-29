@@ -101,6 +101,7 @@
 	<!-- <script src="<?= base_url() ?>public/megastore/js/sync_owl_carousel.js" defer=""></script> -->
 	<script src="<?= base_url() ?>public/megastore/js/scripts.js?123" defer=""></script>
 	<script src="<?= base_url() ?>public/megastore/js/slick.min.js" defer=""></script>
+    <script src="<?= base_url() ?>public/js/select2.min.js"></script>
 	<script src="<?= base_url() ?>public/megastore/js/sweetalert2@9" defer=""></script>
 	<script src="<?= base_url() ?>public/js/jquery.blockUI.min.js" defer=""></script>
 </body>

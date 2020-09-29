@@ -1,5 +1,5 @@
 <!-- Content Category -->
-<div class="relative container-web">
+<div class="relative container-web bottom-margin-default">
 	<div class="container">
 		<div class="row ">
 			<!-- Sider Bar -->
@@ -23,7 +23,7 @@
 			<!-- End Sider Bar -->
 			<div class="col-md-6 relative clear-padding top-padding-default left-padding-default">
 				<div class="col-sm-12 col-xs-12 relative overfollow-hidden clear-padding button-show-sidebar">
-					<p onclick="showSideBar()"><span class="ti-filter"></span> Sidebar</p>
+					<p onclick="showSideBar()"><span class="ti-filter"></span> Menu</p>
 				</div>
 				<div class="bar-category bottom-margin-default border no-border-r no-border-l no-border-t">
 					<div class="row">

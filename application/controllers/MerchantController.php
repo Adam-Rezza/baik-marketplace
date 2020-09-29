@@ -46,17 +46,35 @@ class MerchantController extends CI_Controller
 	public function auth()
 	{
 		if ($this->session->userdata(SESS . 'merchant_id') === null) {
-			$data = $this->init();
+			// $data = $this->init();
 			$data['title']   = 'Daftar Toko';
 			$data['content'] = 'auth/index';
 			$data['vitamin'] = 'auth/index_vitamin';
 			$data['province'] = $this->customer->get('provinsi', '*')->result();
+
+			$data['keyword'] = '';
+			$data['search_category'] = null;
+			$data['search_sub_category'] = null;
+			$data['notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESS . 'id')], 'datetime', 'desc', 100, 0)->result();
+			$data['unread_notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESS . 'id'), 'read' => 0], 'datetime', 'desc', 100, 0)->num_rows();
 
 			// var_dump($this->session->userdata());
 			$this->customer_template->template($data);
 		} else {
 			$this->my_product();
 		}
+	}
+
+	public function my_profile()
+	{
+		$data = $this->init();
+		$data['title']   = 'Produk Saya';
+		$data['content'] = 'account/index';
+		$data['vitamin'] = 'account/index_vitamin';
+		$data['province'] = $this->customer->get('provinsi', '*')->result();
+
+		$data['toko'] = $this->merchant->findMerchantByMerchantId($this->session->userdata(SESS . 'merchant_id'))->row();
+		$this->template->template($data);
 	}
 
 	public function my_product()
@@ -66,7 +84,7 @@ class MerchantController extends CI_Controller
 		$data['content'] = 'my_product/index';
 		$data['vitamin'] = 'my_product/index_vitamin';
 
-		$data['product'] = $this->merchant->findProductByTokoId($this->session->userdata(SESS . 'merchant_id'))->result();
+		$data['product'] = $this->merchant->findProductByMerchantId($this->session->userdata(SESS . 'merchant_id'))->result();
 		// var_dump($this->session->userdata());
 		$this->template->template($data);
 	}

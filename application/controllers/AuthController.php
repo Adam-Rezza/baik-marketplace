@@ -162,8 +162,8 @@ class AuthController extends CI_Controller
 			'nama' => $this->input->post('name_u'),
 			'telp' => $this->input->post('phone_u'),
 		];
-		if ($this->session->userdata(SESS.'id')) {
-			$result = $this->authorized->update('user', $data, $this->session->userdata(SESS.'id'));
+		if ($this->session->userdata(SESS . 'id')) {
+			$result = $this->authorized->update('user', $data, $this->session->userdata(SESS . 'id'));
 			echo json_encode($result > 0 ? 'true' : 'false');
 		}
 	}
@@ -273,6 +273,41 @@ class AuthController extends CI_Controller
 		$this->session->set_userdata(SESS . 'merchant_id', $data['id']);
 		$this->session->set_userdata(SESS . 'merchant_nama', $data['nama']);
 		$this->session->set_userdata(SESS . 'merchant_telp', $data['telp']);
+	}
+
+	public function save_profile_merchant()
+	{
+		if ($this->session->userdata(SESS . 'merchant_id')) {
+			$data['nama'] = $this->input->post('name_t');
+			$data['telp'] = $this->input->post('phone_t');
+			$data['desc'] = $this->input->post('desc_t');
+			// var_dump($this->input->post());
+			$result = $this->authorized->update('toko', $data, $this->session->userdata(SESS . 'merchant_id'));
+			if ($result > 0) {
+				$this->session->set_userdata(SESS . 'merchant_nama', $data['nama']);
+				$this->session->set_userdata(SESS . 'merchant_telp', $data['telp']);
+				echo json_encode("true");
+			} else {
+				echo json_encode("false");
+			}
+		}
+	}
+
+	public function save_address_merchant()
+	{
+		if ($this->session->userdata(SESS . 'merchant_id')) {
+			$data['alamat'] = $this->input->post('alamat');
+			$data['provinsi'] = $this->input->post('provinsi');
+			$data['kota'] = $this->input->post('kabupaten');
+			$data['kecamatan'] = $this->input->post('kecamatan');
+			$data['kelurahan'] = $this->input->post('kelurahan');
+			$result = $this->authorized->update('toko', $data, $this->session->userdata(SESS . 'merchant_id'));
+			if ($result > 0) {
+				echo json_encode("true");
+			} else {
+				echo json_encode("false");
+			}
+		}
 	}
 
 	################--------Foto_Profil--------##############################################

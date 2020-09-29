@@ -19,6 +19,8 @@ $route['get_kelurahan/(:any)'] = 'AuthController/get_kelurahan/$1';
 $route['save_basic_info'] = 'AuthController/save_basic_info';
 $route['save_address'] = 'AuthController/save_address';
 $route['change_password'] = 'AuthController/change_password';
+$route['save_profile_merchant'] = 'AuthController/save_profile_merchant';
+$route['save_address_merchant'] = 'AuthController/save_address_merchant';
 $route['upload_image_profile'] = 'AuthController/upload_image_profile';
 
 # CUSTOMER

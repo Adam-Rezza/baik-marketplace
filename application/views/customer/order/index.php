@@ -20,9 +20,9 @@
 					</div>
 				</div>
 			</div><!-- Content Category -->
-			<div class="col-md-9 relative clear-padding top-padding-default left-padding-default">
+			<div class="col-md-9 col-sm-12 relative clear-padding top-padding-default left-padding-default">
 				<div class="col-sm-12 col-xs-12 relative overfollow-hidden clear-padding button-show-sidebar">
-					<p onclick="showSideBar()"><span class="ti-filter"></span> Sidebar</p>
+					<p onclick="showSideBar()"><span class="ti-filter"></span> Menu</p>
 				</div>
 				<div class="bar-category bottom-margin-default border no-border-r no-border-l no-border-t">
 					<div class="row">
@@ -40,8 +40,8 @@
 						foreach ($transaction as $f) {
 							$total_price = 0;
 						?>
-							<div class="col-md-12 clear-padding border no-border-t no-border-l no-border-r product-category bottom-margin-default product-category-list relative">
-								<div class="relative overfollow-hidden info-product-list right-padding-default">
+							<div class="col-md-12 col-sm-12 clear-padding border no-border-t no-border-l no-border-r product-category bottom-margin-default product-category-list relative">
+								<div class="relative overfollow-hidden right-padding-default">
 									<div style="clear: both">
 										<p class="float-left">No Pesanan: <?= $f->toko_id . date('YmdHis', strtotime($f->created_date)) . $f->id ?></p>
 									</div>
@@ -98,7 +98,7 @@
 										<?php  } ?>
 									</div>
 								</div>
-								<div class="relative overfollow-hidden info-product-list left-margin-default">
+								<div class="relative overfollow-hidden left-margin-default">
 									Total:
 									<p class="clearfix price-product">
 										Rp <?= number_format($total_price, 0, ",", ".") ?>

@@ -1,4 +1,44 @@
 <style>
+    .grid-stack-item {
+        border-bottom: 1px solid #333;
+        position: relative;
+        display: inline-block;
+    }
+
+    .grid-stack-item:last-child {
+        border-bottom: none;
+    }
+
+    .grid-stack-item-content {
+        overflow: hidden !important;
+    }
+
+    .grid-stack-item-content img {
+        width: calc(25% - 15px);
+        height: auto;
+        display: inline-block;
+    }
+
+    .grid-stack-item-content .input-image-product {
+        display: inline-block;
+        margin-left: 20px;
+    }
+
+    #image {
+        width: 400px;
+        width: 400px;
+    }
+
+    .cropper-container {
+        min-width: 400px;
+        min-height: 400px;
+    }
+
+    #crop {
+        bottom: 0;
+        right: 0;
+    }
+
     .form-input>.select2,
     .form-input>select,
     .form-input>label {
@@ -7,16 +47,14 @@
     }
 
     @media only screen and (max-width: 480px) {
-        .title-tabs li{
+        .title-tabs li {
             font-size: 12px;
-            padding : 5px;
+            padding: 5px;
         }
     }
 </style>
-
 <script>
     $(document).ready(function() {
-        //////////////////////////////////////////////////////////////////////
         $('#provinsi').select2();
         $('#kabupaten').select2();
         $('#kecamatan').select2();
@@ -103,24 +141,18 @@
         // Basic Info ///////////////////////////////////////////////////////
         $("#basicInfoForm").validate({
             rules: {
-                name_u: {
+                name_t: {
                     required: true,
                 },
-                username_u: {
-                    required: true,
-                },
-                phone_u: {
+                phone_t: {
                     required: true,
                 },
             },
             messages: {
-                name_u: {
+                name_t: {
                     required: "Nama wajib diisi",
                 },
-                username_u: {
-                    required: "Username wajib diisi",
-                },
-                phone_u: {
+                phone_t: {
                     required: "Phone wajib diisi",
                 },
             },
@@ -129,7 +161,7 @@
                 data = $(form).serialize()
                 $.ajax({
                     type: "post",
-                    url: "<?= base_url('save_basic_info') ?>",
+                    url: "<?= base_url('save_profile_merchant') ?>",
                     data: data,
                     dataType: 'json',
                     success: function(res) {
@@ -137,7 +169,7 @@
                         if (res == 'true') {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Berhasil menyimpan informasi',
+                                title: 'Berhasil menyimpan',
                                 showConfirmButton: false,
                                 timer: 0,
                                 onBeforeOpen: () => {
@@ -147,71 +179,6 @@
                             setTimeout(() => {
                                 window.location.href = (window.location.href).replaceAll('#', '')
                             }, 1000);
-                        }
-                    },
-                    error: function(res) {
-                        console.log('error', res)
-                    }
-                })
-            }
-        })
-        // Change Password ///////////////////////////////////////////////////////
-        $("#passwordForm").validate({
-            rules: {
-                password_old_u: {
-                    required: true,
-                },
-                password_u: {
-                    required: true,
-                    minlength: 5
-                },
-                password2_u: {
-                    equalTo: "#password_u"
-                }
-            },
-            messages: {
-                password_old_u: {
-                    required: "Masukkan Password lama",
-                },
-                password_u: {
-                    required: "Masukkan Password",
-                    minlength: "Password minimal 5 digit character"
-                },
-                password2_u: "Password tidak sama",
-            },
-            submitHandler: function(form, e) {
-                e.preventDefault()
-                data = $(form).serialize()
-                $.ajax({
-                    type: "post",
-                    url: "<?= base_url('change_password') ?>",
-                    data: data,
-                    dataType: 'json',
-                    success: function(res) {
-                        // console.log('success', res == "true")
-                        if (res == "true") {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Password berhasil diganti',
-                                showConfirmButton: false,
-                                timer: 0,
-                                onBeforeOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            })
-                            setTimeout(() => {
-                                window.location.href = (window.location.href).replaceAll('#', '')
-                            }, 1000);
-                        } else if (res == "false") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Password lama yang anda masukan salah',
-                                showConfirmButton: false,
-                                timer: 0,
-                                onBeforeOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            })
                         }
                     },
                     error: function(res) {
@@ -261,39 +228,22 @@
                 data = $(form).serialize()
                 $.ajax({
                     type: "post",
-                    url: "<?= base_url('save_address') ?>",
+                    url: "<?= base_url('save_address_merchant') ?>",
                     data: data,
                     dataType: 'json',
                     success: function(res) {
-                        console.log('success<?= $on_shopping ?>', res)
-                        if (<?= $on_shopping ? "true" : "false" ?>) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Alamat tersimpan',
-                                text: 'Kembali ke halaman checkout',
-                                showConfirmButton: false,
-                                timer: 0,
-                                onBeforeOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            })
-                            setTimeout(() => {
-                                window.location.href = '<?= base_url('checkout') ?>'
-                            }, 1000)
-                        } else if (res == 'true') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Alamat tersimpan',
-                                showConfirmButton: false,
-                                timer: 0,
-                                onBeforeOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            })
-                            setTimeout(() => {
-                                window.location.href = (window.location.href).replaceAll('#', '')
-                            }, 1000);
-                        }
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Alamat tersimpan',
+                            showConfirmButton: false,
+                            timer: 0,
+                            onBeforeOpen: () => {
+                                Swal.showLoading()
+                            },
+                        })
+                        setTimeout(() => {
+                            window.location.href = (window.location.href).replaceAll('#', '')
+                        }, 1000);
                     },
                     error: function(res) {
                         console.log('error', res)

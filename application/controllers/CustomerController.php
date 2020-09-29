@@ -104,7 +104,7 @@ class CustomerController extends CI_Controller
 			$data['url'] .= $sub_category ? '%26sub_category=' . $sub_category : "";
 
 			$data['page'] = $page;
-			$data['page_max'] = round($this->customer->findProductByCategory($category, $sub_category, null, 0)) + 1;
+			$data['page_max'] = round($this->customer->findProductByCategory($category, $sub_category, null, 0)->num_rows() / 20) + 1;
 			$data['product'] = $this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1) * 20)->result();
 
 			$this->template->template($data);

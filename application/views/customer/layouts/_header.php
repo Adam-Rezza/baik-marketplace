@@ -38,7 +38,7 @@
 </div>
 <!-- Header Box -->
 <header class="relative full-width">
-	<div class=" container-web relative">
+	<div class=" container-web relative bottom-margin-default">
 		<div class=" container">
 			<div class="row">
 				<div class=" header-top">

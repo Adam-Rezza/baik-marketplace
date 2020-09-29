@@ -43,7 +43,19 @@ class M_merchant extends CI_Model
         return $this->db->affected_rows();
     }
 
-    function findProductByTokoId($toko_id)
+    function findMerchantByMerchantId($toko_id)
+    {
+        $this->db->select('a.*, b.nama as prov, c.nama as kab, d.nama as kec, e.nama as kel');
+        $this->db->from('toko a');
+        $this->db->join('provinsi b', 'a.provinsi = b.id_prov');
+        $this->db->join('kabupaten c', 'a.kota = c.id_kab');
+        $this->db->join('kecamatan d', 'a.kecamatan = d.id_kec');
+        $this->db->join('kelurahan e', 'a.kelurahan = e.id_kel');
+        $this->db->where('a.id', $toko_id);
+        return $this->db->get();
+    }
+
+    function findProductByMerchantId($toko_id)
     {
         $this->db->select('a.*, b.gambar');
         $this->db->from('produk a');

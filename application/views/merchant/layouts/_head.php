@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/category.css">
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/product.css">
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/cartpage.css">
+    <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/css/select2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" integrity="sha256-jKV9n9bkk/CTP8zbtEtnKaKf+ehRovOYeKoyfthwbC8=" crossorigin="anonymous" />
 
@@ -251,6 +252,12 @@
         background: #c14e00;
     }
 
+    .form-input textarea {
+        resize: none;
+        line-height: 18px;
+        padding: 5px 10px;
+    }
+
     .form-input .auth-redirect {
         clear: both;
         display: block;
@@ -267,6 +274,13 @@
         float: right;
         clear: both;
         display: block;
+    }
+
+    .form-input label.error {
+        bottom: -20px;
+        position: absolute;
+        right: 0;
+        width: auto !important;
     }
 
     .menu-header-top li .name {
