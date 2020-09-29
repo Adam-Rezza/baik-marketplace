@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<div class="col-lg-3 col-xs-6">
-			<div class="small-box bg-aqua">
+			<div class="small-box bg-green">
 				<div class="inner">
 					<h3><?= $user_count; ?></h3>
 					<p>User</p>
@@ -34,7 +34,7 @@
 			</div>
 		</div>
 		<div class="col-lg-3 col-xs-6">
-			<div class="small-box bg-aqua">
+			<div class="small-box bg-yellow">
 				<div class="inner">
 					<h3><?= $toko_count; ?></h3>
 					<p>Toko</p>
