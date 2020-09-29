@@ -35,6 +35,28 @@ class M_customer extends CI_Model
         
     }
 
+	public function getQna($where = NULL, $orderBy = NULL, $orderOrien = 'ASC')
+	{
+		$this->db->select('a.*');
+		$this->db->select('CASE WHEN a.toko_id != 0 THEN c.nama ELSE b.nama END AS nama', false);
+		$this->db->from('qna a');
+		$this->db->join('user b','a.user_id = b.id');
+		$this->db->join('toko c','a.toko_id = c.id','left');
+		$this->db->where($where);
+        $this->db->order_by($orderBy, $orderOrien);
+        return $this->db->get();
+    }
+
+	public function getReview($where = NULL, $orderBy = NULL, $orderOrien = 'ASC')
+	{
+		$this->db->select('a.*, b.nama as user');
+		$this->db->from('review a');
+		$this->db->join('user b','a.user_id = b.id');
+		$this->db->where($where);
+        $this->db->order_by($orderBy, $orderOrien);
+        return $this->db->get();
+    }
+
     // Produk 
 
     function findSponsoredProductFirst()
@@ -45,7 +67,10 @@ class M_customer extends CI_Model
         $this->db->where('b.urutan', '1');
         // $this->db->where('sponsored_date >=', date('Y-m-d'));
         $this->db->where('a.del', '0');
-        $this->db->limit('12', '0');
+        $this->db->order_by('CASE WHEN a.terjual > 0 THEN a.disc else 0 END', 'desc', false);
+        $this->db->order_by('CASE WHEN a.terjual > 0 THEN a.rating else 0 END', 'desc', false);
+        $this->db->order_by('CASE WHEN a.modified_date is not null THEN a.modified_date else a.created_date END', 'desc', false);
+        $this->db->limit('14', '0');
         return $this->db->get();
     }
 
@@ -126,55 +151,85 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
-    function findOrderByMerchantIdAndStatusGroupByTransaction($user_id)
+    function findTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b','a.id = b.transaksi_id');
         $this->db->join('produk c','b.produk_id = c.id');
+        $this->db->join('toko d','a.toko_id = d.id');
         $this->db->where('a.status !=', 9);
+        $this->db->where('a.status !=', 10);
         $this->db->where('b.user_id', $user_id);
         $this->db->order_by('a.created_date','DESC');
         $this->db->group_by('a.id');
         return $this->db->get();
     }
 
-    function findOrderByMerchantIdAndStatusAndTransactionId($user_id, $tansaksi_id)
+    function findTransactionByMerchantIdAndStatusAndTransactionId($user_id, $transaction_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b','a.id = b.transaksi_id');
         $this->db->join('produk c','b.produk_id = c.id');
-        $this->db->where('a.id', $tansaksi_id);
+        $this->db->join('toko d','a.toko_id = d.id');
+        $this->db->where('a.id', $transaction_id);
         $this->db->where('a.status !=', 9);
+        $this->db->where('a.status !=', 10);
         $this->db->where('b.user_id', $user_id);
         $this->db->order_by('a.created_date','DESC');
         return $this->db->get();
     }
 
-    function findCompleteOrderByMerchantIdAndStatusGroupByTransaction($user_id)
+    function findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b','a.id = b.transaksi_id');
         $this->db->join('produk c','b.produk_id = c.id');
+        $this->db->join('toko d','a.toko_id = d.id');
+        $this->db->group_start();
         $this->db->where('a.status', 9);
+        $this->db->or_where('a.status', 10);
+        $this->db->group_end();
         $this->db->where('b.user_id', $user_id);
         $this->db->order_by('a.created_date','DESC');
         $this->db->group_by('a.id');
         return $this->db->get();
     }
 
-    function findCompleteOrderByMerchantIdAndStatusAndTransactionId($user_id, $tansaksi_id)
+    function findCompleteTransactionByMerchantIdAndStatusAndTransactionId($user_id, $transaction_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b','a.id = b.transaksi_id');
         $this->db->join('produk c','b.produk_id = c.id');
-        $this->db->where('a.id', $tansaksi_id);
+        $this->db->join('toko d','a.toko_id = d.id');
+        $this->db->where('a.id', $transaction_id);
+        $this->db->group_start();
         $this->db->where('a.status', 9);
+        $this->db->or_where('a.status', 10);
+        $this->db->group_end();
         $this->db->where('b.user_id', $user_id);
         $this->db->order_by('a.created_date','DESC');
+        return $this->db->get();
+    }
+
+    function findLatestCompleteTransactionByUserIdAndProductIdLastWeek($user_id, $product_id)
+    {
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
+        $this->db->from('transaksi a');
+        $this->db->join('keranjang b','a.id = b.transaksi_id');
+        $this->db->join('produk c','b.produk_id = c.id');
+        $this->db->join('toko d','a.toko_id = d.id');
+        $this->db->where('c.id', $product_id);
+        $this->db->group_start();
+        $this->db->where('a.status', 9);
+        $this->db->group_end();
+        $this->db->where('b.user_id', $user_id);
+        $this->db->where('a.delivery_date > CURDATE() - INTERVAL 7 DAY');
+        $this->db->order_by('a.created_date','DESC');
+        $this->db->limit(1,0);
         return $this->db->get();
     }
 }

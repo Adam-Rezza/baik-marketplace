@@ -316,8 +316,9 @@
 .form-input input,
 .form-input select,
 .form-input textarea {
-    background: #f8f8f8;
-    border: 1px solid #dedede;
+    background: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
     line-height: 28px;
     padding: 0 10px;
     color: #333;
@@ -328,7 +329,7 @@
 .form-input input:focus,
 .form-input select:focus,
 .form-input textarea:focus {
-    border: 1px solid #333;
+    border: 2px solid #000;
 }
 
 .form-input select {

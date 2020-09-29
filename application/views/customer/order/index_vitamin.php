@@ -30,7 +30,7 @@
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
-                                    text: 'Produk berhasil ditambahkan',
+                                    text: 'Pesanan berhasil diupdate',
                                     showConfirmButton: false,
                                     timer: 0,
                                     onBeforeOpen: () => {
@@ -38,7 +38,7 @@
                                     },
                                 })
                                 setTimeout(() => {
-                                    window.location.href = window.location.href
+                                    // window.location.href = (window.location.href).replaceAll('#', '')
                                 }, 1000)
                             }
                         }

@@ -13,17 +13,20 @@ $route['user/logout'] = 'AuthController/logout';
 $route['username_check_r'] = 'AuthController/unique_username';
 $route['merchant_register'] = 'AuthController/register';
 $route['register_merchant'] = 'AuthController/register_merchant';
+$route['get_kabupaten/(:any)'] = 'AuthController/get_kabupaten/$1';
+$route['get_kecamatan/(:any)'] = 'AuthController/get_kecamatan/$1';
+$route['get_kelurahan/(:any)'] = 'AuthController/get_kelurahan/$1';
+$route['save_address'] = 'AuthController/save_address';
+$route['upload_image_profile'] = 'AuthController/upload_image_profile';
 
 # CUSTOMER
 $route['my_account'] = 'CustomerController/my_account';
-$route['get_kabupaten/(:any)'] = 'CustomerController/get_kabupaten/$1';
-$route['get_kecamatan/(:any)'] = 'CustomerController/get_kecamatan/$1';
-$route['get_kelurahan/(:any)'] = 'CustomerController/get_kelurahan/$1';
-$route['save_address'] = 'CustomerController/save_address';
+$route['my_account/checkout'] = 'CustomerController/my_account/checkout';
+$route['checkout'] = 'CustomerController/checkout';
+$route['my_order'] = 'CustomerController/my_order';
+$route['my_recent_order'] = 'CustomerController/my_recent_order';
 
 // $route['category'] = 'CustomerController/category';
-// $route['category/(:any)'] = 'CustomerController/category/$1';
-// $route['category/(:any)/(:any)'] = 'CustomerController/category/$1/$2';
 $route['category=(:any)%26page=(:any)'] = 'CustomerController/category/$1//$2';
 $route['category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/category/$1/$2/$3';
 
@@ -34,12 +37,16 @@ $route['search%26keyword=(:any)%26page=(:any)'] = 'CustomerController/search/$1/
 
 $route['product'] = 'CustomerController/product';
 $route['product/(:any)'] = 'CustomerController/product/$1';
-$route['checkout'] = 'CustomerController/checkout';
-$route['my_order'] = 'CustomerController/my_order';
-$route['my_recent_order'] = 'CustomerController/my_recent_order';
+
+$route['insert_qna/(:any)'] = 'CustomerController/insert_qna/$1';
+$route['reply_qna/(:any)/(:any)'] = 'CustomerController/reply_qna/$1/$2';
+$route['edit_qna/(:any)/(:any)'] = 'CustomerController/edit_qna/$1/$2';
+
+$route['insert_review/(:any)'] = 'CustomerController/insert_review/$1';
 
 # MERCHANT
 $route['merchant'] = 'MerchantController/index';
+$route['my_profile'] = 'MerchantController/my_profile';
 $route['my_product'] = 'MerchantController/my_product';
 $route['order/(:any)'] = 'MerchantController/order/$1';
 $route['get_product_detail/(:any)'] = 'MerchantController/get_product_detail/$1';
@@ -48,15 +55,22 @@ $route['get_images_product/(:any)'] = 'MerchantController/get_images_product/$1'
 $route['insert_update_product'] = 'MerchantController/insert_update_product';
 $route['delete_produk/(:any)'] = 'MerchantController/delete_produk/$1';
 $route['upload_image_product'] = 'MerchantController/upload_image_product';
+$route['get_transaction_detail/(:any)'] = 'MerchantController/get_transaction_detail/$1';
 
 # TRANSAKSI
 $route['get_cart_detail'] = 'TransactionController/get_cart_detail';
 $route['add_to_cart/(:any)/(:any)'] = 'TransactionController/add_to_cart/$1/$2';
 $route['update_product_cart/(:any)/(:any)'] = 'TransactionController/update_product_cart/$1/$2';
 $route['checkout_transaction'] = 'TransactionController/checkout_transaction';
+
 $route['process_order/(:any)'] = 'TransactionController/process_order/$1';
 $route['send_order/(:any)'] = 'TransactionController/send_order/$1';
 $route['delivered_order/(:any)'] = 'TransactionController/delivered_order/$1';
+$route['cancel_order/(:any)'] = 'TransactionController/cancel_order/$1';
+
+#NOTIFIKASI
+$route['read_notification/(:any)'] = 'TransactionController/read_notification/$1';
+
 
 # ADMIN MODUL
 # DASHBOARD

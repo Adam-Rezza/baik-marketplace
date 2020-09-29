@@ -35,6 +35,14 @@ class M_merchant extends CI_Model
         return $this->db->affected_rows();
     }
 
+    function update_product($tabel, $data, $id, $merchant_id)
+    {
+        $this->db->where('id', $id);
+        $this->db->where('toko_id', $merchant_id);
+        $this->db->update($tabel, $data);
+        return $this->db->affected_rows();
+    }
+
     function findProductByTokoId($toko_id)
     {
         $this->db->select('a.*, b.gambar');
@@ -42,60 +50,24 @@ class M_merchant extends CI_Model
         $this->db->where('a.toko_id', $toko_id);
         $this->db->join('gambar_produk b', 'a.id = b.produk_id and b.urutan = 1', 'left');
         $this->db->where('a.del', '0');
-        $this->db->order_by('case when a.modified_date >  a.created_date then a.modified_date ELSE a.created_date END DESC','', false);
+        $this->db->where('a.ban', '0');
+        $this->db->order_by('case when a.modified_date > a.created_date then a.modified_date ELSE a.created_date END DESC','', false);
         return $this->db->get();
     }
 
-    function findProductById($id)
+    function findTransactionByMerchantIdAndStatusGroupByTransaction($toko_id, $status)
     {
-        $this->db->select('*');
-        $this->db->from('produk a');
-        $this->db->where('a.id', $id);
-        $this->db->where('a.del', '0');
-        return $this->db->get();
-    }
-
-    function findAllCategory()
-    {
-        $this->db->select('*');
-        $this->db->from('kategori');
-        $this->db->where('active', '1');
-        $this->db->where('del', '0');
-        return $this->db->get();
-    }
-
-    function findSubCategoriByParent($id)
-    {
-        $this->db->select('*');
-        $this->db->from('sub_kategori');
-        $this->db->where('parent', $id);
-        $this->db->where('active', '1');
-        $this->db->where('del', '0');
-        return $this->db->get();
-    }
-
-    function findImagesByProductId($id)
-    {
-        $this->db->select('*');
-        $this->db->from('gambar_produk');
-        $this->db->where('produk_id', $id);
-        return $this->db->get();
-    }
-
-    function findOrderByMerchantIdAndStatusGroupByTransaction($toko_id, $status)
-    {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->select('a.*, sum(b.harga * b.qty) as total_harga');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b','a.id = b.transaksi_id');
-        $this->db->join('produk c','b.produk_id = c.id');
         $this->db->where('a.status', $status);
-        $this->db->where('c.toko_id', $toko_id);
+        $this->db->where('a.toko_id', $toko_id);
         $this->db->order_by('a.created_date','DESC');
         $this->db->group_by('a.id');
         return $this->db->get();
     }
 
-    function findOrderByMerchantIdAndStatusAndTransactionId($toko_id, $status, $tansaksi_id)
+    function findTransactionByMerchantIdAndStatusAndTransactionId($toko_id, $status, $tansaksi_id)
     {
         $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
         $this->db->from('transaksi a');
@@ -103,6 +75,18 @@ class M_merchant extends CI_Model
         $this->db->join('produk c','b.produk_id = c.id');
         $this->db->where('a.id', $tansaksi_id);
         $this->db->where('a.status', $status);
+        $this->db->where('c.toko_id', $toko_id);
+        $this->db->order_by('a.created_date','DESC');
+        return $this->db->get();
+    }
+
+    function findTransactionByMerchantIdAndTransactionId($toko_id, $tansaksi_id)
+    {
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->from('transaksi a');
+        $this->db->join('keranjang b','a.id = b.transaksi_id');
+        $this->db->join('produk c','b.produk_id = c.id');
+        $this->db->where('a.id', $tansaksi_id);
         $this->db->where('c.toko_id', $toko_id);
         $this->db->order_by('a.created_date','DESC');
         return $this->db->get();

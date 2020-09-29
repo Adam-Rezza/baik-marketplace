@@ -50,7 +50,8 @@
                         url: "<?= base_url() ?>checkout_transaction",
                         dataType: "json",
                         success: function(res) {
-                            if (res) {
+                            console.log(res)
+                            if (res == 'true') {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
@@ -63,6 +64,31 @@
                                 })
                                 setTimeout(() => {
                                     window.location.href = '<?= base_url('my_order') ?>'
+                                }, 1000)
+                            } else if (res == '1'){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Transaksi tidak dapat dilakukan',
+                                    showConfirmButton: false,
+                                    timer: 0,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                            } else if (res == '2'){
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Mohon lengkapi alamat terlebih dahulu',
+                                    showConfirmButton: false,
+                                    timer: 0,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                                setTimeout(() => {
+                                    window.location.href = '<?= base_url('my_account/checkout') ?>'
                                 }, 1000)
                             }
                         }

@@ -9,7 +9,7 @@
                         <div class="clearfix slide-home owl-carousel owl-theme">
                             <?php foreach ($banner as $f) { ?>
                                 <div class="item">
-                                    <img src="<?= base_url()?>public/img/banner/<?=$f->gambar?>" alt="Banner">
+                                    <img src="<?= base_url() ?>public/img/banner/<?= $f->gambar ?>" alt="Banner">
                                 </div>
                             <?php } ?>
                         </div>
@@ -44,7 +44,7 @@
                                                     <div class=" category-image-slide relative full-width">
                                                         <div class="clearfix effect-hover-zoom overfollow-hidden img-categorys-slide center-vertical-image relative">
                                                             <img class="animate-default" src="<?= base_url() ?>public\img\kategori\<?= $f->gambar ?>" alt="<?= $f->nama ?>">
-                                                            <a href="#"></a>
+                                                            <a href="<?= base_url('category=' . $f->id . '%26page=1') ?>"></a>
                                                         </div>
                                                         <a href="#">
                                                             <p class="uppercase bold"><?= $f->nama ?></p>
@@ -82,8 +82,59 @@
             </div>
             <div class="clearfix content-product-box full-width">
                 <div class="row">
+                    <div class="slide-product col-lg-4 col-md-12 col-sm-12 col-xs-12 product-category padding-5">
+                        <div class="owl-carousel owl-theme owl-loaded owl-drag">
+                            <div class="owl-stage-outer">
+                                <div class="owl-stage" style="transform: translate3d(-742px, 0px, 0px); transition: all 0.25s ease 0s; width: 2043px;">
+                                    <?php foreach ($sponsored as $f) { ?>
+                                        <div class="owl-item">
+                                            <div class="product-card relative effect-hover-boxshadow animate-default" data-id="<?= $f->id ?>">
+                                                <div class="relative overfollow-hidden">
+                                                    <a href="<?= base_url() ?>product/<?= $f->id ?>">
+                                                        <div class="center-vertical-image">
+                                                            <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Product">
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <h3 class="title-product clearfix full-width title-hover-black">
+                                                    <a href="<?= base_url() ?>product/<?= $f->id ?>"><?= $f->nama ?></a>
+                                                    <?php if ($f->terjual) { ?>
+                                                        <span class="product-sold float-right">(<?= $f->terjual ?> Terjual)</span>
+                                                    <?php } ?>
+                                                </h3>
+                                                <div class="desc-slide-product clearfix full-width title-hover-black">
+                                                    <p><?= $f->desc ?></p>
+                                                </div>
+                                                <h3 class="title-merchant clearfix full-width title-hover-black">
+                                                    <i class="fa fa-user icon-merchant"></i>
+                                                    <a href="#">Aang</a>
+                                                </h3>
+                                                <p class="clearfix price-product-slide-product">
+                                                    <span class="price-old-slide-product">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
+                                                    <span class="price-new-slide-product">Rp <?= number_format($f->harga_disc, 0, ",", ".") ?></span>
+                                                </p>
+                                                <div class="clearfix ranking-product-category ranking-color">
+                                                    <?php
+                                                    $rate = $f->rating;
+                                                    for ($i = 0; $i < 5; $i++) {
+                                                        $star = ($rate - $i >= 1) ? "star" : ($rate - $i >= 0.5 ? "star-half-o" : "star-o");
+                                                        echo '<i class="fa fa-' . $star . '" aria-hidden="true"></i>';
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <div class="owl-nav disabled">
+                                <button type="button" role="presentation" class="owl-prev" style="display:none"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button>
+                            </div>
+                            <div class="owl-dots disabled"></div>
+                        </div>
+                    </div>
                     <?php foreach ($sponsored as $f) { ?>
-                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 product-category padding-5">
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 product-category padding-5">
                             <div class="product-card relative effect-hover-boxshadow animate-default" data-id="<?= $f->id ?>">
                                 <div class="image-product relative overfollow-hidden">
                                     <a href="<?= base_url() ?>product/<?= $f->id ?>">
@@ -94,21 +145,23 @@
                                 </div>
                                 <h3 class="title-product clearfix full-width title-hover-black">
                                     <a href="<?= base_url() ?>product/<?= $f->id ?>"><?= $f->nama ?></a>
-                                    <span class="product-sold float-right">(99 Terjual)</span>
+                                    <?php if ($f->terjual) { ?>
+                                        <span class="product-sold float-right">(<?= $f->terjual ?> Terjual)</span>
+                                    <?php } ?>
                                 </h3>
                                 <h3 class="title-merchant clearfix full-width title-hover-black">
                                     <i class="fa fa-user icon-merchant"></i>
                                     <a href="#">Aang</a>
                                 </h3>
                                 <p class="clearfix price-product">
-                                    <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
-                                    <span class="price-new">Rp <?= number_format($f->harga_disc, 0, ",", ".") ?></span>
+                                    <span class="price-old-sponsored">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
+                                    <span class="price-new-sponsored">Rp <?= number_format($f->harga_disc, 0, ",", ".") ?></span>
                                 </p>
                                 <div class="clearfix ranking-product-category ranking-color">
                                     <?php
                                     $rate = $f->rating;
                                     for ($i = 0; $i < 5; $i++) {
-                                        $star = ($rate - $i >= 1) ? "star" : ($rate - $i >= 0.5 ? "star-half" : "star-o");
+                                        $star = ($rate - $i >= 1) ? "star" : ($rate - $i >= 0.5 ? "star-half-o" : "star-o");
                                         echo '<i class="fa fa-' . $star . '" aria-hidden="true"></i>';
                                     }
                                     ?>
@@ -120,13 +173,7 @@
                 <div class="row">
                     <div class="pagging relative">
                         <ul>
-                            <li><a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i> First</a></li>
-                            <li class="active-pagging"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li class="dots-pagging">. . .</li>
-                            <li><a href="#">102</a></li>
-                            <li><a href="#">Last <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+                            <li><a href="<?=base_url()?>discount%26page=1">Lebih banyak <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -183,13 +230,7 @@
                 <div class="row">
                     <div class="pagging relative">
                         <ul>
-                            <li><a href="#"><i class="fa fa-angle-left" aria-hidden="true"></i> First</a></li>
-                            <li class="active-pagging"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li class="dots-pagging">. . .</li>
-                            <li><a href="#">102</a></li>
-                            <li><a href="#">Last <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+                            <li><a href="<?=base_url()?>latest%26page=1">Lebih banyak <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
                 </div>

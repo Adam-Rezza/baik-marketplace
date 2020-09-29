@@ -96,18 +96,18 @@
 							?>
 								<div class="product-cart-son clearfix">
 									<div class="image-product-cart float-left center-vertical-image ">
-										<a href="#"><img src="<?= base_url() ?>public/img/produk/<?=$f->gambar?>" alt="" /></a>
+										<a href="#"><img src="<?= base_url() ?>public/img/produk/<?= $f->gambar ?>" alt="" /></a>
 									</div>
 									<div class="info-product-cart float-left">
-										<p class="title-product title-hover-black"><a class="animate-default" href="#"><?=$f->produk?></a></p>
-										<p class="clearfix price-product" id="cart-web-total-price-item-<?=$f->produk_id?>">Rp <?=number_format($total_price_item, 0, ",", ".")?> <span class="total-product-cart-son" id="cart-web-total-qty-item-<?=$f->produk_id?>">(x<?=$f->qty?>)</span></p>
+										<p class="title-product title-hover-black"><a class="animate-default" href="#"><?= $f->produk ?></a></p>
+										<p class="clearfix price-product" id="cart-web-total-price-item-<?= $f->produk_id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?> <span class="total-product-cart-son" id="cart-web-total-qty-item-<?= $f->produk_id ?>">(x<?= $f->qty ?>)</span></p>
 									</div>
 								</div>
 							<?php } ?>
 						</div>
 						<div class="relative border no-border-l no-border-r total-cart-header">
 							<p class="bold clear-margin">Subtotal:</p>
-							<p class=" clear-margin bold" id="cart-web-total-price">Rp <?=number_format($total_price_cart, 0, ",", ".")?></p>
+							<p class=" clear-margin bold" id="cart-web-total-price">Rp <?= number_format($total_price_cart, 0, ",", ".") ?></p>
 						</div>
 						<div class="relative btn-cart-header text-right">
 							<a href="#" class="uppercase bold animate-default hidden">view cart</a>
@@ -116,30 +116,34 @@
 					</div>
 					<div class="cart-notification-header border" tabindex="0" onblur="showNotification()">
 						<div class="relative">
-							<div class="product-cart-son clearfix">
-								<div class="info-product-cart float-left">
-									<p class="title-product title-hover-black"><a class="animate-default" href="#">Notifikasi 1</a></p>
+							<?php $i = 1 ?>
+							<?php foreach ($notification as $f) { ?>
+								<div class="product-cart-son notification-son clearfix <?= $f->read ? '' : 'bg-red' ?>" id="notification-son-<?= $i ?>" data-view="<?$f->read?>" data-id="<?= $f->id ?>">
+									<div class="info-product-cart float-left">
+										<p style="margin-bottom: 0"><?=date('Y-m-d H:i', strtotime($f->datetime))?></p>
+										<p class="notif-text title-hover-black">
+											<a class="animate-default" href="<?= base_url($f->url) ?>"><?= $f->msg ?></a>
+										</p>
+									</div>
 								</div>
-							</div>
-							<div class="product-cart-son">
-								<div class="info-product-cart float-left">
-									<p class="title-product title-hover-black"><a class="animate-default" href="#">Notifikasi 2</a></p>
-								</div>
-							</div>
+								<?php $i++; ?>
+							<?php } ?>
 						</div>
-						<div class="relative btn-cart-header text-right">
-							<a href="#" class="uppercase bold animate-default hidden">view cart</a>
-							<a href="<?= base_url() ?>checkout" class="uppercase bold button-hover-red animate-default float-right">Lihat semua</a>
+						<div class="relative btn-cart-header text-right clearfix">
+							<a href="#" class="uppercase bold button-hover-red animate-default float-left" id="notifPrev" onclick="return false">
+								<<</a> <a href="#" class="uppercase bold button-hover-red animate-default float-left" id="notifCurrent" onclick="return false" disabled data-value='1'>1
+							</a>
+							<a href="#" class="uppercase bold button-hover-red animate-default float-right" id="notifNext" onclick="return false">>></a>
 						</div>
 					</div>
 					<?php if (!($this->session->userdata(SESS . 'id') === null)) { ?>
-						<div class="clearfix bell-website absolute" onclick="showNotification()">
+						<div class="clearfix bell-website absolute" onclick="showNotification()" id="showNotification">
 							<span class="icon-web"><i class="fa fa-bell"></i></span>
-							<p class="count-total-shopping absolute">2</p>
+							<p class="count-total-shopping absolute"><?= $unread_notification ?></p>
 						</div>
 						<div class="clearfix cart-website absolute" onclick="showCartBoxDetail()">
 							<span class="icon-web"><i class="fa fa-shopping-cart"></i></span>
-							<p class="count-total-shopping absolute"  id="cart-web-total-qty"><?=$total_qty_cart?></p>
+							<p class="count-total-shopping absolute" id="cart-web-total-qty"><?= $total_qty_cart ?></p>
 						</div>
 					<?php } else { ?>
 						<div class="clearfix login-website absolute" id="userAccount">

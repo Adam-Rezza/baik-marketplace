@@ -6,74 +6,122 @@
     <div class="bar-category bottom-margin-default border no-border-r no-border-l no-border-t">
         <div class="row">
             <div class="col-md-5 col-sm-5 col-xs-4">
-            <?php if($status == 1) { ?>
-                <p class="title-category-page clear-margin">Pesanan masuk</p>
-            <?php } else if($status == 2) { ?>
-                <p class="title-category-page clear-margin">Pesanan Perlu Dikirim</p>
-            <?php } else if($status == 3) { ?>
-                <p class="title-category-page clear-margin">Pesanan Dikirim</p>
-            <?php } else if($status == 9) { ?>
-                <p class="title-category-page clear-margin">Pesanan selesai</p>
-            <?php } ?>
+                <?php if ($status == 1) { ?>
+                    <p class="title-category-page clear-margin">Pesanan Masuk</p>
+                <?php } else if ($status == 2) { ?>
+                    <p class="title-category-page clear-margin">Pesanan Perlu Dikirim</p>
+                <?php } else if ($status == 3) { ?>
+                    <p class="title-category-page clear-margin">Pesanan Dikirim</p>
+                <?php } else if ($status == 9) { ?>
+                    <p class="title-category-page clear-margin">Pesanan Selesai</p>
+                <?php } else if ($status == 10) { ?>
+                    <p class="title-category-page clear-margin">Pesanan Gagal</p>
+                <?php } ?>
             </div>
         </div>
     </div>
     <!-- Product Content Category -->
-    <div class="relative clearfix">
+    <div class="relative clearfix full-width">
+        <table class="table" id="tableOrders">
+            <thead>
+                <tr>
+                    <th>Pembeli</th>
+                    <th>Telp Pembeli</th>
+                    <th>Alamat</th>
+                    <th>Total Harga</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($transaction as $f) { ?>
+                    <tr>
+                        <td><?= $f->penerima ?></td>
+                        <td><?= $f->telp_penerima ?></td>
+                        <td style="max-width: 250px"><?= $f->alamat ?></td>
+                        <td>
+                            Rp <?= number_format($f->total_harga, 0, ",", ".") ?>
+                        </td>
+                        <td><button class="btn btn-sm btn-info btn-order" data-id="<?= $f->id ?>">Detail</button></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
         <?php
-        if (count($transaction) > 0) {
-        ?>
-            <?php
-            foreach ($transaction as $f) {
-                $total_price = 0;
-            ?>
-                <div class="col-md-12 clear-padding border no-border-t no-border-l no-border-r product-category bottom-margin-default product-category-list relative">
-                    <div class="relative overfollow-hidden info-product-list right-padding-default">
-                        <?php foreach ($order[$f->id] as $g) { ?>
-                            <div style="clear: both">
-                                <p class="float-left"><?= $g->produk ?></p>
-                                <p class="float-right">(x<?= $g->qty ?>)</p>
-                            </div>
-                        <?php
-                            $total_price += $g->harga * $g->qty;
-                        }
-                        ?>
-                    </div>
-                    <div class="relative overfollow-hidden info-product-list left-margin-default">
-                        Total:
-                        <p class="clearfix price-product">
-                            Rp <?= number_format($total_price, 0, ",", ".") ?>
-                        </p>
-                        <p class="intro-product-category"><?= $f->alamat ?></p>
-                        <div class="relative button-product-list clearfix">
-                            <ul class="clear-margin">
-                                <?php if($status == 1) { ?>
-                                    <li class=""><a href="#" class="animate-default process-order" data-id="<?= $f->id ?>">Terima Pesanan</a></li>
-                                <?php } else if($status == 2) { ?>
-                                    <li class=""><a href="#" class="animate-default send-order" data-id="<?= $f->id ?>">Kirim Pesanan</a></li>
-                                <?php } else if($status == 3) { ?>
-                                    <li class=""><a href="#" class="animate-default delivered-order btn-bg-grey" data-id="<?= $f->id ?>" disabled>Sedang dikirim</a></li>
-                                <?php } else if($status == 9) { ?>
-                                    <li class=""><a href="#" class="animate-default complete-order btn-bg-grey" data-id="<?= $f->id ?>" disabled>Selesai</a></li>
-                                <?php } ?>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            <?php } ?>
-        <?php } else { ?>
+        if (count($transaction) > 0 && false) { ?>
             <div class="col-md-12 clear-padding product-category left-margin-default product-category-list relative" style="color: grey">
-                <?php if($status == 1) { ?>
+                <?php if ($status == 1) { ?>
                     <h3>Tidak ada data</h3>
-                <?php } else if($status == 2) { ?>
+                <?php } else if ($status == 2) { ?>
                     <h3>Tidak ada data</h3>
-                <?php } else if($status == 3) { ?>
+                <?php } else if ($status == 3) { ?>
                     <h3>Tidak ada data</h3>
-                <?php } else if($status == 9) { ?>
+                <?php } else if ($status == 9) { ?>
                     <h3>Tidak ada data</h3>
                 <?php } ?>
             </div>
         <?php } ?>
     </div>
     <!-- End Product Content Category -->
+</div>
+
+<div class="modal fade bs-example-modal-lg out" id="modalOrderDetail" tabindex="-1" role="dialog" aria-hidden="true" style="display: none">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="relative">
+                    <button type="button" class="close-modal animate-default" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="ti-close"></span>
+                    </button>
+                    <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default">
+                        <h3 class="title-modal-product">Detail Pesanan</h3>
+                        <div class="col-md-12 clear-padding product-category bottom-margin-default product-category-list relative">
+                            <div class="relative overfollow-hidden info-product-list">
+                                <div class="top-margin-15-default" id="customer-detail"></div>
+                            </div>
+                            <div class="relative overfollow-hidden info-product-list">
+                                <div class="top-margin-15-default" id="list-product"></div>
+                                <div class="top-margin-default">
+                                    Total :
+                                    <p class="price-product" id="total-price">
+                                        Rp <?= number_format(100000, 0, ",", ".") ?>
+                                    </p>
+                                </div>
+                                <div class="top-margin-default">
+                                    Status :
+                                    <?php if ($status == 1) { ?>
+                                        Pesanan masuk
+                                    <?php } else if ($status == 2) { ?>
+                                        Pesanan Diproses
+                                    <?php } else if ($status == 3) { ?>
+                                        Pesanan sedang dikirim
+                                    <?php } else if ($status == 9) { ?>
+                                        Pesanan selesai
+                                    <?php } else if ($status == 10) { ?>
+                                        Pesanan dibatalkan dengan alasan
+                                        <b>
+                                            <p id="failed-reason">aaa</p>
+                                        </b>
+                                    <?php } ?>
+                                </div>
+                                <div class="relative button-product-list clearfix">
+                                    <ul class="clear-margin">
+                                        <?php if ($status == 1) { ?>
+                                            <li class=""><a href="#" class="animate-default btn-order-update cancel-order bg-grey" data-id="0">Tolak Pesanan</a></li>
+                                            <li class=""><a href="#" class="animate-default btn-order-update process-order" data-id="0">Terima Pesanan</a></li>
+                                        <?php } else if ($status == 2) { ?>
+                                            <li class=""><a href="#" class="animate-default btn-order-update send-order" data-id="0">Kirim Pesanan</a></li>
+                                        <?php } else if ($status == 3) { ?>
+                                            <li class=""><a href="#" class="animate-default btn-order-update delivered-order btn-bg-grey" data-id="0" disabled>Sedang dikirim</a></li>
+                                        <?php } else if ($status == 9) { ?>
+                                            <li class=""><a href="#" class="animate-default btn-order-update complete-order btn-bg-grey" data-id="0" disabled>Selesai</a></li>
+                                        <?php } ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -98,7 +98,7 @@ class AuthController extends CI_Controller
 		$data['active'] = 1;
 		$data['ban'] = 0;
 		$data['password'] = password_hash($this->input->post('password_r'), PASSWORD_BCRYPT);
-		$result = $this->ci->authorized->insert('user', $data);
+		$result = $this->authorized->insert('user', $data);
 		if ($result > 0) {
 			$data['id'] = $result;
 			$this->_set_session_r($data);
@@ -128,6 +128,51 @@ class AuthController extends CI_Controller
 		$this->session->set_userdata(SESS . 'telp', $data['telp']);
 	}
 
+	//ALAMAT
+
+	public function save_address()
+	{
+		$data = [
+			'user_id' => $this->session->userdata(SESS . 'id'),
+			'alamat' => $this->input->post('alamat'),
+			'provinsi' => $this->input->post('provinsi'),
+			'kota' => $this->input->post('kabupaten'),
+			'kecamatan' => $this->input->post('kecamatan'),
+			'kelurahan' => $this->input->post('kelurahan'),
+			'def' => 1,
+			'del' => 0
+		];
+		$id = $this->input->post('alamat_id');
+		if ($id) {
+			$result = $this->authorized->update('alamat', $data, $id);
+			echo $this->session->userdata('checkout') ? 'checkout' : ($result ? 'true' : 'false');
+		} else {
+			$result = $this->authorized->insert('alamat', $data);
+			echo $this->session->userdata('checkout') ? 'checkout' : ($result ? 'true' : 'false');
+		}
+	}
+
+	public function get_kabupaten($id_prov)
+	{
+		$where = ['id_prov' => $id_prov];
+		$result = $this->authorized->get('kabupaten', '*', $where)->result();
+		echo json_encode($result);
+	}
+
+	public function get_kecamatan($id_kab)
+	{
+		$where = ['id_kab' => $id_kab];
+		$result = $this->authorized->get('kecamatan', '*', $where)->result();
+		echo json_encode($result);
+	}
+
+	public function get_kelurahan($id_kec)
+	{
+		$where = ['id_kec' => $id_kec];
+		$result = $this->authorized->get('kelurahan', '*', $where)->result();
+		echo json_encode($result);
+	}
+
 	// ################--------Merchant--------##############################################
 
 	public function login_merchant($user_id)
@@ -146,10 +191,14 @@ class AuthController extends CI_Controller
 		$data['nama'] = $this->input->post('nama');
 		$data['telp'] = $this->input->post('telp');
 		$data['alamat'] = $this->input->post('alamat');
+		$data['provinsi'] = $this->input->post('provinsi');
+		$data['kota'] = $this->input->post('kabupaten');
+		$data['kecamatan'] = $this->input->post('kecamatan');
+		$data['kelurahan'] = $this->input->post('kelurahan');
 		$data['user_id'] = $this->session->userdata(SESS . 'id');
 		$data['active'] = 1;
 		$data['ban'] = 0;
-		$result = $this->ci->authorized->insert('toko', $data);
+		$result = $this->authorized->insert('toko', $data);
 		if ($result > 0) {
 			$data['id'] = strval($result);
 			$this->_set_session_r_merchant($data);
@@ -184,6 +233,38 @@ class AuthController extends CI_Controller
 		$this->session->set_userdata(SESS . 'merchant_id', $data['id']);
 		$this->session->set_userdata(SESS . 'merchant_nama', $data['nama']);
 		$this->session->set_userdata(SESS . 'merchant_telp', $data['telp']);
+	}
+
+	// ################--------Foto-profil--------##############################################
+
+	public function upload_image_profile()
+	{
+		$modul = $this->input->post('modul');
+		$image = $this->input->post('image');
+		$filename = $this->session->userdata(SESS . 'id') . uniqid() . '.png';
+
+		if ($modul == 'user') {
+			$folderPath = 'public/img/profile/';
+			$id = $this->session->userdata(SESS . 'id');
+		} else if ($modul == 'toko') {
+			$folderPath = 'public/img/profile_toko/';
+			$id = $this->session->userdata(SESS . 'merchant_id');
+		}
+		$image_parts = explode(";base64,", $image);
+		$image_type_aux = explode("image/", $image_parts[0]);
+		$image_type = $image_type_aux[1];
+		$image_base64 = base64_decode($image_parts[1]);
+		$file = $folderPath . $filename;
+
+		if (file_put_contents($file, $image_base64)) {
+			$data = [
+				'gambar' => $filename,
+			];
+			$result = $this->authorized->update($modul, $data, $id);
+			echo json_encode($result > 0 ? 'true' : 'false');
+		} else {
+			echo json_encode('false');
+		}
 	}
 }
 

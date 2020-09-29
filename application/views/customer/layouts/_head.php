@@ -1,5 +1,5 @@
 <head>
-    <title><?=$title?></title>
+    <title><?= $title ?></title>
     <meta name="format-detection" content="telephone=no">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,7 +22,8 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/megastore/css/category.css">
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/megastore/css/product.css">
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/megastore/css/cartpage.css">
-    <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/css/select2.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" integrity="sha256-jKV9n9bkk/CTP8zbtEtnKaKf+ehRovOYeKoyfthwbC8=" crossorigin="anonymous" />
 
     <!-- <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/megastore/css/icon-font-linea.css">
 	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/megastore/css/multirange.css">
@@ -41,6 +42,10 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/megastore/css/responsive.css"> -->
 </head>
 <style>
+    p {
+        margin: 0;
+    }
+
     .clearfix .logo img {
         height: 38px;
         width: auto;
@@ -63,6 +68,7 @@
 
     .title-merchant {
         margin: 0px;
+        line-height: 10px;
     }
 
     .title-merchant a {
@@ -85,6 +91,8 @@
 
     .product-sold {
         font-size: 11px;
+        position: absolute;
+        right: 5px;
     }
 
     .image-product {
@@ -135,15 +143,26 @@
     }
 
     .price-old {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .price-new {
-        font-size: 18px;
+        font-size: 16px;
+    }
+
+    .price-old-sponsored {
+        font-size: 10px;
+        color: #959595;
+        text-decoration: line-through;
+    }
+
+    .price-new-sponsored {
+        font-size: 14px;
     }
 
     .price-product {
         height: auto;
+        line-height: 10px;
     }
 
     .ranking-product-category {
@@ -156,6 +175,36 @@
         background-color: #fff;
         padding: 15px;
         border-radius: 5px;
+    }
+
+    .price-product-slide-product {
+        height: auto;
+        line-height: 10px;
+        color: #fe6600;
+        font-size: 20px;
+        letter-spacing: -0.25px;
+        font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .price-old-slide-product {
+        font-size: 16px;
+        color: #959595;
+        text-decoration: line-through;
+    }
+
+    .price-new-slide-product {
+        font-size: 20px;
+    }
+
+    .price-product-slide-product {
+        height: auto;
+        line-height: 10px;
+    }
+
+    .desc-slide-product {
+        font-size: 13px;
+        height: 64px;
+        overflow: hidden;
     }
 
     .padding-5 {
@@ -191,6 +240,54 @@
         background-color: #659dfc;
     }
 
+    .msg-discuss-input {
+        padding: 10px 90px 10px 10px;
+        border: 1px solid #666;
+        border-radius: 20px;
+        width: 100%;
+        resize: none;
+        margin: 0px;
+        position: relative;
+        line-height: 16px;
+    }
+
+    .msg-discuss-input:focus {
+        border: 1px solid #fff;
+        border-radius: 20px;
+    }
+
+    .msg-review-input {
+        padding: 10px 120px 10px 10px;
+        border: 1px solid #666;
+        border-radius: 20px;
+        width: 100%;
+        resize: none;
+        margin: 0px;
+        position: relative;
+        line-height: 16px;
+    }
+
+    .msg-review-input:focus {
+        border: 1px solid #fff;
+        border-radius: 20px;
+    }
+
+    .msg-discuss-container {
+        position: relative;
+    }
+
+    .msg-discuss-container button {
+        bottom: 18px;
+        right: 9px;
+        border-radius: 10px;
+    }
+
+    .msg-discuss-container #btn-discuss-input-camera {
+        bottom: 18px;
+        right: 75px;
+        border-radius: 10px;
+    }
+
     .msg-sender {
         float: left;
         position: absolute;
@@ -210,12 +307,21 @@
     .msg-content {
         clear: both;
         bottom: 0px;
+        line-height: 16px;
+        padding-bottom: 10px;
     }
 
-    .msg-content-reply {
+    .msg-content-reply,
+    .msg-content-edit-reply {
         position: absolute;
         bottom: 5px;
         right: 12px;
+    }
+
+    .msg-content-edit {
+        position: absolute;
+        bottom: 5px;
+        right: 32px;
     }
 
     .msg-content-star {
@@ -225,8 +331,52 @@
         color: #f68e56;
     }
 
+    .msg-content-star-input {
+        color: #f68e56;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    #star-input {
+        position: absolute;
+        top: 40px;
+        width: 0;
+        height: 0;
+        display: block;
+        top: 10px;
+        border: none;
+    }
+
+    #star-input:focus {
+        z-index: -99;
+        border: 1px solid black;
+    }
+
+    .msg-content-edit:hover,
+    .msg-content-edit-reply:hover,
     .msg-content-reply:hover {
         cursor: pointer;
+    }
+
+    .msg-review {
+        clear: both;
+        bottom: 0px;
+        line-height: 16px;
+        padding-bottom: 10px;
+        display: inline-block;
+    }
+
+    .img-review {
+        max-width: 20%;
+        display: block;
+        padding-bottom: 10px;
+    }
+
+    .msg-review-star {
+        position: absolute;
+        bottom: 5px;
+        right: 12px;
+        color: #f68e56;
     }
 
     .btn-daftar-toko {
@@ -249,11 +399,20 @@
     .form-input .auth-redirect {
         clear: both;
         display: block;
+        margin-top: 10px;
     }
 
     .form-input input.error,
     .form-input textarea.error {
         border: 1px solid #ff0000;
+    }
+
+    .form-input label.error,
+    .form-input .input-group label.error {
+        bottom: -20px;
+        position: absolute;
+        right: 0;
+        width: auto !important;
     }
 
     .form-input label.error {
@@ -281,6 +440,14 @@
     .cart-detail-header:focus,
     .cart-notification-header:focus {
         outline: none;
+    }
+
+    .notif-text>a {
+        color: #000;
+    }
+
+    .hidden {
+        display: none;
     }
 
     @media only screen and (max-width: 480px) {

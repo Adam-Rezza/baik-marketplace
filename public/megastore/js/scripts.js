@@ -121,7 +121,7 @@ function changeTabsAuth(num) {
     $('.title-tabs-auth-' + num).addClass('active-title-tabs');
     var pos = $('.content-tab-auth-' + num).position();
     if (pos.top == 0) {
-        console.log(pos.top)
+        // console.log(pos.top)
         $('.content-tabs-auth-detail').removeClass('active-tabs-auth-detail').css({ display: "none", opacity: 0 });
         $('.content-tab-auth-' + num).css({ display: "block", opacity: 0 }).animate({ opacity: 1 }, 500);
     }
@@ -390,12 +390,15 @@ function optionShiping(item) {
 
         });
         $('.category-image > div').owlCarousel({
-            loop: false,
+            loop: true,
             nav: false,
             dots: false,
-            autoplay: false,
-            autoplayTimeout: 5500,
+            autoplay: true,
+            autoplayTimeout: 1500,
             autoplayHoverPause: true,
+            smartSpeed: 1500,
+            animateIn: 'linear',
+            animateOut: 'linear',
             responsive: {
                 320: {
                     items: 2

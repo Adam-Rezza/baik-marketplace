@@ -5,11 +5,19 @@
 			<!-- Sider Bar -->
 			<div class="col-md-3 relative top-padding-default top-margin-default" id="slide-bar-category">
 				<div class="col-md-12 col-sm-12 col-xs-12 sider-bar-category border bottom-margin-default">
-					<ul class="clear-margin list-siderbar">
-						<li><a href="<?=base_url()?>my_account">Akun saya</a></li>
-						<li><a href="<?=base_url()?>my_order">Pesanan saya</a></li>
-						<li><a href="<?=base_url()?>my_recent_order">Pesanan selesai</a></li>
+					<img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile/<?=$user->gambar ? $user->gambar : "user.png"?>" alt="">
+					<div class="text-center top-margin-15-default">
+						<button id="btn-profil-foto">Upload foto</button>
+						<input type="file" id="profil-foto" accept="image/*" class="hidden">
+					</div>
+					<ul class="clear-margin list-siderbar top-margin-15-default">
+						<li><a href="<?= base_url() ?>my_account">Akun saya</a></li>
+						<li><a href="<?= base_url() ?>my_order">Pesanan saya</a></li>
+						<li><a href="<?= base_url() ?>my_recent_order">Pesanan selesai</a></li>
 					</ul>
+					<div class="text-center top-margin-15-default">
+						<a class="btn-daftar-toko" href="<?=base_url()?>">Lanjut Belanja</a>
+					</div>
 				</div>
 			</div><!-- Content Category -->
 			<div class="col-md-9 relative clear-padding top-padding-default left-padding-default">
@@ -19,7 +27,7 @@
 				<div class="bar-category bottom-margin-default border no-border-r no-border-l no-border-t">
 					<div class="row">
 						<div class="col-md-5 col-sm-5 col-xs-4">
-								<p class="title-category-page clear-margin">Pesanan Saya</p>
+							<p class="title-category-page clear-margin">Pesanan Saya</p>
 						</div>
 					</div>
 				</div>
@@ -34,15 +42,61 @@
 						?>
 							<div class="col-md-12 clear-padding border no-border-t no-border-l no-border-r product-category bottom-margin-default product-category-list relative">
 								<div class="relative overfollow-hidden info-product-list right-padding-default">
-									<?php foreach ($order[$f->id] as $g) { ?>
-										<div style="clear: both">
-											<p class="float-left"><?= $g->produk ?></p>
-											<p class="float-right">(x<?= $g->qty ?>)</p>
-										</div>
-									<?php
-										$total_price += $g->harga * $g->qty;
-									}
-									?>
+									<div style="clear: both">
+										<p class="float-left">No Pesanan: <?= $f->toko_id . date('YmdHis', strtotime($f->created_date)) . $f->id ?></p>
+									</div>
+									<div style="clear: both">
+										<p class="float-left">Penjual : <b><?= $f->toko ?></b></p>
+									</div>
+									<div class="top-padding-15-default" style="clear: both">
+										<p class="float-left">Pesanan :</p>
+										<?php foreach ($order[$f->id] as $g) { ?>
+											<div class="left-padding-15-default" style="clear: both">
+												<p class="float-left"><b><?= $g->produk ?></b> (x<?= $g->qty ?>)</p>
+												<p class="float-right"><?= $g->harga * $g->qty ?></p>
+											</div>
+										<?php
+											$total_price += $g->harga * $g->qty;
+										}
+										?>
+									</div>
+									<div class="top-padding-15-default" style="clear: both">
+										<p>Status :</p>
+										<?php if ($f->created_date) { ?>
+											<p class="left-padding-15-default margin-bottom-none">
+												<?=date('d-m-Y H:i', strtotime($f->created_date))?> => 
+												Pesanan di teruskan ke <b><?=$f->toko?></b>
+											</p>
+										<?php  } ?>
+										<?php if ($f->proccess_date) { ?>
+											<p class="left-padding-15-default margin-bottom-none">
+												<?=date('d-m-Y H:i', strtotime($f->proccess_date))?> => 
+												Pesanan diproses oleh <b><?=$f->toko?></b>
+											</p>
+										<?php  } ?>
+										<?php if ($f->shipment_date) { ?>
+											<p class="left-padding-15-default margin-bottom-none">
+												<?=date('d-m-Y H:i', strtotime($f->shipment_date))?> => 
+												Pesanan dikirim oleh <b><?=$f->toko?></b>
+											</p>
+										<?php  } ?>
+										<?php if ($f->delivery_date) { ?>
+											<p class="left-padding-15-default margin-bottom-none">
+												<?=date('d-m-Y H:i', strtotime($f->delivery_date))?> => 
+												Pesanan diterima
+											</p>
+										<?php  } ?>
+										<?php if ($f->failed_date) { ?>
+											<p class="left-padding-15-default margin-bottom-none">
+												<?=date('d-m-Y H:i', strtotime($f->failed_date))?> => 
+												Pesanan dibatalkan oleh <b><?=$f->toko?></b>
+											</p>
+											<p class="left-padding-15-default margin-bottom-none">
+												Alasan : 
+												<b><?=$f->failed_reason?></b>
+											</p>
+										<?php  } ?>
+									</div>
 								</div>
 								<div class="relative overfollow-hidden info-product-list left-margin-default">
 									Total:

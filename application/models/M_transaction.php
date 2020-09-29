@@ -73,150 +73,46 @@ class M_transaction extends CI_Model
         return $this->db->get();
     }
 
-    function updateKeranjangByUserId($data, $user_id)
+    function updateKeranjangByUserIdAndMerchantId($transaksi_id, $user_id, $toko_id)
     {
-        $this->db->where('user_id', $user_id);
-        $this->db->where('transaksi_id is null');
-        $this->db->update('keranjang', $data);
+        // $this->db->where('toko_id', $$toko_id);
+        // $this->db->where('user_id', $user_id);
+        // $this->db->where('transaksi_id is null');
+        // $this->db->update('keranjang', $data);
+        $this->db->query('UPDATE `keranjang` as `a` '.
+                            'JOIN `produk` as `b` on `a`.`produk_id` = `b`.`id` '.
+                            'SET `transaksi_id` = '.$transaksi_id.' '.
+                            'WHERE `b`.`toko_id` = '.$toko_id.' '.
+                                'AND `a`.`user_id` = '.$user_id.' '.
+                                'AND `a`.`transaksi_id` is null ');
         return $this->db->affected_rows();
     }
 
-
-
-
-
-
-
-    
-
-    function findAllBanner()
+    function findMerchantOwnerCartByUserIdGroupByMerchantId($user_id)
     {
-        $this->db->select('*');
-        $this->db->from('banner');
-        $this->db->where('active', '1');
-        $this->db->where('del', '0');
-        return $this->db->get();
-    }
-    
-
-    function findAllCategory()
-    {
-        $this->db->select('*');
-        $this->db->from('kategori');
-        $this->db->where('active', '1');
-        $this->db->where('del', '0');
+        $this->db->select('c.*');
+        $this->db->from('keranjang a');
+        $this->db->join('produk b','a.produk_id = b.id');
+        $this->db->join('toko c','b.toko_id = c.id');
+        $this->db->where('a.transaksi_id is null');
+        $this->db->group_by('c.id');
         return $this->db->get();
     }
 
-    function findSubCategoriByParent($id)
+    function findProductByUserIdAndTransactionId($user_id, $tansaksi_id)
     {
-        $this->db->select('*');
-        $this->db->from('sub_kategori');
-        $this->db->where('parent', $id);
-        $this->db->where('active', '1');
-        $this->db->where('del', '0');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, c.id as produk_id, c.terjual');
+        $this->db->from('transaksi a');
+        $this->db->join('keranjang b','a.id = b.transaksi_id');
+        $this->db->join('produk c','b.produk_id = c.id');
+        $this->db->where('a.id', $tansaksi_id);
+        $this->db->where('a.user_id', $user_id);
+        $this->db->order_by('a.created_date','DESC');
         return $this->db->get();
     }
 
-    function findSponsoredProductFirst()
-    {
-        $this->db->select('a.*, b.gambar');
-        $this->db->from('produk a');
-        $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
-        $this->db->where('b.urutan', '1');
-        // $this->db->where('sponsored_date >=', date('Y-m-d'));
-        $this->db->where('a.del', '0');
-        $this->db->limit('12', '0');
-        return $this->db->get();
-    }
 
-    function findLatestProductFirst()
-    {
-        $this->db->select('a.*, b.gambar');
-        $this->db->from('produk a');
-        $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
-        $this->db->where('b.urutan', '1');
-        $this->db->where('a.del', '0');
-        $this->db->order_by('created_date', 'desc');
-        $this->db->limit('12', '0');
-        return $this->db->get();
-    }
 
-    function findProductByCategory($category, $sub_category)
-    {
-        $this->db->select('a.*, b.gambar');
-        $this->db->from('produk a');
-        $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
-        $this->db->where('a.kategori_id', $category);
-        if ($sub_category) {
-            $this->db->where('a.sub_kategori_id', $sub_category);
-        }
-        $this->db->where('b.urutan', '1');
-        $this->db->where('a.del', '0');
-        $this->db->order_by('a.rating', 'desc');
-        $this->db->order_by('a.created_date', 'desc');
-        $this->db->limit('20', '0');
-        return $this->db->get();
-    }
-
-    function findProductByKey($keyword, $category, $sub_category)
-    {
-        $this->db->select('a.*, b.gambar');
-        $this->db->from('produk a');
-        $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
-        $this->db->where('a.nama like', '%' . $keyword . '%');
-        if ($category) {
-            $this->db->where('a.kategori_id', $category);
-        }
-        if ($sub_category) {
-            $this->db->where('a.sub_kategori_id', $sub_category);
-        }
-        $this->db->where('b.urutan', '1');
-        $this->db->where('a.del', '0');
-        $this->db->order_by('a.rating', 'desc');
-        $this->db->order_by('a.created_date', 'desc');
-        $this->db->limit('20', '0');
-        return $this->db->get();
-    }
-
-    function findCategoryById($id)
-    {
-        $this->db->select('*');
-        $this->db->from('kategori');
-        $this->db->where('id', $id);
-        $this->db->where('active', '1');
-        $this->db->where('del', '0');
-        return $this->db->get();
-    }
-
-    function findSubCategoryById($id)
-    {
-        $this->db->select('*');
-        $this->db->from('sub_kategori');
-        $this->db->where('id', $id);
-        $this->db->where('active', '1');
-        $this->db->where('del', '0');
-        return $this->db->get();
-    }
-
-    function findProductById($id)
-    {
-        $this->db->select('*');
-        $this->db->from('produk a');
-        $this->db->where('a.id', $id);
-        $this->db->where('a.del', '0');
-        return $this->db->get();
-    }
-
-    function findProductPicturesByProductId($idProduct)
-    {
-        $this->db->select('*');
-        $this->db->from('gambar_produk a');
-        $this->db->where('a.produk_id', $idProduct);
-        $this->db->where('a.del', '0');
-        $this->db->order_by('a.urutan', 'asc');
-        return $this->db->get();
-    }
 }
 
 /* End of file M_core.php */
