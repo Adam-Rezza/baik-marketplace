@@ -27,6 +27,10 @@ $route['my_order'] = 'CustomerController/my_order';
 $route['my_recent_order'] = 'CustomerController/my_recent_order';
 
 // $route['category'] = 'CustomerController/category';
+$route['discount%26page=(:any)'] = 'CustomerController/discount/$1/';
+$route['latest%26page=(:any)'] = 'CustomerController/latest/$1/';
+
+// $route['category'] = 'CustomerController/category';
 $route['category=(:any)%26page=(:any)'] = 'CustomerController/category/$1//$2';
 $route['category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/category/$1/$2/$3';
 

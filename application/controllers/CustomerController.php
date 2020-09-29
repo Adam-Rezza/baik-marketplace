@@ -47,10 +47,41 @@ class CustomerController extends CI_Controller
 		$where_banner = ['active' => 1, 'del' => 0];
 		$data['banner'] = $this->customer->get('banner', '*', $where_banner, 'urutan', 'ASC')->result();
 		// $data['banner'] = $this->customer->findAllBanner()->result();
-		$data['sponsored'] = $this->customer->findSponsoredProductFirst()->result();
-		$data['latest'] = $this->customer->findLatestProductFirst()->result();
+		$data['sponsored'] = $this->customer->findSponsoredProduct()->result();
+		$data['latest'] = $this->customer->findLatestProduct()->result();
 		// var_dump($this->session->userdata());
 		// var_dump($data['sponsored']);
+		$this->template->template($data);
+	}
+
+	public function discount($page = 1)
+	{
+		$data = $this->init();
+		$data['title']   = 'Produk berdasarkan kategori';
+		$data['content'] = 'discount/index';
+		$data['vitamin'] = 'discount/index_vitamin';
+
+		$data['url'] = base_url('discount');
+
+		$data['page'] = $page;
+		$data['page_max'] = round($this->customer->findSponsoredProduct(null, 0)->num_rows() / 20) + 1;
+		$data['product'] = $this->customer->findSponsoredProduct(20, ($page - 1) * 20)->result();
+		$this->template->template($data);
+	}
+
+	public function latest($page = 1)
+	{
+		$data = $this->init();
+		$data['title']   = 'Produk berdasarkan kategori';
+		$data['content'] = 'latest/index';
+		$data['vitamin'] = 'latest/index_vitamin';
+
+		$data['url'] = base_url('discount');
+
+		$data['page'] = $page;
+		$data['page_max'] = round($this->customer->findLatestProduct(null, 0)->num_rows() / 20) + 1;
+		$data['product'] = $this->customer->findLatestProduct(20, ($page - 1) * 20)->result();
+
 		$this->template->template($data);
 	}
 
@@ -73,7 +104,7 @@ class CustomerController extends CI_Controller
 			$data['url'] .= $sub_category ? '%26sub_category=' . $sub_category : "";
 
 			$data['page'] = $page;
-			$data['page_max'] = round($this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1) * 20)->num_rows() / 20) + 1;
+			$data['page_max'] = round($this->customer->findProductByCategory($category, $sub_category, null, 0)) + 1;
 			$data['product'] = $this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1) * 20)->result();
 
 			$this->template->template($data);
@@ -104,7 +135,7 @@ class CustomerController extends CI_Controller
 			$data['url'] .= $sub_category ? '%26sub_category=' . $sub_category : "";
 
 			$data['page'] = $page;
-			$data['page_max'] = round($this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1) * 20)->num_rows() / 20) + 1;
+			$data['page_max'] = round($this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, null, 0)->num_rows() / 20) + 1;
 			$data['product'] = $this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1) * 20)->result();
 			// var_dump($data['page_max']);
 			$this->template->template($data);
@@ -162,7 +193,7 @@ class CustomerController extends CI_Controller
 		$data['vitamin'] = 'account/index_vitamin';
 		$data['address'] = $this->customer->findAddressByUserId($this->session->userdata(SESS . 'id'))->row();
 		$data['province'] = $this->customer->get('provinsi', '*')->result();
-		$data['user'] = $this->customer->get('user','id, username, nama, telp, gambar',['id'=>$this->session->userdata(SESS.'id')])->row();
+		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESS . 'id')])->row();
 		$data['on_shopping'] = $on_shopping != null ? true : false;
 		$this->session->set_flashdata('checkout', $on_shopping != null ? true : false);
 		// print_r($data['address']);
@@ -180,7 +211,7 @@ class CustomerController extends CI_Controller
 		foreach ($data['transaction'] as $f) {
 			$data['order'][$f->id] = $this->customer->findTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
 		}
-		$data['user'] = $this->customer->get('user','id, username, nama, telp, gambar',['id'=>$this->session->userdata(SESS.'id')])->row();
+		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESS . 'id')])->row();
 		// var_dump($data['transaction']);
 		$this->template->template($data);
 	}
@@ -196,7 +227,7 @@ class CustomerController extends CI_Controller
 		foreach ($data['transaction'] as $f) {
 			$data['order'][$f->id] = $this->customer->findCompleteTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
 		}
-		$data['user'] = $this->customer->get('user','id, username, nama, telp, gambar',['id'=>$this->session->userdata(SESS.'id')])->row();
+		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESS . 'id')])->row();
 		// var_dump($data['transaction']);
 		$this->template->template($data);
 	}

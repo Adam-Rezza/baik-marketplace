@@ -107,7 +107,7 @@
                                                 </div>
                                                 <h3 class="title-merchant clearfix full-width title-hover-black">
                                                     <i class="fa fa-user icon-merchant"></i>
-                                                    <a href="#">Aang</a>
+                                                    <a href="#"><?= $f->toko ?></a>
                                                 </h3>
                                                 <p class="clearfix price-product-slide-product">
                                                     <span class="price-old-slide-product">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
@@ -151,7 +151,7 @@
                                 </h3>
                                 <h3 class="title-merchant clearfix full-width title-hover-black">
                                     <i class="fa fa-user icon-merchant"></i>
-                                    <a href="#">Aang</a>
+                                    <a href="#"><?= $f->toko ?></a>
                                 </h3>
                                 <p class="clearfix price-product">
                                     <span class="price-old-sponsored">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
@@ -173,7 +173,7 @@
                 <div class="row">
                     <div class="pagging relative">
                         <ul>
-                            <li><a href="<?=base_url()?>discount%26page=1">Lebih banyak <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+                            <li><a href="<?= base_url() ?>discount%26page=1">Lebih banyak <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -210,7 +210,7 @@
                                 </h3>
                                 <h3 class="title-merchant clearfix full-width title-hover-black">
                                     <i class="fa fa-user icon-merchant"></i>
-                                    <a href="#">Aang</a>
+                                    <a href="#"><?= $f->toko ?></a>
                                 </h3>
                                 <p class="clearfix price-product">
                                     <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
@@ -230,7 +230,7 @@
                 <div class="row">
                     <div class="pagging relative">
                         <ul>
-                            <li><a href="<?=base_url()?>latest%26page=1">Lebih banyak <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
+                            <li><a href="<?= base_url() ?>latest%26page=1">Lebih banyak <i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
                 </div>

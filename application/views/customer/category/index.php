@@ -33,11 +33,13 @@
                             </div>
                             <h3 class="title-product clearfix full-width title-hover-black">
                                 <a href="<?= base_url() ?>product/<?= $f->id ?>"><?= $f->nama ?></a>
-                                <span class="product-sold float-right">(99 Terjual)</span>
+                                <?php if($f->terjual > 0){ ?>
+                                    <span class="product-sold float-right">(<?=$f->terjual?> Terjual)</span>
+                                <?php } ?>
                             </h3>
                             <h3 class="title-merchant clearfix full-width title-hover-black">
                                 <i class="fa fa-user icon-merchant"></i>
-                                <a href="#">Aang</a>
+                                <a href="#"><?=$f->toko?></a>
                             </h3>
                             <p class="clearfix price-product">
                                 <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
