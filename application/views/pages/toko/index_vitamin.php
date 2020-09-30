@@ -40,24 +40,12 @@
 					"data": null,
 					"render": function(res) {
 						let statusActive;
-						if (res.active == '1') {
+						if (res.ban == '0') {
 							statusActive = `Aktif`;
 						} else {
 							statusActive = `Non Aktif`;
 						}
 						return statusActive;
-					}
-				},
-				{
-					"data": null,
-					"render": function(res) {
-						let statusBan;
-						if (res.ban == '1') {
-							statusBan = `Banned`;
-						} else {
-							statusBan = `Not Banned`;
-						}
-						return statusBan;
 					}
 				},
 				{
@@ -110,11 +98,11 @@
 				},
 			],
 			"columnDefs": [{
-					"targets": [1, 8],
+					"targets": [1, 7],
 					"orderable": false,
 				},
 				{
-					"targets": [0, 1, 6, 7, 8],
+					"targets": [0, 1, 6, 7],
 					"className": "text-center"
 				}
 			],
@@ -156,27 +144,29 @@
 			},
 		}).done(function(res) {
 			console.log(res);
-			htmlnya = '';
+			let htmlnya = '';
 			if (res.code == 404 || res.total_data == 0) {
 				alert("Toko belum memiliki Produk");
 			} else {
 				no = 1;
+				htmlnya = `
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Nama Produk</th>
+							<th>Kategori</th>
+							<th>Harga Asli</th>
+							<th>Harga Disc</th>
+							<th>Terjual</th>
+							<th>Rating</th>
+							<th>Tanggal Terdaftar</th>
+						</tr>
+					</thead>
+					<tbody>
+				`;
 				$.each(res.data, function(i, k) {
-					htmlnya = `
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Nama Produk</th>
-								<th>Kategori</th>
-								<th>Harga Asli</th>
-								<th>Harga Disc</th>
-								<th>Terjual</th>
-								<th>Rating</th>
-								<th>Tanggal Terdaftar</th>
-							</tr>
-						</thead>
-						<tbody>
+					htmlnya += `
 							<tr>
 								<td>${no}</td>
 								<td>${k.nama_produk}</td>
@@ -187,11 +177,12 @@
 								<td>${k.rating}</td>
 								<td>${k.created_date}</td>
 							</tr>
-						</tbody>
-					</table>
 					`;
 					no++;
 				});
+
+				htmlnya += `</tbody></table>`;
+
 				$('#modal_lihat_produk #nama_toko').html(res.nama_toko);
 				$('#modal_lihat_produk .modal-body').html(htmlnya);
 				$('#modal_lihat_produk').modal('show');

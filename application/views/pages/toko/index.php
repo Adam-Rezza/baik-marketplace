@@ -28,7 +28,6 @@
 									<th>Telp</th>
 									<th>Pemilik Toko</th>
 									<th>Status</th>
-									<th>Ban Status</th>
 									<th class="text-center" style="width: 100px;"><i class="fa fa-cogs"></i></th>
 								</tr>
 							</thead>

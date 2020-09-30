@@ -73,7 +73,12 @@ class TokoController extends CI_Controller
 			$row['nama']   = $field->nama;
 			$row['alamat'] = $field->alamat;
 			$row['telp']   = $field->telp;
-			$row['gambar'] = $field->gambar;
+
+			$gambar = 'logo.png';
+			if ($field->gambar != NULL) {
+				$gambar = $field->gambar;
+			}
+			$row['gambar'] = $gambar;
 			$row['active'] = $field->active;
 			$row['ban']    = $field->ban;
 
@@ -101,44 +106,43 @@ class TokoController extends CI_Controller
 
 		$where = [
 			'toko_id' => $id,
-			'del' => null
+			'del'     => FALSE
 		];
-		$exec = $this->mcore->get(TABLE_PRODUK, '*', $where, 'id', 'DESC');
+		$exec = $this->mcore->get(TABLE_PRODUK, '*', $where, 'toko_id', 'DESC');
 
-		if ($exec) {
-			$code = 200;
+		$code = 200;
+		if (!$exec) {
+			$this->output->set_status_header('500', 'Gagal mendapatkan data Produk');
+			exit;
 		}
 
 		$produk = [];
 		foreach ($exec->result() as $key) {
-			$id           = $key->id;
-			$toko_id      = $key->toko_id;
-			$kategori_id  = $key->kategori_id;
-			$nama_produk  = $key->nama;
-			$harga_asli   = $key->harga_asli;
-			$harga_disc   = $key->harga_disc;
-			$terjual      = $key->terjual;
-			$rating       = $key->rating;
-			$created_date = $key->created_date;
+			$id              = $key->id;
+			$toko_id         = $key->toko_id;
+			$kategori_id     = $key->kategori_id;
+			$sub_kategori_id = $key->sub_kategori_id;
+			$nama_produk     = $key->nama;
+			$harga_asli      = $key->harga_asli;
+			$harga_disc      = $key->harga_disc;
+			$terjual         = $key->terjual;
+			$rating          = $key->rating;
+			$created_date    = $key->created_date;
 
-			$exec_toko = $this->mcore->get(TABLE_TOKO, '*', ['id' => $toko_id]);
+			$exec_toko = $this->mcore->get(TABLE_TOKO, 'nama', ['id' => $toko_id]);
 			$nama_toko = $exec_toko->row()->nama;
 
-			$exec_kategori      = $this->mcore->get(TABLE_KATEGORI, '*', ['id' => $kategori_id]);
-			$parent_id_kategori = $exec_kategori->row()->parent;
-			$parent_kategori    = NULL;
-			$child_kategori     = $exec_kategori->row()->nama;
+			$exec_kategori = $this->mcore->get(TABLE_KATEGORI, '*', ['id' => $kategori_id]);
+			$nama_kategori = $exec_kategori->row()->nama;
 
-
-			if ($parent_id_kategori != NULL) {
-				$exec_parent_kategori = $this->mcore->get(TABLE_KATEGORI, '*', ['id' => $parent_id_kategori]);
-				$parent_kategori = $exec_parent_kategori->row()->nama;
+			$nama_sub_kategori = '';
+			if (in_array($sub_kategori_id, [NULL, '0']) === FALSE) {
+				$exec_sub_kategori = $this->mcore->get('sub_kategori', '*', ['id' => $sub_kategori_id]);
+				$nama_sub_kategori = $exec_sub_kategori->row()->nama;
 			}
 
-			if ($parent_kategori != NULL) {
-				$nama_kategori = $parent_kategori . " > " . $child_kategori;
-			} else {
-				$nama_kategori = $child_kategori;
+			if ($sub_kategori_id != NULL && $sub_kategori_id != '0') {
+				$nama_kategori = $nama_kategori . " > " . $nama_sub_kategori;
 			}
 
 			$nested = [
