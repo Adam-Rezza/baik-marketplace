@@ -60,17 +60,10 @@
 						tombolDelete = `<a onclick="deleteData('${res.id}');"><i class="fa fa-trash fa-fw"></i> Delete</a>`;
 						tombolEdit = `<a onclick="editData('${res.id}');"><i class="fa fa-pencil fa-fw"></i> Edit</a>`;
 
-						if (res.active == '1') {
-							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.active}', 'status');"><i class="fa fa-times fa-fw"></i> Non Aktifkan</a>`;
+						if (res.ban == '0') {
+							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-times fa-fw"></i> Non Aktifkan</a>`;
 						} else {
-							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.active}', 'status');"><i class="fa fa-check fa-fw"></i> Aktifkan</a>`;
-						}
-
-						if (res.ban == '1') {
-							tombolBan = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-check fa-fw"></i> Unban Toko</a>`;
-						} else {
-							tombolBan = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-times fa-fw"></i> Ban Toko</a>`;
-
+							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-check fa-fw"></i> Aktifkan</a>`;
 						}
 
 						tombolLihatProduk = `<a href="javascript:;" onclick="lihatProduk('${res.id}');"><i class="fa fa-search fa-fw"></i> Lihat Produk</a>`;
@@ -88,7 +81,6 @@
 									<li>${tombolLihatProduk}</li>
 									<li role="separator" class="divider"></li>
 									<li>${ tombolStatus }</li>
-									<li>${ tombolBan }</li>
 								</ul>
 							</div>
 						</div>
@@ -229,18 +221,10 @@
 		let targetURL;
 		let confirmMessage;
 
-		if (tipe == 'status') {
-			if (status == 1) {
-				confirmMessage = "Non Aktifkan Toko ?"
-			} else {
-				confirmMessage = "Aktifkan Toko ?"
-			}
+		if (status == 1) {
+			confirmMessage = "Aktifkan Toko ?"
 		} else {
-			if (status == 1) {
-				confirmMessage = "Unban Toko ?"
-			} else {
-				confirmMessage = "Ban Toko ?"
-			}
+			confirmMessage = "Non Aktifkan Toko ?"
 		}
 
 		let cek_confirm = confirm(confirmMessage);
