@@ -141,3 +141,8 @@ $route['user']                = 'UsersController/index';
 $route['user/change_status']  = 'UsersController/change_status';
 $route['user/reset_password'] = 'UsersController/reset_password';
 $route['datatables/user']     = 'UsersController/datatables';
+
+# TRANSAKSI
+$route['transaksi']            = 'TransaksiController/index';
+$route['transaksi/show']       = 'TransaksiController/show';
+$route['datatables/transaksi'] = 'TransaksiController/datatables';

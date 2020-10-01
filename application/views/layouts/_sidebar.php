@@ -23,6 +23,11 @@
 				</a>
 			</li>
 			<li class="">
+				<a href="<?= site_url('transaksi'); ?>">
+					<i class="fa fa-list"></i> <span>List Transaksi</span>
+				</a>
+			</li>
+			<li class="">
 				<a href="<?= site_url('user'); ?>">
 					<i class="fa fa-users"></i> <span>User Management</span>
 				</a>
