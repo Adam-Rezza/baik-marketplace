@@ -31,7 +31,7 @@
 							</li>
 							<li class="user-footer">
 								<div class="pull-left">
-									<button type="button" class="btn btn-info btn-flat">Ganti Password</button>
+									<button type="button" class="btn btn-info btn-flat" data-toggle="modal" data-target="#modal_change_password">Ganti Password</button>
 								</div>
 								<div class="pull-right">
 									<a href="<?= site_url(); ?>logout" class="btn btn-danger btn-flat" role="button">Sign out</a>

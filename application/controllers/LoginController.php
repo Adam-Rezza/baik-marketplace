@@ -116,7 +116,44 @@ class LoginController extends CI_Controller
 		$this->session->unset_userdata(SESS . 'id');
 		$this->session->unset_userdata(SESS . 'username');
 		$this->session->set_flashdata('logout', LOGOUT_MSG);
-		redirect(site_url(), 'refresh');
+		redirect(site_url('login'), 'refresh');
+	}
+
+	public function change_password()
+	{
+		$id               = $this->session->userdata(SESS . 'id');
+		$current_password = $this->input->post('current_pass') . UYAH;
+		$new_password     = $this->input->post('new_pass');
+
+		if ($id == NULL) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+		$admin = $this->mcore->get('admins', '*', ['id' => $id]);
+
+		if ($admin->num_rows() == 0) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+
+		$password_db = $admin->row()->password;
+
+		if (!password_verify($current_password, $password_db)) {
+			echo json_encode(['code' => 501, 'id' => $id, 'current_password' => $current_password]);
+			exit;
+		}
+
+		$new_password = password_hash($new_password . UYAH, PASSWORD_DEFAULT);
+
+		$exec = $this->mcore->update('admins', ['password' => $new_password], ['id' => $id]);
+
+		if (!$exec) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+
+		echo json_encode(['code' => 200]);
+		exit;
 	}
 }
 
