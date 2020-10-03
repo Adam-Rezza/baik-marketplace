@@ -90,7 +90,7 @@ $route['dashboard'] = 'DashboardController/index';
 # AUTH
 $route['login']           = 'LoginController/index';
 $route['logout']          = 'LoginController/logout';
-$route['change_password'] = 'LoginController/change_password';
+$route['admin/change_password'] = 'LoginController/change_password';
 
 # ADMINS
 $route['admins']            = 'AdminsController/index';

@@ -88,6 +88,7 @@ defined('EXIT__AUTO_MAX')      or define('EXIT__AUTO_MAX', 125); // highest auto
 # DEVELOPER NEW CONSTANT
 ## UTILITY
 define('SESS', 'BAIKMRKTSESS');
+define('SESSUSER', 'BAIKMRKTSESSUSER');
 define('COOK', 'BAIKMRKTCOOK');
 define('UYAH', 'macbookpro2020');
 define('VERSION_APP', '1.0.0 Alpha');

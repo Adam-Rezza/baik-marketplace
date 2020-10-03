@@ -143,8 +143,8 @@ class MerchantController extends CI_Controller
 		$data['harga_asli'] = str_replace('.', '', $this->input->post('harga_asli'));
 		$data['disc'] = $this->input->post('disc');
 		$data['harga_disc'] = str_replace('.', '', $this->input->post('harga_disc'));
-		$data['kategori_id'] = $this->input->post('kategori');
-		$data['sub_kategori_id'] = $this->input->post('sub_kategori');
+		$data['kategori_id'] = $this->input->post('kategori') ? $this->input->post('kategori') : null;
+		$data['sub_kategori_id'] = $this->input->post('sub_kategori') ? $this->input->post('sub_kategori') : null;
 		$data['desc'] = $this->input->post('desc');
 		if ($this->session->userdata(SESS . 'merchant_id')) {
 			if ($id) {
