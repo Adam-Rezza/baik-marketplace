@@ -53,7 +53,7 @@
 										<?php foreach ($order[$f->id] as $g) { ?>
 											<div class="left-padding-15-default" style="clear: both">
 												<p class="float-left"><b><?= $g->produk ?></b> (x<?= $g->qty ?>)</p>
-												<p class="float-right"><?= $g->harga * $g->qty ?></p>
+												<p class="float-right">Rp <?= number_format(($g->harga * $g->qty), 0, ",", ".") ?></p>
 											</div>
 										<?php
 											$total_price += $g->harga * $g->qty;

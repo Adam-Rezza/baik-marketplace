@@ -100,7 +100,7 @@ class TransactionController extends CI_Controller
 	{
 		$user_id = $this->session->userdata(SESS . 'id');
 		$alamat = $this->ci->transaction->findAddressByUserId($user_id)->row();
-
+		$this->db->trans_begin();
 		if ($user_id && $alamat) {
 			$toko_pemilik_keranjang = $this->ci->transaction->findMerchantOwnerCartByUserIdGroupByMerchantId($user_id)->result();
 			// echo json_encode($toko_pemilik_keranjang);
@@ -131,11 +131,14 @@ class TransactionController extends CI_Controller
 					$this->create_notification($user_id, $msg, $url);
 					$status = ($status && $keranjang) ? true : false;
 				} else {
-					//rollback disini
+					$this->db->trans_rollback();
 					$status = false;
+					echo json_encode($status ? 'true' : '1'); // 1 => transaksi gagal 
+					exit;
 				}
 			}
-			echo json_encode($status ? 'true' : '1');
+			$this->db->trans_commit();
+			echo json_encode($status ? 'true' : '1'); // 1 => transaksi gagal 
 		} else {
 			$this->session->set_flashdata('checkout', true);
 			echo json_encode('2');
