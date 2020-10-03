@@ -74,7 +74,7 @@ class TokoController extends CI_Controller
 			$row['alamat'] = $field->alamat;
 			$row['telp']   = $field->telp;
 
-			$gambar = 'logo.png';
+			$gambar = 'merchant.png';
 			if ($field->gambar != NULL) {
 				$gambar = $field->gambar;
 			}
@@ -117,6 +117,10 @@ class TokoController extends CI_Controller
 		}
 
 		$produk = [];
+		if ($exec->num_rows() == 0) {
+			echo json_encode(['code' => 404]);
+			exit();
+		}
 		foreach ($exec->result() as $key) {
 			$id              = $key->id;
 			$toko_id         = $key->toko_id;
@@ -130,10 +134,14 @@ class TokoController extends CI_Controller
 			$created_date    = $key->created_date;
 
 			$exec_toko = $this->mcore->get(TABLE_TOKO, 'nama', ['id' => $toko_id]);
+
 			$nama_toko = $exec_toko->row()->nama;
 
-			$exec_kategori = $this->mcore->get(TABLE_KATEGORI, '*', ['id' => $kategori_id]);
-			$nama_kategori = $exec_kategori->row()->nama;
+			$nama_kategori = '';
+			if (in_array($kategori_id, [NULL, '0']) === FALSE) {
+				$exec_kategori = $this->mcore->get('kategori', '*', ['id' => $kategori_id]);
+				$nama_kategori = $exec_kategori->row()->nama;
+			}
 
 			$nama_sub_kategori = '';
 			if (in_array($sub_kategori_id, [NULL, '0']) === FALSE) {

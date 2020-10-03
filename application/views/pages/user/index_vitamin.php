@@ -20,7 +20,7 @@
 				{
 					"data": null,
 					"render": function(res) {
-						html = `<img src="<?= base_url(); ?>public/img/user/${res.gambar}" class="img-thumbnail" style="width: 80px;" />`;
+						html = `<img src="<?= base_url(); ?>public/img/profile/${res.gambar}" class="img-thumbnail" style="width: 80px;" />`;
 						return html;
 					}
 				},
