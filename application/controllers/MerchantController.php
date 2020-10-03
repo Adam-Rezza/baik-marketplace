@@ -150,72 +150,99 @@ class MerchantController extends CI_Controller
 			if ($id) {
 				$data['modified_date'] = date('Y-m-d h:i:s');
 				if ($result = $this->merchant->update_product('produk', $data, $id, $this->session->userdata(SESS . 'merchant_id')) > 0) {
-					echo "true";
+					echo json_encode('true');
 				} else {
-					echo 'false';
+					echo json_encode('false');
 				}
 			} else {
 				$data['created_date'] = date('Y-m-d h:i:s');
 				if ($result = $this->merchant->insert('produk', $data) > 0) {
 					$data['id'] = $result;
-					echo "true";
+					echo json_encode('true');
 				} else {
-					echo 'false';
+					echo json_encode('false');
 				}
 			}
 		} else {
-			echo 'false';
+			echo json_encode('false');
 		}
 	}
 
 	public function upload_image_product()
 	{
-		$id = $this->input->post('gambar_id');
+		$gambar_id = $this->input->post('gambar_id');
 		$product_id = $this->input->post('produk_id');
-		$urutan = $this->input->post('urutan');
-		$image = $this->input->post('image');
-		$filename = $product_id . uniqid() . '.png';
+		$product = $this->merchant->findProductByMerhanctIdAndProductId($this->session->userdata(SESS . 'merchant_id'), $product_id, 1);
+		if ($product->row()) {
+			$image = $this->input->post('image');
+			$filename = $product_id . uniqid() . '.png';
 
-		$folderPath = 'public/img/produk/';
-		$image_parts = explode(";base64,", $image);
-		$image_type_aux = explode("image/", $image_parts[0]);
-		$image_type = $image_type_aux[1];
-		$image_base64 = base64_decode($image_parts[1]);
-		$file = $folderPath . $filename;
+			$folderPath = 'public/img/produk/';
+			$image_parts = explode(";base64,", $image);
+			$image_type_aux = explode("image/", $image_parts[0]);
+			$image_type = $image_type_aux[1];
 
-		if (file_put_contents($file, $image_base64)) {
-			$data = [
-				'produk_id' => $product_id,
-				'gambar' => $filename,
-				'urutan' => $urutan,
-			];
-			if ($id) {
-				$data['id'] = $id;
-				$result = $this->merchant->update('gambar_produk', $data, $id);
-				if ($result) {
-					echo json_encode($data);
+			$image_base64 = base64_decode($image_parts[1]);
+			$file = $folderPath . $filename;
+
+			if (file_put_contents($file, $image_base64)) {
+				$data = [
+					'produk_id' => $product_id,
+					'gambar' => $filename,
+				];
+				$urutan = $product->row()->urutan ? $product->row()->urutan + 1 : 1;
+				if ($gambar_id) {
+					$data['id'] = $gambar_id;
+					$gambar = $this->merchant->get('gambar_produk', '*', ['id' => $gambar_id])->row();
+					$result = $this->merchant->update('gambar_produk', $data, $gambar_id);
+					if ($result) {
+						$data['urutan'] = $gambar->urutan;
+						echo json_encode($data);
+					} else {
+						echo json_encode('false');
+					}
+				} else if ($urutan < 4) {
+					$data['urutan'] = $urutan;
+					$result = $this->merchant->insert('gambar_produk', $data);
+					if ($result) {
+						$data['id'] = $result;
+						echo json_encode($data);
+					} else {
+						echo json_encode('false');
+					}
 				} else {
-					echo 'false';
+					echo json_encode('false');
 				}
 			} else {
-				$result = $this->merchant->insert('gambar_produk', $data);
-				if ($result) {
-					$data['id'] = $result;
-					echo json_encode($data);
-				} else {
-					echo 'false';
-				}
+				echo json_encode('false');
 			}
 		} else {
-			echo 'false';
+			echo json_encode('false');
 		}
+	}
 
-		// if ($result = $this->merchant->insert('produk', $data) > 0) {
-		// 	$data['id'] = $result;
-		// 	echo "true";
-		// } else {
-		// 	echo 'false';
-		// }
+	public function sort_image_product()
+	{
+		$post = json_decode($this->input->post('data'));
+		$result = true;
+		foreach ($post as $f) {
+			$executed = $this->merchant->update('gambar_produk', ['urutan' => $f->urutan], $f->id);
+			$result = ($executed > 0 && $result) ? true : false;
+		}
+		echo json_encode($result ? 'true' : 'false');
+	}
+
+	public function delete_image_product()
+	{
+		$id = $this->input->post('id');
+		$product_id = $this->input->post('produk_id');
+		$product = $this->merchant->findProductByMerhanctIdAndProductId($this->session->userdata(SESS . 'merchant_id'), $product_id, 1);
+		if ($product->row()) {
+			$result = $this->merchant->delete('gambar_produk', ['id' => $id]);
+			echo json_encode($result ? 'true' : 'false');
+		} else {
+			echo json_encode('false');			
+		}
 	}
 }
 

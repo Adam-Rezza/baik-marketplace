@@ -4,46 +4,65 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class M_merchant extends CI_Model
 {
 
-	public function get($table, $select = '*', $where = NULL, $orderBy = NULL, $orderOrien = 'ASC', $limit = NULL, $offset = NULL, $groupBy = NULL)
-	{
-		$this->db->select($select);
-		if ($where != NULL) {
-			$this->db->where($where);
-		}
-
-		if($orderBy != NULL){
-			$this->db->order_by($orderBy, $orderOrien);
-		}
-
-		if($groupBy != NULL){
-			$this->db->group_by($groupBy);
-		}
-
-		return $this->db->get($table, $limit, $offset);
-	}
-
-    function insert($tabel, $data)
+    public function get($table, $select = '*', $where = NULL, $orderBy = NULL, $orderOrien = 'ASC', $limit = NULL, $offset = NULL, $groupBy = NULL)
     {
-        $this->db->insert($tabel, $data);
+        $this->db->select($select);
+        if ($where != NULL) {
+            $this->db->where($where);
+        }
+
+        if ($orderBy != NULL) {
+            $this->db->order_by($orderBy, $orderOrien);
+        }
+
+        if ($groupBy != NULL) {
+            $this->db->group_by($groupBy);
+        }
+
+        return $this->db->get($table, $limit, $offset);
+    }
+
+    function insert($table, $data)
+    {
+        $this->db->insert($table, $data);
         return $this->db->insert_id();
     }
 
-    function update($tabel, $data, $id)
+    function update($table, $data, $id)
     {
         $this->db->where('id', $id);
-        $this->db->update($tabel, $data);
+        $this->db->update($table, $data);
         return $this->db->affected_rows();
     }
 
-    function update_product($tabel, $data, $id, $merchant_id)
+    function delete($table, $where)
+    {
+        $this->db->where($where);
+        $this->db->delete($table);
+        return $this->db->affected_rows();
+    }
+
+    function update_product($table, $data, $id, $merchant_id)
     {
         $this->db->where('id', $id);
         $this->db->where('toko_id', $merchant_id);
-        $this->db->update($tabel, $data);
+        $this->db->update($table, $data);
         return $this->db->affected_rows();
     }
 
-    function findMerchantByMerchantId($toko_id)
+    function findProductByMerhanctIdAndProductId($merchant_id, $product_id, $limit = null)
+    {
+        $this->db->select('a.*, b.urutan');
+        $this->db->from('produk a');
+        $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
+        $this->db->where('a.toko_id', $merchant_id);
+        $this->db->where('a.id', $product_id);
+        $this->db->order_by('b.urutan', 'desc');
+        $this->db->limit($limit);
+        return $this->db->get();
+    }
+
+    function findMerchantByMerchantId($merchant_id)
     {
         $this->db->select('a.*, b.nama as prov, c.nama as kab, d.nama as kec, e.nama as kel');
         $this->db->from('toko a');
@@ -51,59 +70,58 @@ class M_merchant extends CI_Model
         $this->db->join('kabupaten c', 'a.kota = c.id_kab');
         $this->db->join('kecamatan d', 'a.kecamatan = d.id_kec');
         $this->db->join('kelurahan e', 'a.kelurahan = e.id_kel');
-        $this->db->where('a.id', $toko_id);
+        $this->db->where('a.id', $merchant_id);
         return $this->db->get();
     }
 
-    function findProductByMerchantId($toko_id)
+    function findProductByMerchantId($merchant_id)
     {
         $this->db->select('a.*, b.gambar');
         $this->db->from('produk a');
-        $this->db->where('a.toko_id', $toko_id);
+        $this->db->where('a.toko_id', $merchant_id);
         $this->db->join('gambar_produk b', 'a.id = b.produk_id and b.urutan = 1', 'left');
         $this->db->where('a.del', '0');
         $this->db->where('a.ban', '0');
-        $this->db->order_by('case when a.modified_date > a.created_date then a.modified_date ELSE a.created_date END DESC','', false);
+        $this->db->order_by('case when a.modified_date > a.created_date then a.modified_date ELSE a.created_date END DESC', '', false);
         return $this->db->get();
     }
 
-    function findTransactionByMerchantIdAndStatusGroupByTransaction($toko_id, $status)
+    function findTransactionByMerchantIdAndStatusGroupByTransaction($merchant_id, $status)
     {
         $this->db->select('a.*, sum(b.harga * b.qty) as total_harga');
         $this->db->from('transaksi a');
-        $this->db->join('keranjang b','a.id = b.transaksi_id');
+        $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->where('a.status', $status);
-        $this->db->where('a.toko_id', $toko_id);
-        $this->db->order_by('a.created_date','DESC');
+        $this->db->where('a.toko_id', $merchant_id);
+        $this->db->order_by('a.created_date', 'DESC');
         $this->db->group_by('a.id');
         return $this->db->get();
     }
 
-    function findTransactionByMerchantIdAndStatusAndTransactionId($toko_id, $status, $tansaksi_id)
+    function findTransactionByMerchantIdAndStatusAndTransactionId($merchant_id, $status, $tansaksi_id)
     {
         $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
         $this->db->from('transaksi a');
-        $this->db->join('keranjang b','a.id = b.transaksi_id');
-        $this->db->join('produk c','b.produk_id = c.id');
+        $this->db->join('keranjang b', 'a.id = b.transaksi_id');
+        $this->db->join('produk c', 'b.produk_id = c.id');
         $this->db->where('a.id', $tansaksi_id);
         $this->db->where('a.status', $status);
-        $this->db->where('c.toko_id', $toko_id);
-        $this->db->order_by('a.created_date','DESC');
+        $this->db->where('c.toko_id', $merchant_id);
+        $this->db->order_by('a.created_date', 'DESC');
         return $this->db->get();
     }
 
-    function findTransactionByMerchantIdAndTransactionId($toko_id, $tansaksi_id)
+    function findTransactionByMerchantIdAndTransactionId($merchant_id, $tansaksi_id)
     {
         $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
         $this->db->from('transaksi a');
-        $this->db->join('keranjang b','a.id = b.transaksi_id');
-        $this->db->join('produk c','b.produk_id = c.id');
+        $this->db->join('keranjang b', 'a.id = b.transaksi_id');
+        $this->db->join('produk c', 'b.produk_id = c.id');
         $this->db->where('a.id', $tansaksi_id);
-        $this->db->where('c.toko_id', $toko_id);
-        $this->db->order_by('a.created_date','DESC');
+        $this->db->where('c.toko_id', $merchant_id);
+        $this->db->order_by('a.created_date', 'DESC');
         return $this->db->get();
     }
-
 }
 
 /* End of file M_core.php */

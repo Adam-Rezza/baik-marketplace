@@ -21,9 +21,9 @@
                     <div class="image-product image-product-merhcant relative overfollow-hidden">
                         <div class="center-vertical-image">
                             <?php if ($f->gambar) { ?>
-                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Product">
+                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" id="image-product-<?= $f->id ?>" alt="Product">
                             <?php } else { ?>
-                                <img src="<?= base_url(); ?>public/megastore/img/no-image-available.png" alt="No image">
+                                <img src="<?= base_url(); ?>public/megastore/img/no-image-available.png" id="image-product-<?= $f->id ?>" alt="No image">
                             <?php } ?>
                         </div>
                         <ul class="option-product animate-default clear-margin">
@@ -148,30 +148,53 @@
                     <button type="button" class="close-modal animate-default" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" class="ti-close"></span>
                     </button>
-                    <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default grid-stack-container">
-                        <h3>Gambar Produk > <span id="title-product">Product</span></h3>
-                        <div class="grid-stack" id="grid-stack">
-                            <div class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                                <div class="grid-stack-item-content">
+                    <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default">
+                        <div class="col-md-12" style="display: block; margin-bottom: 30px">
+                            <h3>Gambar Produk > <span id="title-product">Product</span></h3>
+                        </div>
+                        <div class="image-product-container" id="image-product-sortable" data-produk-id="45">
+                            <div class="image-product-item" id="image-product-item-example-1">
+                                <div class="image-product-item-content">
                                     <img src="<?= base_url(); ?>public/megastore/img/add-image.png" alt="No image">
-                                    <input type="file" class="input-image-product">
+                                    <input type="file" class="input-image-product hidden">
+                                    <button>Update</button>
+                                </div>
+                                <button class="image-product-item-remove"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </div>
+                            <div class="image-product-item" id="image-product-item-example-2">
+                                <div class="image-product-item-content">
+                                    <img src="<?= base_url(); ?>public/megastore/img/add-image.png" alt="No image">
+                                    <input type="file" class="input-image-product hidden">
+                                    <button>Update</button>
                                 </div>
                             </div>
-                            <div class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                                <div class="grid-stack-item-content">
+                            <div class="image-product-item" id="image-product-item-example-3">
+                                <div class="image-product-item-content">
                                     <img src="<?= base_url(); ?>public/megastore/img/add-image.png" alt="No image">
+                                    <input type="file" class="input-image-product hidden">
+                                    <button>Update</button>
                                 </div>
                             </div>
-                            <div class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                                <div class="grid-stack-item-content">
+                            <div class="image-product-add-item" id="image-product-item-example-4">
+                                <div class="image-product-item-content">
                                     <img src="<?= base_url(); ?>public/megastore/img/add-image.png" alt="No image">
+                                    <input type="file" class="input-image-product hidden">
+                                    <button>Tambah</button>
                                 </div>
                             </div>
-                            <div class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                                <div class="grid-stack-item-content">
+                        </div>
+                        <div class="image-product-container" id="image-product-container-add" style="display: none">
+                            <div class="image-product-add-item" id="image-product-item-example-4">
+                                <div class="image-product-item-content">
                                     <img src="<?= base_url(); ?>public/megastore/img/add-image.png" alt="No image">
+                                    <input type="file" class="input-image-product hidden" id="add-image-new" accept="image/*">
+                                    <button class="btn-image-product" data-target="add-image-new">Tambah</button>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-input full-width clearfix relative text-center">
+                            <button class="btn-daftar-toko full-width top-margin-15-default" id="save_sort">Simpan</button>
                         </div>
                     </div>
 
@@ -189,7 +212,7 @@
                     <button type="button" class="close-modal animate-default" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true" class="ti-close"></span>
                     </button>
-                    <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default grid-stack-container">
+                    <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default">
                         <h3>Simpan Gambar</h3>
 
                         <div class="img-container">

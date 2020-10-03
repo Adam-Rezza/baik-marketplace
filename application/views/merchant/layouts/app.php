@@ -104,6 +104,7 @@
     <script src="<?= base_url() ?>public/js/select2.min.js"></script>
 	<script src="<?= base_url() ?>public/megastore/js/sweetalert2@9" defer=""></script>
 	<script src="<?= base_url() ?>public/js/jquery.blockUI.min.js" defer=""></script>
+	<script src="<?= base_url() ?>public/js/jquery-ui-sortable.min.js" defer=""></script>
 </body>
 
 <?php $this->load->view('merchant/' . $vitamin) ?>

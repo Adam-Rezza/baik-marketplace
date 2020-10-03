@@ -1,32 +1,72 @@
 <style>
-    .grid-stack-item {
-        border-bottom: 1px solid #333;
-        position: relative;
+    .image-product-container {
+        display: inline;
+        padding-top: 30px;
+    }
+
+    .image-product-item {
+        border: 2px solid #ddd;
         display: inline-block;
+        width: calc(25% - 15px);
+        position: relative;
+        margin-right: 10px;
+        margin-bottom: 11px;
+        text-align: center;
+        padding: 5px;
     }
 
-    .grid-stack-item:last-child {
-        border-bottom: none;
+    .image-product-add-item {
+        border: 2px solid #ddd;
+        display: inline-block;
+        width: calc(25% - 15px);
+        position: relative;
+        margin-right: 8px;
+        margin-bottom: 11px;
+        text-align: center;
+        padding: 5px;
     }
 
-    .grid-stack-item-content {
+    .image-product-item img,
+    .image-product-add-item img {
+        padding-bottom: 5px;
+    }
+
+    .image-product-item .image-product-item-remove {
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        background-color: #dddddd;
+        border-radius: 50%;
+        border: 1px solid black;
+        width: 15px;
+        height: 15px;
+        text-align: center;
+        font-size: 10px;
+    }
+
+    .image-product-item .image-product-item-remove:focus {
+        border-radius: 50%;
+        border: none;
+    }
+
+    .image-product-item-content {
         overflow: hidden !important;
     }
 
-    .grid-stack-item-content img {
-        width: calc(25% - 15px);
+    .image-product-item-content img {
+        width: 100%;
         height: auto;
         display: inline-block;
     }
 
-    .grid-stack-item-content .input-image-product {
+    .image-product-item-content .input-image-product {
         display: inline-block;
         margin-left: 20px;
     }
 
     #image {
         width: 400px;
-        width: 400px;
+        height: 400px;
     }
 
     .cropper-container {
@@ -87,7 +127,8 @@
                 }
             })
         })
-        $('.edit-image-product').click(function() {
+        $('.edit-image-product').click(function(e) {
+            e.preventDefault()
             $.blockUI({
                 message: '<img src="<?= base_url() ?>public/megastore/img/ajax-loader.gif" />',
                 css: {
@@ -103,94 +144,127 @@
                 dataType: "json",
                 success: function(res) {
                     // console.log(res)
-                    // gridLength = (res.length + 1) * 3
                     imageProduct = ''
-                    if (grid) {
-                        grid.removeAll()
-                        $('#grid-stack-container').html('<div class="grid-stack" id="grid-stack"></div>')
-                    } else {
-                        $('#grid-stack').html('')
-                    }
-                    var j = 1
                     $.each(res, function(i, v) {
-                        imageProduct = `
-                        <div id="gsi-${v.id}" class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                            <div class="grid-stack-item-content">
-                                <img src="<?= base_url() ?>public/img/produk/${v.gambar}">
-                                <input type="file" class="input-image-product" data-gambar-id="${v.id}" data-produk-id="${produk_id}" data-urutan="${j++}">
+                        imageProduct += `
+                        <div class="image-product-item" id="image-product-item-${v.id}" data-produk-id="${v.produk_id}" data-gambar-id="${v.id}">
+                            <div class="image-product-item-content">
+                                <img src="<?= base_url() ?>public/img/produk/${v.gambar}" id="image-product-${v.id}" alt="No image">
+                                <input type="file" class="input-image-product hidden" id="update-image-${v.id}" data-produk-id="${v.produk_id}" data-gambar-id="${v.id}" accept="image/*">
+                                <button class="btn-image-product" data-target="update-image-${v.id}">Update</button>
                             </div>
+                            <button class="image-product-item-remove" data-id="${v.id}" data-produk-id="${res.produk_id}"><i class="fa fa-times" aria-hidden="true"></i></button>
                         </div>`
-                        $('#grid-stack').append(imageProduct)
-                        if (grid) {
-                            grid.makeWidget('gsi-' + v.id)
-                        }
                     })
                     if (res.length < 4) {
-                        imageProduct = `
-                        <div id="gsi-new" class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                            <div class="grid-stack-item-content">
-                                <img src="<?= base_url() ?>public/megastore/img/add-image.png" alt="No image">
-                                <input type="file" class="input-image-product" data-produk-id="${produk_id}" data-urutan="${j++}">
-                            </div>
-                        </div>`
-                        $('#grid-stack').append(imageProduct)
-                        if (grid) {
-                            grid.makeWidget('gsi-new')
-                        }
+                        $('#image-product-container-add').show()
+                        $('#add-image-new').data('produk-id', produk_id)
+                    } else {
+                        $('#image-product-container-add').hide()
+                        $('#add-image-new').data('produk-id', null)
                     }
-                    // $('#grid-stack').html(imageProduct)
-                    // console.log(produk_name)
+                    $("#image-product-sortable").data('produk-id', produk_id)
+                    $('#image-product-sortable').html(imageProduct)
+                    console.log()
                     $('#title-product').html(produk_name)
                     $('#modalImageProduct').modal('show')
                 }
             }).done(() => {
-                // console.log(gridLength)
-                setTimeout(() => {
-                    if (!grid) {
-                        // console.log(grid)
-                        grid = GridStack.init({
-                            resizable: {
-                                handles: 's'
-                            },
-                            column: 12,
-                            row: 12
-                            // row: gridLength
-                        })
-                    }
-                    $.unblockUI()
-                }, 1000)
+                $.unblockUI()
             })
         })
-        $('#kategori').change(function(e) {
-            e.preventDefault()
-            kategori = $( "#kategori option:selected" ).val()
-            // console.log(kategori)
-            if (kategori > 0) {
-                $.ajax({
-                    url: "<?= base_url() ?>on_change_category/" + kategori,
-                    dataType: "json",
-                    success: function(res) {
-                        // console.log(res)
-                        subKategori = '<option value="">Semua Sub Kategori</option>'
-                        if (res.length) {
-                            $.each(res, function(i, v) {
-                                subKategori += `<option value="${v.id}">${v.nama}</option>`
-                            })
-                            $('#sub_kategori').html(subKategori)
-                            $('#sub-kategori-parent').show()
-                        } else {
-                            $('#sub_kategori').html('<option value="">Semua Sub Kategori</option>')
-                            $('#sub-kategori-parent').hide()
-                        }
-                    }
-                })
-            } else {
-                $('#sub_kategori').html('<option value="">Semua Sub Kategori</option>')
-                $('#sub-kategori-parent').hide()
-            }
+        $("#image-product-sortable").sortable({
+            cursor: "move",
+            cancel: ".image-product-add-item",
+            stop: function(e, ui) {},
         })
 
-        // CROP IMAGE
+        function update_sort_image() {
+            listElements = $('#image-product-sortable').children()
+            produk_id = $('#image-product-sortable').data('produk-id')
+            data = []
+            firstImage = {}
+            $.each(listElements, function(i, val) {
+                item = {
+                    id: $('body').find(val).data('gambar-id'),
+                    urutan: i + 1
+                }
+                data.push(item)
+                if (i == 0) {
+                    firstImage = {
+                        id: $('body').find(val).data('produk-id'),
+                        gambar: $('body').find('#image-product-' + item.id).attr('src')
+                    }
+                    // console.log(firstImage)
+                }
+            })
+            $.ajax({
+                type: "post",
+                url: "<?= base_url() ?>sort_image_product/",
+                dataType: "json",
+                data: {
+                    data: JSON.stringify(data)
+                },
+                beforeSend: function() {
+                    $.blockUI({
+                        message: '<img src="<?= base_url() ?>public/megastore/img/ajax-loader.gif" />',
+                        css: {
+                            backgroundColor: 'none',
+                            border: 'none',
+                        },
+                        baseZ: 1051
+                    })
+                },
+                success: function(res) {
+                    if (res = 'true') {
+                        $.unblockUI()
+                    }
+                }
+            }).then((res) => {
+                $('body').find('#image-product-' + firstImage.id).attr('src', firstImage.gambar)
+            })
+        }
+        $("body").on('click', '.btn-image-product', function() {
+            target = $(this).data('target')
+            $('#' + target).click()
+        })
+        $("body").on('click', '.image-product-item-remove', function() {
+            gambar_id = $(this).data('id')
+            produk_id = $(this).data('produk-id')
+            $('body').find('#image-product-item-' + gambar_id).remove()
+            $.ajax({
+                type: "post",
+                url: "<?= base_url() ?>sort_image_product/",
+                data: {
+                    id: gambar_id,
+                    produk_id: produk_id
+                },
+                dataType: "json",
+                beforeSend: function() {
+                    $.blockUI({
+                        message: '<img src="<?= base_url() ?>public/megastore/img/ajax-loader.gif" />',
+                        css: {
+                            backgroundColor: 'none',
+                            border: 'none',
+                        },
+                        baseZ: 1051
+                    })
+                },
+                success: function(res) {
+                    if (res = 'true') {
+                        update_sort_image()
+                        $.unblockUI()
+                    }
+                }
+            })
+        })
+        $('#save_sort').click(function(e) {
+            e.preventDefault()
+            update_sort_image()
+            $('#modalImageProduct').modal('hide')
+        })
+
+        // CROP IMAGE /////////////////////////////////////////////////////////////
         var $modal = $('#modalCropImage')
         var image = document.getElementById('image')
         var cropper
@@ -198,7 +272,6 @@
         $("body").on("change", ".input-image-product", function(e) {
             $('#crop').data('gambar-id', $(this).data('gambar-id'))
             $('#crop').data('produk-id', $(this).data('produk-id'))
-            $('#crop').data('urutan', $(this).data('urutan'))
             // console.log($('#crop').data())
             var files = e.target.files
             var done = function(url) {
@@ -209,7 +282,6 @@
             var file
             var url
 
-            // console.log(files)
             if (files && files.length > 0) {
                 file = files[0]
 
@@ -234,6 +306,7 @@
         }).on('hidden.bs.modal', function() {
             cropper.destroy()
             cropper = null
+            $('.input-image-product').val('')
         })
 
         $("#crop").click(function() {
@@ -246,9 +319,7 @@
                 baseZ: 1051
             })
             var produk_id = $(this).data('produk-id')
-            var urutan = $(this).data('urutan')
             var gambar_id = $(this).data('gambar-id')
-            // console.log(produk_id, urutan)
             canvas = cropper.getCroppedCanvas({
                 width: 600,
                 height: 600,
@@ -266,77 +337,45 @@
                         data: {
                             image: base64data,
                             gambar_id: gambar_id,
-                            produk_id: produk_id,
-                            urutan: urutan
+                            produk_id: produk_id
                         },
-                        success: function(data) {
-                            // console.log(data)
-                            $modal.modal('hide')
-                            $.ajax({
-                                url: "<?= base_url() ?>get_images_product/" + produk_id,
-                                dataType: "json",
-                                success: function(res) {
-                                    // console.log(res)
-                                    gridLength = (res.length + 1) * 3
-                                    imageProduct = ''
-                                    if (grid) {
-                                        grid.removeAll()
-                                        $('#grid-stack-container').html('<div class="grid-stack" id="grid-stack"></div>')
-                                    } else {
-                                        $('#grid-stack').html('')
+                        success: function(res) {
+                            if (res != "false") {
+                                if (gambar_id) {
+                                    $('body').find('#image-product-' + gambar_id).attr('src', '<?= base_url('public/img/produk/') ?>' + res.gambar)
+                                    if (res.urutan == 1) {
+                                        $('#image-product-' + produk_id).attr('src', '<?= base_url('public/img/produk/') ?>' + res.gambar)
                                     }
-                                    var j = 1
-                                    $.each(res, function(i, v) {
-                                        imageProduct = `
-                                    <div id="gsi-${v.id}" class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                                        <div class="grid-stack-item-content">
-                                            <img src="<?= base_url() ?>public/img/produk/${v.gambar}">
-                                            <input type="file" class="input-image-product" data-gambar-id="${v.id}" data-produk-id="${produk_id}" data-urutan="${j++}">
-                                        </div>
-                                    </div>`
-                                        $('#grid-stack').append(imageProduct)
-                                        if (grid) {
-                                            grid.makeWidget('gsi-' + v.id)
-                                        }
-                                    })
-                                    if (res.length < 4) {
-                                        imageProduct = `
-                                    <div id="gsi-new" class="grid-stack-item" data-gs-width="12" data-gs-height="3">
-                                        <div class="grid-stack-item-content">
-                                            <img src="<?= base_url() ?>public/megastore/img/add-image.png" alt="No image">
-                                            <input type="file" class="input-image-product" data-produk-id="${produk_id}" data-urutan="${j++}">
-                                        </div>
-                                    </div>`
-                                        $('#grid-stack').append(imageProduct)
-                                        if (grid) {
-                                            grid.makeWidget('gsi-new')
-                                        }
+                                } else {
+                                    newImageAdded =
+                                        `<div class="image-product-item" data-produk-id="${res.produk_id}" data-gambar-id="${res.id}">
+                                            <div class="image-product-item-content">
+                                                <img src="<?= base_url() ?>public/img/produk/${res.gambar}" id="image-product-${res.id}" alt="No image">
+                                                <input type="file" class="input-image-product hidden" id="update-image-${res.id}" data-produk-id="${res.produk_id}" data-gambar-id="${res.id}" accept="image/*">
+                                                <button class="btn-image-product" data-target="update-image-${res.id}">Update</button>
+                                            </div>
+                                            <button class="image-product-item-remove" data-id="${res.id}" data-produk-id="${res.produk_id}"><i class="fa fa-times" aria-hidden="true"></i></button>
+                                        </div>`
+                                    $('#image-product-sortable').append(newImageAdded)
+                                    if (res.urutan > 3) {
+                                        $('#image-product-container-add').hide()
                                     }
-                                    // $('#grid-stack').html(imageProduct)
-                                    $('#modalImageProduct').modal('hide')
+                                    if (res.urutan == 1) {
+                                        $('#image-product-' + produk_id).attr('src', '<?= base_url('public/img/produk/') ?>' + res.gambar)
+                                    }
                                 }
-                            }).done(() => {
-                                // console.log(gridLength)
-                                setTimeout(() => {
-                                    if (!grid) {
-                                        // console.log(grid)
-                                        grid = GridStack.init({
-                                            resizable: {
-                                                handles: 's'
-                                            },
-                                            column: 12,
-                                            row: gridLength
-                                        })
-                                    }
-                                    $('#modalImageProduct').modal('show')
-                                    $.unblockUI()
-                                }, 1000)
-                            })
+                            }
                         }
+                    }).then(function() {
+                        $modal.modal('hide')
+                        $.unblockUI()
                     })
                 }
             })
         })
+
+        ///add new product////////////////////////////////
+
         validator = $("#productForm").validate({
             rules: {
                 nama: {
@@ -399,8 +438,37 @@
                 })
             }
         })
-        // END CROP IMAGE
+
+        $('#kategori').change(function(e) {
+            e.preventDefault()
+            kategori = $("#kategori option:selected").val()
+            // console.log(kategori)
+            if (kategori > 0) {
+                $.ajax({
+                    url: "<?= base_url() ?>on_change_category/" + kategori,
+                    dataType: "json",
+                    success: function(res) {
+                        // console.log(res)
+                        subKategori = '<option value="">Semua Sub Kategori</option>'
+                        if (res.length) {
+                            $.each(res, function(i, v) {
+                                subKategori += `<option value="${v.id}">${v.nama}</option>`
+                            })
+                            $('#sub_kategori').html(subKategori)
+                            $('#sub-kategori-parent').show()
+                        } else {
+                            $('#sub_kategori').html('<option value="">Semua Sub Kategori</option>')
+                            $('#sub-kategori-parent').hide()
+                        }
+                    }
+                })
+            } else {
+                $('#sub_kategori').html('<option value="">Semua Sub Kategori</option>')
+                $('#sub-kategori-parent').hide()
+            }
+        })
     })
+
     $('#disc').on({
         keyup: function(e) {
             discChange()

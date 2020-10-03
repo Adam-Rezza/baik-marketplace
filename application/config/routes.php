@@ -63,6 +63,8 @@ $route['get_images_product/(:any)'] = 'MerchantController/get_images_product/$1'
 $route['insert_update_product'] = 'MerchantController/insert_update_product';
 $route['delete_produk/(:any)'] = 'MerchantController/delete_produk/$1';
 $route['upload_image_product'] = 'MerchantController/upload_image_product';
+$route['sort_image_product'] = 'MerchantController/sort_image_product';
+$route['delete_image_product'] = 'MerchantController/delete_image_product';
 $route['get_transaction_detail/(:any)'] = 'MerchantController/get_transaction_detail/$1';
 
 # TRANSAKSI

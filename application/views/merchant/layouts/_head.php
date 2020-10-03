@@ -23,7 +23,7 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/product.css">
     <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/cartpage.css">
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>public/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.min.css" />
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.min.css" /> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.6/cropper.css" integrity="sha256-jKV9n9bkk/CTP8zbtEtnKaKf+ehRovOYeKoyfthwbC8=" crossorigin="anonymous" />
 
     <!-- <link rel="stylesheet" type="text/css" href="<?= base_url(); ?>public/megastore/css/icon-font-linea.css">
