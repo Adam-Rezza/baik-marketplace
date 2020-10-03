@@ -13,7 +13,7 @@ class MerchantController extends CI_Controller
 
 	public function init()
 	{
-		if ($this->session->userdata(SESS . 'merchant_id')) {
+		if ($this->session->userdata(SESS . 'merchant_id') && $this->session->userdata(SESS . 'merchant_active') == 1) {
 			$where_category = ['active' => 1, 'del' => 0];
 			$data['category'] = $this->merchant->get('kategori', '*', $where_category, 'urutan', 'ASC')->result();
 			foreach ($data['category'] as $f) {
@@ -34,7 +34,7 @@ class MerchantController extends CI_Controller
 
 			return $data;
 		} else {
-			redirect(base_url());
+			$this->auth();
 		}
 	}
 
@@ -45,7 +45,7 @@ class MerchantController extends CI_Controller
 
 	public function auth()
 	{
-		if ($this->session->userdata(SESS . 'merchant_id') === null) {
+		if ($this->session->userdata(SESS . 'merchant_id') === null || $this->session->userdata(SESS . 'merchant_active') === 0) {
 			// $data = $this->init();
 			$data['title']   = 'Daftar Toko';
 			$data['content'] = 'auth/index';
@@ -113,7 +113,7 @@ class MerchantController extends CI_Controller
 
 	public function get_product_detail($id)
 	{
-		$where_product = ['del' => 0, 'ban' => 0, 'id' => $id];
+		$where_product = ['del' => 0, 'id' => $id];
 		$product = $this->merchant->get('produk', '*', $where_product)->row();
 
 		echo json_encode($product);

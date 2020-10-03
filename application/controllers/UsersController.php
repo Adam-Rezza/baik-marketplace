@@ -30,8 +30,9 @@ class UsersController extends CI_Controller
 			$no++;
 			$row = array();
 
+			$gambar = $field->gambar;
 			if ($field->gambar == NULL) {
-				$gambar = 'avatar_default.png';
+				$gambar = 'user.png';
 			}
 
 			$row['no']        = $no;

@@ -81,7 +81,6 @@ class M_merchant extends CI_Model
         $this->db->where('a.toko_id', $merchant_id);
         $this->db->join('gambar_produk b', 'a.id = b.produk_id and b.urutan = 1', 'left');
         $this->db->where('a.del', '0');
-        $this->db->where('a.ban', '0');
         $this->db->order_by('case when a.modified_date > a.created_date then a.modified_date ELSE a.created_date END DESC', '', false);
         return $this->db->get();
     }

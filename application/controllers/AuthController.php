@@ -264,6 +264,7 @@ class AuthController extends CI_Controller
 	private function _set_session_merchant($data)
 	{
 		$this->session->set_userdata(SESS . 'merchant_id', $data->id);
+		$this->session->set_userdata(SESS . 'merchant_active', $data->active);
 		$this->session->set_userdata(SESS . 'merchant_nama', $data->nama);
 		$this->session->set_userdata(SESS . 'merchant_telp', $data->telp);
 	}
@@ -271,6 +272,7 @@ class AuthController extends CI_Controller
 	private function _set_session_r_merchant($data)
 	{
 		$this->session->set_userdata(SESS . 'merchant_id', $data['id']);
+		$this->session->set_userdata(SESS . 'merchant_active', $data['active']);
 		$this->session->set_userdata(SESS . 'merchant_nama', $data['nama']);
 		$this->session->set_userdata(SESS . 'merchant_telp', $data['telp']);
 	}
