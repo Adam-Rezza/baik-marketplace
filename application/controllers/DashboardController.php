@@ -17,6 +17,7 @@ class DashboardController extends CI_Controller
 		$data['vitamin'] = 'dashboard/index_vitamin';
 
 		$data['admin_count'] = $this->mcore->count("admins", ['deleted_at' => NULL]);
+		$data['user_count']  = $this->mcore->count("user", ['active' => TRUE, 'ban' => FALSE]);
 		$data['toko_count']  = $this->mcore->count("toko", ['active' => TRUE, 'ban' => FALSE]);
 
 		$this->template->template($data);

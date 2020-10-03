@@ -40,24 +40,12 @@
 					"data": null,
 					"render": function(res) {
 						let statusActive;
-						if (res.active == '1') {
+						if (res.ban == '0') {
 							statusActive = `Aktif`;
 						} else {
 							statusActive = `Non Aktif`;
 						}
 						return statusActive;
-					}
-				},
-				{
-					"data": null,
-					"render": function(res) {
-						let statusBan;
-						if (res.ban == '1') {
-							statusBan = `Banned`;
-						} else {
-							statusBan = `Not Banned`;
-						}
-						return statusBan;
 					}
 				},
 				{
@@ -72,17 +60,10 @@
 						tombolDelete = `<a onclick="deleteData('${res.id}');"><i class="fa fa-trash fa-fw"></i> Delete</a>`;
 						tombolEdit = `<a onclick="editData('${res.id}');"><i class="fa fa-pencil fa-fw"></i> Edit</a>`;
 
-						if (res.active == '1') {
-							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.active}', 'status');"><i class="fa fa-times fa-fw"></i> Non Aktifkan</a>`;
+						if (res.ban == '0') {
+							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-times fa-fw"></i> Non Aktifkan</a>`;
 						} else {
-							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.active}', 'status');"><i class="fa fa-check fa-fw"></i> Aktifkan</a>`;
-						}
-
-						if (res.ban == '1') {
-							tombolBan = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-check fa-fw"></i> Unban Toko</a>`;
-						} else {
-							tombolBan = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-times fa-fw"></i> Ban Toko</a>`;
-
+							tombolStatus = `<a onclick="gantiStatus('${res.id}', '${res.ban}', 'ban');"><i class="fa fa-check fa-fw"></i> Aktifkan</a>`;
 						}
 
 						tombolLihatProduk = `<a href="javascript:;" onclick="lihatProduk('${res.id}');"><i class="fa fa-search fa-fw"></i> Lihat Produk</a>`;
@@ -100,7 +81,6 @@
 									<li>${tombolLihatProduk}</li>
 									<li role="separator" class="divider"></li>
 									<li>${ tombolStatus }</li>
-									<li>${ tombolBan }</li>
 								</ul>
 							</div>
 						</div>
@@ -110,11 +90,11 @@
 				},
 			],
 			"columnDefs": [{
-					"targets": [1, 8],
+					"targets": [1, 7],
 					"orderable": false,
 				},
 				{
-					"targets": [0, 1, 6, 7, 8],
+					"targets": [0, 1, 6, 7],
 					"className": "text-center"
 				}
 			],
@@ -156,27 +136,29 @@
 			},
 		}).done(function(res) {
 			console.log(res);
-			htmlnya = '';
+			let htmlnya = '';
 			if (res.code == 404 || res.total_data == 0) {
 				alert("Toko belum memiliki Produk");
 			} else {
 				no = 1;
+				htmlnya = `
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Nama Produk</th>
+							<th>Kategori</th>
+							<th>Harga Asli</th>
+							<th>Harga Disc</th>
+							<th>Terjual</th>
+							<th>Rating</th>
+							<th>Tanggal Terdaftar</th>
+						</tr>
+					</thead>
+					<tbody>
+				`;
 				$.each(res.data, function(i, k) {
-					htmlnya = `
-					<table class="table table-bordered">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Nama Produk</th>
-								<th>Kategori</th>
-								<th>Harga Asli</th>
-								<th>Harga Disc</th>
-								<th>Terjual</th>
-								<th>Rating</th>
-								<th>Tanggal Terdaftar</th>
-							</tr>
-						</thead>
-						<tbody>
+					htmlnya += `
 							<tr>
 								<td>${no}</td>
 								<td>${k.nama_produk}</td>
@@ -187,11 +169,12 @@
 								<td>${k.rating}</td>
 								<td>${k.created_date}</td>
 							</tr>
-						</tbody>
-					</table>
 					`;
 					no++;
 				});
+
+				htmlnya += `</tbody></table>`;
+
 				$('#modal_lihat_produk #nama_toko').html(res.nama_toko);
 				$('#modal_lihat_produk .modal-body').html(htmlnya);
 				$('#modal_lihat_produk').modal('show');
@@ -238,18 +221,10 @@
 		let targetURL;
 		let confirmMessage;
 
-		if (tipe == 'status') {
-			if (status == 1) {
-				confirmMessage = "Non Aktifkan Toko ?"
-			} else {
-				confirmMessage = "Aktifkan Toko ?"
-			}
+		if (status == 1) {
+			confirmMessage = "Aktifkan Toko ?"
 		} else {
-			if (status == 1) {
-				confirmMessage = "Unban Toko ?"
-			} else {
-				confirmMessage = "Ban Toko ?"
-			}
+			confirmMessage = "Non Aktifkan Toko ?"
 		}
 
 		let cek_confirm = confirm(confirmMessage);

@@ -74,7 +74,7 @@ class M_users_less extends CI_Model
 		$this->_get_datatables_query();
 		if ($_POST['length'] != -1)
 			$this->db->limit($_POST['length'], $_POST['start']);
-		$this->db->where('user.active', '1');
+		$this->db->where('user.active', TRUE);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -96,7 +96,7 @@ class M_users_less extends CI_Model
 	public function count_all()
 	{
 		$this->db->from($this->table);
-		$this->db->where('user.active', '1');
+		$this->db->where('user.active', TRUE);
 		return $this->db->count_all_results();
 	}
 }

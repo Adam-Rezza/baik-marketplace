@@ -4,8 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class UsersController extends CI_Controller
 {
 	private $msg_password_beda     = "{field} tidak sama dengan field Password";
-	private $form_delimiter_open   = '<span class="help-block text-red">';
-	private $form_delimiter_close  = "</span>";
 	private $msg_username_duplikat = "{field} sama ditemukan, silahkan gunakan username lain";
 
 	public function __construct()
@@ -21,42 +19,6 @@ class UsersController extends CI_Controller
 		$data['content'] = 'user/index';
 		$data['vitamin'] = 'user/index_vitamin';
 		$this->template->template($data);
-	}
-
-	public function destroy()
-	{
-		$cur_date = new DateTime('now');
-		$id = $this->input->post('id');
-
-		$object = ['deleted_at' => $cur_date->format('Y-m-d H:i:s')];
-		$where  = ['id' => $id];
-		$exec   = $this->mcore->update(TABLE_ADMINS, $object, $where);
-
-		if ($exec) {
-			$ret = ['code' => 200];
-		} else {
-			$ret = ['code' => 500];
-		}
-
-		echo json_encode($ret);
-	}
-
-	public function reset()
-	{
-		$id = $this->input->post('id');
-		$password = sha1($this->input->post('password') . UYAH);
-
-		$object = ['password' => $password];
-		$where  = ['id' => $id];
-		$exec   = $this->mcore->update(TABLE_ADMINS, $object, $where);
-
-		if ($exec) {
-			$ret = ['code' => 200];
-		} else {
-			$ret = ['code' => 500];
-		}
-
-		echo json_encode($ret);
 	}
 
 	public function datatables()
@@ -96,20 +58,54 @@ class UsersController extends CI_Controller
 		echo json_encode($output);
 	}
 
-	public function username_check($str)
+	public function change_status()
 	{
-		$where = [
-			'username'   => $str,
-			'deleted_at' => NULL
-		];
-		$arr = $this->mcore->get(TABLE_ADMINS, '*', $where);
 
-		if ($arr->num_rows() > 0) {
-			$this->form_validation->set_message('username_check', $this->msg_username_duplikat);
-			return FALSE;
-		} else {
-			return TRUE;
+		$id     = $this->input->post('id');
+		$status = $this->input->post('status');
+
+		if (!$id && !$status) {
+			return show_404();
 		}
+
+		if ($status == '1') {
+			$status = FALSE;
+		} else {
+			$status = TRUE;
+		}
+
+		$object = ['ban' => $status];
+		$where  = ['id' => $id];
+		$exec   = $this->mcore->update('user', $object, $where);
+
+		if ($exec) {
+			$return['code'] = 200;
+		} else {
+			$return['code'] = 500;
+		}
+
+		$return['sql'] = $this->db->last_query();
+		$return['status'] = $status;
+
+		echo json_encode($return);
+	}
+
+	public function reset_password()
+	{
+		$id       = $this->input->post('id');
+		$password = password_hash($this->input->post('new_password') . UYAH, PASSWORD_DEFAULT);
+
+		$object = ['password' => $password];
+		$where  = ['id' => $id];
+		$exec   = $this->mcore->update('user', $object, $where);
+
+		if ($exec) {
+			$ret = ['code' => 200];
+		} else {
+			$ret = ['code' => 500];
+		}
+
+		echo json_encode($ret);
 	}
 }
 

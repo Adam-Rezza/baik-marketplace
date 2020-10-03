@@ -80,7 +80,7 @@ class AdminsController extends CI_Controller
 	public function reset()
 	{
 		$id = $this->input->post('id');
-		$password = sha1($this->input->post('password') . UYAH);
+		$password = password_hash($this->input->post('password') . UYAH, PASSWORD_DEFAULT);
 
 		$object = ['password' => $password];
 		$where  = ['id' => $id];

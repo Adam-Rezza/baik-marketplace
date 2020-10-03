@@ -23,7 +23,7 @@ class ProdukController extends CI_Controller
 	public function show()
 	{
 		$id   = $this->input->get('id');
-		$exec = $this->mcore->get('gambar_produk', '*', ['produk_id' => $id, 'del' => NULL], 'urutan', 'ASC');
+		$exec = $this->mcore->get('gambar_produk', '*', ['produk_id' => $id, 'del' => FALSE], 'urutan', 'ASC');
 
 		if ($exec->num_rows() == 0) {
 			echo json_encode([
@@ -53,7 +53,7 @@ class ProdukController extends CI_Controller
 	{
 		$id = $this->input->post('id');
 
-		$object = ['del' => '1'];
+		$object = ['del' => TRUE];
 		$where  = ['id' => $id];
 		$exec   = $this->mcore->update('produk', $object, $where);
 
@@ -70,7 +70,7 @@ class ProdukController extends CI_Controller
 	{
 		$id = $this->input->post('id');
 
-		$object = ['del' => '1'];
+		$object = ['del' => TRUE];
 		$where  = ['id' => $id];
 		$exec   = $this->mcore->update('gambar_produk', $object, $where);
 
