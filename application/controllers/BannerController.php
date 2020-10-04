@@ -229,7 +229,7 @@ class BannerController extends CI_Controller
 
 	public function up()
 	{
-		$id = $this->input->get('id');
+		$id    = $this->input->get('id');
 		$count = $this->mcore->count('banner', ['id' => $id]);
 
 		if ($count == 0) {
@@ -238,7 +238,8 @@ class BannerController extends CI_Controller
 			$cur = $this->mcore->get('banner', 'id, urutan', ['id' => $id]);
 			$cur_urutan = $cur->row()->urutan;
 
-			$prev        = $this->mcore->get('banner', 'id, urutan', ['del' => FALSE], 'urutan', 'DESC', '1', '1');
+			$where_prev  = "urutan = (select max(urutan) from banner where urutan < '" . $cur_urutan . "' AND del = false) ";
+			$prev        = $this->mcore->get('banner', 'id, urutan', $where_prev);
 			$prev_id     = $prev->row()->id;
 			$prev_urutan = $prev->row()->urutan;
 
@@ -267,14 +268,14 @@ class BannerController extends CI_Controller
 
 	public function down()
 	{
-		$id = $this->input->get('id');
+		$id    = $this->input->get('id');
 		$count = $this->mcore->count('banner', ['id' => $id]);
 
 		if ($count == 0) {
 			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
 		} else {
-			$cur = $this->mcore->get('banner', 'id, urutan', ['id' => $id]);
-			$cur_urutan = $cur->row()->urutan; #3
+			$cur        = $this->mcore->get('banner', 'id, urutan', ['id' => $id]);
+			$cur_urutan = $cur->row()->urutan;
 
 			$where_next  = "urutan = (select min(urutan) from banner where urutan > '" . $cur_urutan . "' AND del = false) ";
 			$next        = $this->mcore->get('banner', 'id, urutan', $where_next);
@@ -282,7 +283,7 @@ class BannerController extends CI_Controller
 			$next_urutan = $next->row()->urutan;
 
 			$update_next = $this->mcore->update('banner', ['urutan' => $cur_urutan], ['id' => $next_id]);
-			$update_cur = $this->mcore->update('banner', ['urutan' => $next_urutan], ['id' => $id]);
+			$update_cur  = $this->mcore->update('banner', ['urutan' => $next_urutan], ['id' => $id]);
 
 			if ($update_next && $update_cur) {
 				$ret = ['code' => 200, 'msg' => ""];
