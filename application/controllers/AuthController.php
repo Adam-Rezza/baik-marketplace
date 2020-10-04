@@ -185,10 +185,10 @@ class AuthController extends CI_Controller
 		$id = $this->input->post('alamat_id');
 		if ($id) {
 			$result = $this->authorized->update('alamat', $data, $id);
-			echo $this->session->userdata('checkout') ? 'checkout' : ($result ? 'true' : 'false');
+			echo json_encode($result ? 'true' : 'false');
 		} else {
 			$result = $this->authorized->insert('alamat', $data);
-			echo $this->session->userdata('checkout') ? 'checkout' : ($result ? 'true' : 'false');
+			echo json_encode($result ? 'true' : 'false');
 		}
 	}
 
@@ -264,7 +264,9 @@ class AuthController extends CI_Controller
 	private function _set_session_merchant($data)
 	{
 		$this->session->set_userdata(SESSUSER . 'merchant_id', $data->id);
+		$this->session->set_userdata(SESSUSER . 'merchant_user_id', $data->user_id);
 		$this->session->set_userdata(SESSUSER . 'merchant_active', $data->active);
+		$this->session->set_userdata(SESSUSER . 'merchant_ban', $data->ban);
 		$this->session->set_userdata(SESSUSER . 'merchant_nama', $data->nama);
 		$this->session->set_userdata(SESSUSER . 'merchant_telp', $data->telp);
 	}
@@ -272,7 +274,9 @@ class AuthController extends CI_Controller
 	private function _set_session_r_merchant($data)
 	{
 		$this->session->set_userdata(SESSUSER . 'merchant_id', $data['id']);
+		$this->session->set_userdata(SESSUSER . 'merchant_user_id', $data['user_id']);
 		$this->session->set_userdata(SESSUSER . 'merchant_active', $data['active']);
+		$this->session->set_userdata(SESSUSER . 'merchant_ban', $data['ban']);
 		$this->session->set_userdata(SESSUSER . 'merchant_nama', $data['nama']);
 		$this->session->set_userdata(SESSUSER . 'merchant_telp', $data['telp']);
 	}

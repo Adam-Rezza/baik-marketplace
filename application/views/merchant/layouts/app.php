@@ -59,7 +59,7 @@
 	</div>
 
 	<div class="modal fade bs-example-modal-lg out" id="modalCropImageProfile" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
-		<div class="modal-dialog modal-dialog-centered" role="document" style="min-height: 229.25px; width: 830px!important">
+		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content">
 				<div class="modal-body">
 					<div class="relative">
@@ -105,6 +105,7 @@
 	<script src="<?= base_url() ?>public/megastore/js/sweetalert2@9" defer=""></script>
 	<script src="<?= base_url() ?>public/js/jquery.blockUI.min.js" defer=""></script>
 	<script src="<?= base_url() ?>public/js/jquery-ui-sortable.min.js" defer=""></script>
+	<script src="<?= base_url() ?>public/js/jquery.ui.touch-punch.min.js" defer=""></script>
 </body>
 
 <?php $this->load->view('merchant/' . $vitamin) ?>
@@ -155,6 +156,8 @@
 		})
 
 		$modal.on('shown.bs.modal', function() {
+            widthContainer = $(this).width()
+            $('#imageProfileCrop').height(widthContainer)
 			cropper = new Cropper(image, {
 				aspectRatio: 1,
 				viewMode: 1,

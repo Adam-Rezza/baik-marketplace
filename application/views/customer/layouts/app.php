@@ -93,7 +93,7 @@
     </div>
 
     <div class="modal fade bs-example-modal-lg out" id="modalCropImageProfile" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="min-height: 229.25px; width: 830px!important">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="relative">
@@ -290,7 +290,7 @@
                         setTimeout(() => {
                             setTimeout(() => {
                                 if (intend) {
-                                    window.location.href = '<?=base_url('my_account')?>'
+                                    window.location.href = '<?= base_url('my_account') ?>'
                                 } else {
                                     window.location.href = (window.location.href).replaceAll('#', '')
                                 }
@@ -341,7 +341,7 @@
                             })
                             setTimeout(() => {
                                 if (intend) {
-                                    window.location.href = '<?=base_url('my_account')?>'
+                                    window.location.href = '<?= base_url('my_account') ?>'
                                 } else {
                                     window.location.href = (window.location.href).replaceAll('#', '')
                                 }
@@ -451,7 +451,6 @@
             if (files && files.length > 0) {
                 if ((files[0].type).search("image") > -1) {
                     file = files[0]
-                    console.log(files[0])
                     if (URL) {
                         done(URL.createObjectURL(file))
                     } else if (FileReader) {
@@ -466,6 +465,8 @@
         })
 
         $modal.on('shown.bs.modal', function() {
+            widthContainer = $(this).width()
+            $('#imageProfileCrop').height(widthContainer)
             cropper = new Cropper(image, {
                 aspectRatio: 1,
                 viewMode: 1,

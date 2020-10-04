@@ -68,6 +68,8 @@ class M_customer extends CI_Model
         $this->db->where('b.urutan', '1');
         // $this->db->where('sponsored_date >=', date('Y-m-d'));
         $this->db->where('a.del', '0');
+        $this->db->where('a.ban', '0');
+        $this->db->where('c.ban', '0');
         $this->db->order_by('CASE WHEN a.terjual > 0 THEN a.disc else 0 END', 'desc', false);
         $this->db->order_by('CASE WHEN a.terjual > 0 THEN a.rating else 0 END', 'desc', false);
         $this->db->order_by('CASE WHEN a.modified_date is not null THEN a.modified_date else a.created_date END', 'desc', false);
@@ -83,6 +85,8 @@ class M_customer extends CI_Model
         $this->db->join('toko c', 'a.toko_id = c.id');
         $this->db->where('b.urutan', '1');
         $this->db->where('a.del', '0');
+        $this->db->where('a.ban', '0');
+        $this->db->where('c.ban', '0');
         $this->db->order_by('created_date', 'desc');
         $this->db->limit($limit, $offset);
         return $this->db->get();
@@ -100,6 +104,8 @@ class M_customer extends CI_Model
         }
         $this->db->where('b.urutan', '1');
         $this->db->where('a.del', '0');
+        $this->db->where('a.ban', '0');
+        $this->db->where('c.ban', '0');
         $this->db->order_by('a.rating', 'desc');
         $this->db->order_by('a.created_date', 'desc');
         $this->db->limit($limit, $offset);
@@ -121,6 +127,8 @@ class M_customer extends CI_Model
         }
         $this->db->where('b.urutan', '1');
         $this->db->where('a.del', '0');
+        $this->db->where('a.ban', '0');
+        $this->db->where('c.ban', '0');
         $this->db->order_by('a.rating', 'desc');
         $this->db->order_by('a.created_date', 'desc');
         $this->db->limit($limit, $offset);
@@ -139,6 +147,7 @@ class M_customer extends CI_Model
         $this->db->where('a.user_id', $user_id);
         $this->db->where('a.transaksi_id is null');
         $this->db->where('b.del', 0);
+        $this->db->where('b.ban', 0);
         $this->db->where('c.urutan', 1);
         return $this->db->get();
     }
@@ -157,7 +166,7 @@ class M_customer extends CI_Model
 
     function findTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
@@ -172,7 +181,7 @@ class M_customer extends CI_Model
 
     function findTransactionByMerchantIdAndStatusAndTransactionId($user_id, $transaction_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
@@ -187,7 +196,7 @@ class M_customer extends CI_Model
 
     function findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');

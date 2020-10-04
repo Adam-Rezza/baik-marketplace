@@ -82,17 +82,6 @@
         width: auto;
     }
 
-    #image {
-        width: 400px;
-        height: 400px;
-    }
-
-    .cropper-container {
-        min-width: 400px;
-        min-height: 400px;
-        max-width: 100%;
-    }
-
     #crop {
         bottom: 0;
         right: 0;
@@ -119,14 +108,17 @@
             $("#productForm").find('input.error').removeClass('error')
             tempImageContainer = []
             $('#image-add-product-sortable').html('')
-            if ($('#produk_id').val()) {
+            if ($('#produk_id').val() != '') {
                 $('.image-add-container').hide()
+            } else {
+                $('.image-add-container').show()
             }
         })
         $('.add-product').click(function() {
             $('.title-modal-product').html('Tambah Produk');
             validator.resetForm()
             validator.reset()
+            $('.image-add-container').show()
             $("#productForm").find('input, textarea, select').val('')
             $("#productForm").find('input.error').removeClass('error')
             $('#modalAddProduct').modal('show')
@@ -220,7 +212,6 @@
                 url: "<?= base_url() ?>get_images_product/" + produk_id,
                 dataType: "json",
                 success: function(res) {
-                    console.log(res)
                     imageProduct = ''
                     $.each(res, function(i, v) {
                         imageProduct += `
@@ -254,6 +245,7 @@
             cancel: ".image-product-add-item",
             stop: function(e, ui) {},
         })
+        $("#image-product-sortable").disableSelection();
 
         function update_sort_image() {
             listElements = $('#image-product-sortable').children()
@@ -347,6 +339,7 @@
                         },
                         success: function(res) {
                             if (res = 'true') {
+                                $('#image-product-container-add').show()
                                 update_sort_image()
                                 $.unblockUI()
                                 Swal.fire({
@@ -374,6 +367,7 @@
             id = $(this).data('id')
             tempImageContainer.splice(id, 1)
             $('#add-image-product-' + id).remove()
+            $('#image-add-product-container').show()
 
             $.unblockUI()
         })
@@ -416,6 +410,8 @@
         })
 
         $modal.on('shown.bs.modal', function() {
+            widthContainer = $(this).width()
+            $('#image').height(widthContainer)
             cropper = new Cropper(image, {
                 aspectRatio: 1,
                 viewMode: 1,
@@ -467,7 +463,7 @@
                                     }
                                 } else {
                                     newImageAdded =
-                                        `<div class="image-product-item" data-produk-id="${res.produk_id}" data-gambar-id="${res.id}">
+                                        `<div class="image-product-item" id="image-product-item-${res.id}" data-produk-id="${res.produk_id}" data-gambar-id="${res.id}">
                                             <div class="image-product-item-content">
                                                 <img src="<?= base_url() ?>public/img/produk/${res.gambar}" id="image-product-${res.id}">
                                                 <input type="file" class="input-image-product hidden" id="update-image-${res.id}" data-produk-id="${res.produk_id}" data-gambar-id="${res.id}" accept="image/*">
@@ -520,6 +516,8 @@
         })
 
         $modalCropNewProduct.on('shown.bs.modal', function() {
+            widthContainer = $(this).width()
+            $('#imageNewProduct').height(widthContainer)
             cropperNewProduct = new Cropper(imageNewProduct, {
                 aspectRatio: 1,
                 viewMode: 1,
@@ -563,6 +561,9 @@
                         </div>`
                     $('#image-add-product-sortable').append(newImageAdded)
                     $modalCropNewProduct.modal('hide')
+                    if (id == 3) {
+                        $('#image-add-product-container').hide()
+                    }
                     $.unblockUI()
                 }
             })
