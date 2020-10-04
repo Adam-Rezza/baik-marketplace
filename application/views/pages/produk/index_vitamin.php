@@ -22,6 +22,12 @@
 					"data": "nama"
 				},
 				{
+					"data": "nama_kategori"
+				},
+				{
+					"data": "nama_sub_kategori"
+				},
+				{
 					"data": "harga_asli_rp"
 				},
 				{
@@ -49,15 +55,15 @@
 				},
 			],
 			"columnDefs": [{
-					"targets": [7],
+					"targets": [9],
 					"orderable": false,
 				},
 				{
-					"targets": [5, 6, 7],
+					"targets": [7, 8, 9],
 					"class": "text-center"
 				},
 				{
-					"targets": [2, 3, 4],
+					"targets": [5, 6, 7],
 					"class": "text-right"
 				}
 			],

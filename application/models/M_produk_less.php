@@ -23,7 +23,9 @@ class M_produk_less extends CI_Model
 		produk.toko_id,
 		toko.nama as nama_toko,
 		produk.kategori_id,
-		kategori.nama  as nama_kategori,
+		kategori.nama as nama_kategori,
+		produk.sub_kategori_id,
+		sub_kategori.nama as nama_sub_kategori,
 		produk.nama,
 		produk.desc,
 		produk.harga_asli,
@@ -36,6 +38,7 @@ class M_produk_less extends CI_Model
 		$this->db->from($this->table);
 		$this->db->join('toko', 'toko.id = produk.toko_id', 'left');
 		$this->db->join('kategori', 'kategori.id = produk.kategori_id', 'left');
+		$this->db->join('sub_kategori', 'sub_kategori.id = produk.sub_kategori_id', 'left');
 
 		$i = 0;
 
