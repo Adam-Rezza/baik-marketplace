@@ -38,12 +38,24 @@
                                     },
                                 })
                                 setTimeout(() => {
-                                    // window.location.href = (window.location.href).replaceAll('#', '')
+                                    window.location.href = (window.location.href).replaceAll('#', '')
                                 }, 1000)
                             }
                         }
                     })
                 }
+            })
+        })
+        $('.complain-order').click(function(e) {
+            e.preventDefault()
+            Swal.fire({
+                icon: 'warning',
+                title: 'Fitur sedang dikembangkan',
+                showConfirmButton: false,
+                timer: 1500,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
             })
         })
     })

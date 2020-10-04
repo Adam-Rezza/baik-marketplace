@@ -22,7 +22,7 @@
         border: 2px solid red !important;
     }
 
-    @media only screen and (max-width: 480px) {
+    @media only screen and (max-width: 610px) {
         .title-tabs li {
             font-size: 12px;
             padding: 5px;

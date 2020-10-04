@@ -151,9 +151,9 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'product/index';
 		$data['vitamin'] = 'product/index_vitamin';
 
-		$where_product_pictures = ['del' => 0, 'ban' => 0, 'id' => $id];
-		$data['product'] = $this->customer->get('produk', '*', $where_product_pictures)->row();
-
+		$where_product = ['del' => 0, 'ban' => 0, 'id' => $id];
+		$data['product'] = $this->customer->get('produk', '*', $where_product)->row();
+		// var_dump($data['product']);
 		$where_product_pictures = ['del' => 0, 'produk_id' => $id];
 		$data['product_pictures'] = $this->customer->get('gambar_produk', '*', $where_product_pictures, 'urutan', 'ASC')->result();
 

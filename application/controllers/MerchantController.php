@@ -13,7 +13,7 @@ class MerchantController extends CI_Controller
 
 	public function init()
 	{
-		if ($this->session->userdata(SESSUSER . 'merchant_id') && $this->session->userdata(SESSUSER . 'merchant_active') == 1) {
+		if ($this->session->userdata(SESSUSER . 'merchant_id') && $this->session->userdata(SESSUSER . 'merchant_active') == 1 && $this->session->userdata(SESSUSER . 'merchant_ban') == 0) {
 			$where_category = ['active' => 1, 'del' => 0];
 			$data['category'] = $this->merchant->get('kategori', '*', $where_category, 'urutan', 'ASC')->result();
 			foreach ($data['category'] as $f) {
@@ -34,7 +34,7 @@ class MerchantController extends CI_Controller
 
 			return $data;
 		} else {
-			$this->auth();
+			redirect(base_url('merchant'));
 		}
 	}
 
@@ -46,7 +46,7 @@ class MerchantController extends CI_Controller
 	public function auth()
 	{
 		if ($this->session->userdata(SESSUSER . 'id')) {
-			if ($this->session->userdata(SESSUSER . 'merchant_id') === null || $this->session->userdata(SESSUSER . 'merchant_active') === 0) {
+			if ($this->session->userdata(SESSUSER . 'merchant_id') === null || $this->session->userdata(SESSUSER . 'merchant_active') === 0 || $this->session->userdata(SESSUSER . 'merchant_ban') == 1) {
 				// $data = $this->init();
 				$data['title']   = 'Daftar Toko';
 				$data['content'] = 'auth/index';

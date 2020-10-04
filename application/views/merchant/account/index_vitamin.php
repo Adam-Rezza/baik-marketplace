@@ -24,21 +24,6 @@
         margin-left: 20px;
     }
 
-    #image {
-        width: 400px;
-        width: 400px;
-    }
-
-    .cropper-container {
-        min-width: 400px;
-        min-height: 400px;
-    }
-
-    #crop {
-        bottom: 0;
-        right: 0;
-    }
-
     .form-input>.select2,
     .form-input>select,
     .form-input>label {
@@ -46,7 +31,7 @@
         width: 100% !important;
     }
 
-    @media only screen and (max-width: 480px) {
+    @media only screen and (max-width: 610px) {
         .title-tabs li {
             font-size: 12px;
             padding: 5px;
