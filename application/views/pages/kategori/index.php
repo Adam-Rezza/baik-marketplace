@@ -16,6 +16,7 @@
 							<thead>
 								<tr>
 									<th class="text-center">ID</th>
+									<th>Gambar</th>
 									<th>Kategori</th>
 									<th class="text-center">Status</th>
 									<th class="text-center">Urutan</th>
@@ -33,7 +34,7 @@
 					<h3 class="box-title">Tambah Kategori</h3>
 				</div>
 
-				<form id="form_add" class="form-horizontal">
+				<form id="form_add" class="form-horizontal" enctype="multipart/form-data">
 					<div class="box-body">
 
 						<div class="form-group">
@@ -59,6 +60,13 @@
 									<option value="1">Aktif</option>
 									<option value="0">Tidak Aktif</option>
 								</select>
+							</div>
+						</div>
+
+						<div class="form-group gambar">
+							<label for="active" class="col-sm-4 col-sm-offset-1 control-label">Gambar</label>
+							<div class="col-sm-6">
+								<input type="file" class="form-control" id="gambar" name="gambar" accept="image/*">
 							</div>
 						</div>
 
@@ -92,9 +100,14 @@
 							<option value="0">Tidak Aktif</option>
 						</select>
 					</div>
+					<div class="form-group">
+						<label for="gambar_edit">Gambar</label>
+						<input type="file" class="form-control" id="gambar_edit" name="gambar_edit" accept="image/*">
+					</div>
 				</div>
 				<div class="modal-footer">
 					<input type="hidden" id="id_edit" name="id_edit">
+					<input type="hidden" id="nama_gambar_edit" name="nama_gambar_edit">
 					<button type="submit" id="edit_submit" class="btn btn-primary">Edit</button>
 					<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
 				</div>
@@ -132,6 +145,7 @@
 				</div>
 				<div class="modal-footer">
 					<input type="hidden" id="id_edit_sub" name="id_edit_sub">
+					<input type="hidden" id="prev_parent_edit" name="prev_parent_edit">
 					<button type="submit" id="edit_submit_sub" class="btn btn-primary">Edit</button>
 					<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
 				</div>

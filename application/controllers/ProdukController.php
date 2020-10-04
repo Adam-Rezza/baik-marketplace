@@ -113,26 +113,38 @@ class ProdukController extends CI_Controller
 		$list = $this->mless->get_datatables();
 		$data = array();
 		$no   = $_POST['start'];
-		$total_data = $this->mless->count_filtered();
+
 		foreach ($list as $field) {
 			$no++;
 			$row             = array();
 
-			$row['no']            = $no;
-			$row['id']            = $field->id;
-			$row['toko_id']       = $field->toko_id;
-			$row['nama_toko']     = $field->nama_toko;
-			$row['kategori_id']   = $field->kategori_id;
-			$row['nama_kategori'] = $field->nama_kategori;
-			$row['nama']          = $field->nama;
-			$row['desc']          = $field->desc;
-			$row['harga_asli']    = $field->harga_asli;
-			$row['harga_asli_rp'] = 'Rp.' . number_format($field->harga_asli, 0, ',', '.');
-			$row['harga_disc']    = $field->harga_disc;
-			$row['harga_disc_rp'] = 'Rp.' . number_format($field->harga_disc, 0, ',', '.');
-			$row['terjual']       = $field->terjual;
-			$row['rating']        = $field->rating;
-			$row['ban']           = $field->ban;
+			$row['no']                = $no;
+			$row['id']                = $field->id;
+			$row['toko_id']           = $field->toko_id;
+			$row['nama_toko']         = $field->nama_toko;
+			$row['kategori_id']       = $field->kategori_id;
+
+			$nama_kategori = "Semua Kategori";
+			if ($field->kategori_id != NULL) {
+				$nama_kategori = $field->nama_kategori;
+			}
+
+			$nama_sub_kategori = "Semua Sub Kategori";
+			if ($field->sub_kategori_id != NULL) {
+				$nama_sub_kategori = $field->nama_sub_kategori;
+			}
+
+			$row['nama_kategori']     = $nama_kategori;
+			$row['nama_sub_kategori'] = $nama_sub_kategori;
+			$row['nama']              = $field->nama;
+			$row['desc']              = $field->desc;
+			$row['harga_asli']        = $field->harga_asli;
+			$row['harga_asli_rp']     = 'Rp.' . number_format($field->harga_asli, 0, ',', '.');
+			$row['harga_disc']        = $field->harga_disc;
+			$row['harga_disc_rp']     = 'Rp.' . number_format($field->harga_disc, 0, ',', '.');
+			$row['terjual']           = $field->terjual;
+			$row['rating']            = $field->rating;
+			$row['ban']               = $field->ban;
 
 			$delete = '<button class="btn btn-danger btn-xs" onclick="deleteData(\'' . $field->id . '\');"><i class="fa fa-trash fa-fw"></i> Delete</button>';
 

@@ -51,7 +51,7 @@ class KategoriController extends CI_Controller
 		if ($exec->num_rows() == 0) {
 			echo json_encode([
 				'code' => '404',
-				'msg' => 'Data tidak ditemukan'
+				'msg'  => 'Data tidak ditemukan'
 			]);
 			exit;
 		}
@@ -68,12 +68,12 @@ class KategoriController extends CI_Controller
 	public function store()
 	{
 		$cur_date = new DateTime('now');
-		$nama = $this->input->post('nama');
-		$parent = $this->input->post('parent');
-		$active = $this->input->post('active');
+		$nama     = $this->input->post('nama');
+		$parent   = $this->input->post('parent');
+		$active   = $this->input->post('active');
 
 		if ($parent == 'no') {
-			$check = $this->mcore->count('kategori', ['nama' => $nama, 'del' => FALSE, 'active' => TRUE]);
+			$check = $this->mcore->count('kategori', ['nama' => $nama, 'del' => FALSE]);
 
 			if ($check > 0) {
 				echo json_encode([
@@ -83,12 +83,32 @@ class KategoriController extends CI_Controller
 				exit;
 			}
 
-			$last_no_urut = $this->mcore->get('kategori', 'urutan', ['del' => FALSE, 'active' => TRUE], 'urutan', 'DESC', 1);
+			$last_no_urut = $this->mcore->get('kategori', 'urutan', ['del' => FALSE], 'urutan', 'DESC', 1);
 
 			if ($last_no_urut->num_rows() == 0) {
 				$last_no_urut = 1;
 			} else {
 				$last_no_urut = $last_no_urut->row()->urutan + 1;
+			}
+
+			$nama_gambar = NULL;
+			if (!empty($_FILES['gambar']['name'])) {
+				$config['upload_path']      = './public/img/kategori/';
+				$config['allowed_types']    = 'gif|jpg|png';
+				$config['overwrite']        = TRUE;
+				$config['file_ext_tolower'] = TRUE;
+				$config['encrypt_name']     = TRUE;
+
+
+				$this->load->library('upload', $config);
+
+				if (!$this->upload->do_upload('gambar')) {
+					$ret = ['code' => 500, 'msg' => $this->upload->display_errors()];
+					echo json_encode($ret);
+					exit;
+				} else {
+					$nama_gambar = $this->upload->data('file_name');
+				}
 			}
 
 			$data = [
@@ -97,7 +117,7 @@ class KategoriController extends CI_Controller
 				'created_date' => $cur_date->format('Y-m-d H:i:s'),
 				'active'       => ($active == '1') ? TRUE : FALSE,
 				'del'          => FALSE,
-				'gambar'       => NULL,
+				'gambar'       => $nama_gambar,
 			];
 			$exec = $this->mcore->store('kategori', $data);
 
@@ -115,7 +135,7 @@ class KategoriController extends CI_Controller
 				exit;
 			}
 		} else {
-			$check = $this->mcore->count('sub_kategori', ['parent' => $parent, 'nama' => $nama, 'active' => TRUE, 'del' => FALSE]);
+			$check = $this->mcore->count('sub_kategori', ['parent' => $parent, 'nama' => $nama, 'del' => FALSE]);
 
 			if ($check > 0) {
 				echo json_encode([
@@ -125,7 +145,7 @@ class KategoriController extends CI_Controller
 				exit;
 			}
 
-			$last_no_urut = $this->mcore->get('sub_kategori', 'urutan', ['parent' => $parent, 'del' => FALSE, 'active' => TRUE], 'urutan', 'DESC', 1);
+			$last_no_urut = $this->mcore->get('sub_kategori', 'urutan', ['parent' => $parent, 'del' => FALSE], 'urutan', 'DESC', 1);
 
 			if ($last_no_urut->num_rows() == 0) {
 				$last_no_urut = 1;
@@ -161,9 +181,10 @@ class KategoriController extends CI_Controller
 
 	public function update()
 	{
-		$id     = $this->input->post('id_edit');
-		$nama   = $this->input->post('nama_edit');
-		$active = $this->input->post('active_edit');
+		$id          = $this->input->post('id_edit');
+		$nama        = $this->input->post('nama_edit');
+		$active      = $this->input->post('active_edit');
+		$prev_gambar = $this->input->post('nama_gambar_edit');
 
 		$check = $this->mcore->count('kategori', ['id' => $id]);
 
@@ -175,9 +196,30 @@ class KategoriController extends CI_Controller
 			exit;
 		}
 
+		$nama_gambar = $prev_gambar;
+		if (!empty($_FILES['gambar_edit']['name'])) {
+			$config['upload_path']      = './public/img/kategori/';
+			$config['allowed_types']    = 'gif|jpg|png';
+			$config['overwrite']        = TRUE;
+			$config['file_ext_tolower'] = TRUE;
+			$config['encrypt_name']     = TRUE;
+
+
+			$this->load->library('upload', $config);
+
+			if (!$this->upload->do_upload('gambar_edit')) {
+				$ret = ['code' => 500, 'msg' => $this->upload->display_errors()];
+				echo json_encode($ret);
+				exit;
+			} else {
+				$nama_gambar = $this->upload->data('file_name');
+			}
+		}
+
 		$data = [
 			'nama'   => $nama,
 			'active' => ($active == '1') ? TRUE : FALSE,
+			'gambar' => $nama_gambar,
 		];
 
 		$exec = $this->mcore->update('kategori', $data, ['id' => $id]);
@@ -185,7 +227,8 @@ class KategoriController extends CI_Controller
 		if ($exec) {
 			$ret = [
 				'code' => 200,
-				'msg' => 'Update Kategori Berhasil',
+				'msg'  => 'Update Kategori Berhasil',
+				'data' => $data
 			];
 		} else {
 			$ret = [
@@ -199,10 +242,11 @@ class KategoriController extends CI_Controller
 
 	public function update_sub()
 	{
-		$id     = $this->input->post('id_edit_sub');
-		$nama   = $this->input->post('nama_edit_sub');
-		$parent = $this->input->post('parent_edit_sub');
-		$active = $this->input->post('active_edit_sub');
+		$id          = $this->input->post('id_edit_sub');
+		$nama        = $this->input->post('nama_edit_sub');
+		$parent      = $this->input->post('parent_edit_sub');
+		$active      = $this->input->post('active_edit_sub');
+		$prev_parent = $this->input->post('prev_parent_edit');
 
 		$check = $this->mcore->count('sub_kategori', ['id' => $id]);
 
@@ -220,17 +264,34 @@ class KategoriController extends CI_Controller
 			'active' => ($active == '1') ? TRUE : FALSE,
 		];
 
+		if ($prev_parent != $parent) {
+			$arr_last_urutan = $this->mcore->get('sub_kategori', 'urutan', ['parent' => $parent, 'del' => FALSE], 'urutan', 'DESC', '1');
+
+			$last_urutan = 1;
+			if ($arr_last_urutan->num_rows() > 0) {
+				$last_urutan = $arr_last_urutan->row()->urutan + 1;
+			}
+
+			$data = [
+				'nama'   => $nama,
+				'parent' => $parent,
+				'active' => ($active == '1') ? TRUE : FALSE,
+				'urutan' => $last_urutan,
+			];
+		}
+
 		$exec = $this->mcore->update('sub_kategori', $data, ['id' => $id]);
 
 		if ($exec) {
 			$ret = [
-				'code' => 200,
-				'msg' => 'Update Sub Kategori Berhasil',
+				'code'   => 200,
+				'msg'    => 'Update Sub Kategori Berhasil',
+				'parent' => $parent,
 			];
 		} else {
 			$ret = [
 				'code' => 500,
-				'msg' => 'Update Sub Kategori Gagal',
+				'msg'  => 'Update Sub Kategori Gagal',
 			];
 		}
 
@@ -247,8 +308,19 @@ class KategoriController extends CI_Controller
 
 		if ($exec) {
 			$ret = ['code' => 200, 'msg' => 'Hapus Kategori Berhasil'];
+			$exec2   = $this->mcore->update('sub_kategori', $object, ['parent' => $id]);
+
+			if (!$exec2) {
+				$ret = ['code' => 500, 'msg' => 'Hapus Sub Kategori Gagal'];
+			}
 		} else {
 			$ret = ['code' => 500, 'msg' => 'Hapus Kategori Gagal'];
+		}
+
+		$reindent = $this->_reindent('kategori');
+
+		if ($reindent === FALSE) {
+			$ret = ['code' => 500, 'msg' => 'proses reindent gagal, silahkan hubungi team IT'];
 		}
 
 		echo json_encode($ret);
@@ -262,10 +334,20 @@ class KategoriController extends CI_Controller
 		$where  = ['id' => $id];
 		$exec   = $this->mcore->update('sub_kategori', $object, $where);
 
-		if ($exec) {
-			$ret = ['code' => 200, 'msg' => 'Hapus Sub Kategori Berhasil'];
-		} else {
-			$ret = ['code' => 500, 'msg' => 'Hapus Sub Kategori Gagal'];
+		$parent = $this->mcore->get('sub_kategori', 'parent', $where);
+
+		if ($parent->num_rows() > 0) {
+			if ($exec) {
+				$ret = ['code' => 200, 'msg' => 'Hapus Sub Kategori Berhasil', 'parent' => $parent->row()->parent];
+			} else {
+				$ret = ['code' => 500, 'msg' => 'Hapus Sub Kategori Gagal'];
+			}
+
+			$reindent = $this->_reindent('sub_kategori', $parent->row()->parent);
+
+			if ($reindent === FALSE) {
+				$ret = ['code' => 200, 'msg' => 'proses reindent gagal, Karna Kategori sudah tidak memiliki Sub Kategori'];
+			}
 		}
 
 		echo json_encode($ret);
@@ -328,6 +410,12 @@ class KategoriController extends CI_Controller
 
 			$row['no']     = $no;
 			$row['id']     = $field->id;
+
+			$gambar = '';
+			if ($field->gambar) {
+				$gambar = base_url() . 'public/img/kategori/' . $field->gambar;
+			}
+			$row['gambar'] = '<img src="' . $gambar . '" class="img-thumbnail" style="width: 100px !important;" />';
 			$row['nama']   = $field->nama;
 			$row['active'] = $field->active;
 
@@ -359,7 +447,7 @@ class KategoriController extends CI_Controller
 			</div>
 			';
 
-			$data[]          = $row;
+			$data[] = $row;
 		}
 
 		$output = array(
@@ -374,35 +462,38 @@ class KategoriController extends CI_Controller
 
 	public function up_parent()
 	{
-		$id = $this->input->get('id');
+		$id    = $this->input->get('id');
 		$count = $this->mcore->count('kategori', ['id' => $id]);
 
 		if ($count == 0) {
 			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
 		} else {
-			$cur = $this->mcore->get('kategori', 'id, urutan', ['id' => $id]);
+			$cur        = $this->mcore->get('kategori', 'id, urutan', ['id' => $id]);
 			$cur_urutan = $cur->row()->urutan;
-			$prev_urutan = $cur_urutan - 1;
+
+			$where_prev  = "urutan = (select max(urutan) from kategori where urutan < '" . $cur_urutan . "' AND del = false) ";
+			$prev        = $this->mcore->get('kategori', 'id, urutan', $where_prev);
+			$prev_id     = $prev->row()->id;
+			$prev_urutan = $prev->row()->urutan;
+
 			if ($prev_urutan <= 0) {
 				$prev_urutan = 1;
 			}
-			$where_prev = [
-				'urutan' => $prev_urutan,
-				'parent' => NULL,
-				'del'    => NULL
-			];
-			$prev = $this->mcore->get('kategori', 'id, urutan', $where_prev);
-			$id_prev = $prev->row()->id;
 
-			$update_prev = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $id_prev]);
-
+			$update_prev = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $prev_id]);
 			$update_cur = $this->mcore->update('kategori', ['urutan' => $prev_urutan], ['id' => $id]);
 
 			if ($update_prev && $update_cur) {
-				$ret = ['code' => 200, 'msg' => ""];
+				$ret = ['code' => 200, 'msg' => "", 'prev_id' => $prev_id, 'id' => $id];
 			} else {
 				$ret = ['code' => 500, 'msg' => "Update urutan gagal, silahkan coba kembali"];
 			}
+		}
+
+		$reindent = $this->_reindent('kategori');
+
+		if ($reindent === FALSE) {
+			$ret = ['code' => 500, 'msg' => 'proses reindent gagal, silahkan hubungi team IT'];
 		}
 
 		echo json_encode($ret);
@@ -410,30 +501,22 @@ class KategoriController extends CI_Controller
 
 	public function down_parent()
 	{
-		$id = $this->input->get('id');
+		$id    = $this->input->get('id');
 		$count = $this->mcore->count('kategori', ['id' => $id]);
 
 		if ($count == 0) {
 			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
 		} else {
-			$cur = $this->mcore->get('kategori', 'id, urutan', ['id' => $id]);
+			$cur        = $this->mcore->get('kategori', 'id, urutan', ['id' => $id]);
 			$cur_urutan = $cur->row()->urutan;
-			$next_urutan = $cur_urutan + 1;
-			$where_next = [
-				'urutan' => $next_urutan,
-				'parent' => NULL,
-				'del'    => NULL
-			];
-			$next = $this->mcore->get('kategori', 'id, urutan', $where_next);
 
-			$update_next = TRUE;
-			if ($next->num_rows() != 0) {
-				$id_next = $next->row()->id;
-				$update_next = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $id_next]);
-			}
+			$where_next  = "urutan = (select min(urutan) from kategori where urutan > '" . $cur_urutan . "' AND del = false) ";
+			$next        = $this->mcore->get('kategori', 'id, urutan', $where_next);
+			$next_id     = $next->row()->id;
+			$next_urutan = $next->row()->urutan;
 
-
-			$update_cur = $this->mcore->update('kategori', ['urutan' => $next_urutan], ['id' => $id]);
+			$update_next = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $next_id]);
+			$update_cur  = $this->mcore->update('kategori', ['urutan' => $next_urutan], ['id' => $id]);
 
 			if ($update_next && $update_cur) {
 				$ret = ['code' => 200, 'msg' => ""];
@@ -447,30 +530,23 @@ class KategoriController extends CI_Controller
 
 	public function up_child()
 	{
-		$id = $this->input->get('id');
-		$count = $this->mcore->count('kategori', ['id' => $id]);
+		$id    = $this->input->get('id');
+		$count = $this->mcore->count('sub_kategori', ['id' => $id]);
 
 		if ($count == 0) {
 			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
 		} else {
-			$cur = $this->mcore->get('kategori', 'id, urutan, parent', ['id' => $id]);
+			$cur        = $this->mcore->get('sub_kategori', 'id, urutan, parent', ['id' => $id]);
 			$cur_urutan = $cur->row()->urutan;
-			$parent = $cur->row()->parent;
-			$prev_urutan = $cur_urutan - 1;
-			if ($prev_urutan <= 0) {
-				$prev_urutan = 1;
-			}
-			$where_prev = [
-				'urutan' => $prev_urutan,
-				'parent' => $parent,
-				'del'    => NULL
-			];
-			$prev = $this->mcore->get('kategori', 'id, urutan', $where_prev);
-			$id_prev = $prev->row()->id;
+			$parent     = $cur->row()->parent;
 
-			$update_prev = $this->mcore->update('kategori', ['urutan' => $cur_urutan], ['id' => $id_prev]);
+			$where_prev  = "urutan = (select max(urutan) from sub_kategori where urutan < '" . $cur_urutan . "' AND del = false AND parent = '" . $parent . "') AND del = false AND parent = '" . $parent . "'";
+			$prev        = $this->mcore->get('sub_kategori', 'id, urutan', $where_prev);
+			$prev_id     = $prev->row()->id;
+			$prev_urutan = $prev->row()->urutan;
 
-			$update_cur = $this->mcore->update('kategori', ['urutan' => $prev_urutan], ['id' => $id]);
+			$update_prev = $this->mcore->update('sub_kategori', ['urutan' => $cur_urutan], ['id' => $prev_id]);
+			$update_cur  = $this->mcore->update('sub_kategori', ['urutan' => $prev_urutan], ['id' => $id]);
 
 			if ($update_prev && $update_cur) {
 				$ret = ['code' => 200, 'msg' => "", 'id_parent' => $parent];
@@ -480,6 +556,68 @@ class KategoriController extends CI_Controller
 		}
 
 		echo json_encode($ret);
+	}
+
+	public function down_child()
+	{
+		$id    = $this->input->get('id');
+		$count = $this->mcore->count('sub_kategori', ['id' => $id]);
+
+		if ($count == 0) {
+			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
+		} else {
+			$cur        = $this->mcore->get('sub_kategori', 'id, urutan, parent', ['id' => $id]);
+			$cur_urutan = $cur->row()->urutan;
+			$parent     = $cur->row()->parent;
+
+			$where_next  = "urutan = (select min(urutan) from sub_kategori where urutan > '" . $cur_urutan . "' AND del = false AND parent = '" . $parent . "') AND del = false AND parent = '" . $parent . "'";
+			$next        = $this->mcore->get('sub_kategori', 'id, urutan', $where_next);
+			$next_id     = $next->row()->id;
+			$next_urutan = $next->row()->urutan;
+
+			$update_next = $this->mcore->update('sub_kategori', ['urutan' => $cur_urutan], ['id' => $next_id]);
+			$update_cur  = $this->mcore->update('sub_kategori', ['urutan' => $next_urutan], ['id' => $id]);
+
+			if ($update_next && $update_cur) {
+				$ret = ['code' => 200, 'msg' => "", 'id_parent' => $parent];
+			} else {
+				$ret = ['code' => 500, 'msg' => "Update urutan gagal, silahkan coba kembali"];
+			}
+		}
+
+		echo json_encode($ret);
+	}
+
+	public function _reindent($jenis, $parent = NULL)
+	{
+		if ($jenis == 'kategori') {
+			$arr = $this->mcore->get('kategori', 'id', ['del' => FALSE], 'urutan', 'ASC');
+		} else {
+			$arr = $this->mcore->get('sub_kategori', 'id', ['del' => FALSE, 'parent' => $parent], 'urutan', 'ASC');
+		}
+
+		if ($arr->num_rows() == 0) {
+			return FALSE;
+		}
+
+		$data = [];
+
+		$no_urut = 1;
+		foreach ($arr->result() as $key) {
+			$id     = $key->id;
+
+			$data  = ['urutan' => $no_urut];
+			$where = ['id' => $id];
+			$exec  = $this->mcore->update($jenis, $data, $where);
+
+			$no_urut++;
+		}
+
+		if ($exec) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 }
         

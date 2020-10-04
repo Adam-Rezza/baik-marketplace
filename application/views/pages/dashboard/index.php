@@ -45,5 +45,17 @@
 				<a href="<?= site_url('toko'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
 			</div>
 		</div>
+		<div class="col-lg-3 col-xs-6">
+			<div class="small-box bg-red">
+				<div class="inner">
+					<h3><?= $produk_count; ?></h3>
+					<p>Produk</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-cubes"></i>
+				</div>
+				<a href="<?= site_url('produk'); ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
 	</div>
 </section>

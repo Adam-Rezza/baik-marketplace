@@ -20,6 +20,9 @@
 					"data": "id"
 				},
 				{
+					"data": "gambar"
+				},
+				{
 					"data": "nama"
 				},
 				{
@@ -40,12 +43,21 @@
 				},
 			],
 			"columnDefs": [{
-				"targets": [3],
+				"targets": [1, 4, 5],
 				"orderable": false,
 			}, {
-				"targets": [0, 2, 3, 4],
+				"targets": [0, 3, 4, 5],
 				"class": "text-center"
 			}],
+		});
+
+		$("#parent").on('change', function() {
+			let parent = $(this).find(':selected').val();
+			if (parent == "no") {
+				$('.gambar').show();
+			} else {
+				$('.gambar').hide();
+			}
 		});
 
 		$('#form_add').on('submit', function(e) {
@@ -65,6 +77,10 @@
 					$('#add_submit').attr('disabled', true);
 					$.blockUI();
 				}
+			}).fail(function(res) {
+				console.log(res);
+				$('#add_submit').attr('disabled', false);
+				$.unblockUI();
 			}).done(function(res) {
 				if (res.code == 200) {
 					$('#nama').val(null);
@@ -128,6 +144,7 @@
 				if (res.code == 200) {
 					table.draw();
 					$('#modal-edit_sub').modal('hide');
+					detailData(res.parent);
 				}
 				alert(res.msg);
 				$('#edit_submit_sub').attr('disabled', false);
@@ -217,9 +234,11 @@
 					}
 				})
 				.done(function(res) {
+					console.log(res);
 					if (res.code == 200) {
 						table.draw();
-						$('#modal-sub').modal('hide');
+						detailData(res.parent);
+						console.log(res.parent);
 					}
 					alert(res.msg);
 					getListParent();
@@ -239,6 +258,10 @@
 			},
 			beforeSend: function() {
 				$.blockUI();
+				$('#id_edit').val('');
+				$('#nama_edit').val('');
+				$('#gambar_edit').val('');
+				$('#nama_gambar_edit').val('');
 			}
 		}).done(function(res) {
 			console.log(res);
@@ -247,6 +270,7 @@
 			} else {
 				$('#id_edit').val(res.id);
 				$('#nama_edit').val(res.nama);
+				$('#nama_gambar_edit').val(res.gambar);
 				$('#parent_edit').val(res.parent).trigger('change');
 				$('#active_edit').val(res.active).trigger('change');
 				$('#modal-edit').modal('show');
@@ -277,6 +301,7 @@
 				$('#nama_edit_sub').val(res.nama);
 				$('#parent_edit_sub').val(res.parent).trigger('change');
 				$('#active_edit_sub').val(res.active).trigger('change');
+				$('#prev_parent_edit').val(res.parent);
 				$('#modal-edit_sub').modal('show');
 			}
 
@@ -412,6 +437,9 @@
 				console.log(res);
 				if (res.code == 200) {
 					table.draw();
+					if (type != 'parent') {
+						detailData(res.id_parent);
+					}
 				} else {
 					alert(res.msg)
 				}

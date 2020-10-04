@@ -17,6 +17,8 @@
 								<tr>
 									<th>Toko</th>
 									<th>Nama</th>
+									<th>Kategori</th>
+									<th>Sub Kategori</th>
 									<th>Harga Asli</th>
 									<th>Harga Disc</th>
 									<th>Terjual</th>

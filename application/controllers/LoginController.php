@@ -23,14 +23,10 @@ class LoginController extends CI_Controller
 
 				$this->_set_session($id, $username);
 				$this->session->set_flashdata('first_login', FIRST_LOGIN_MSG);
-				echo "dashboard";
-				exit;
 				redirect(site_url() . 'dashboard');
 			} else {
 				delete_cookie(COOK);
 				$this->session->set_flashdata('expired', EXPIRED_MSG);
-				echo "refresh";
-				exit;
 				redirect(site_url(), 'refresh');
 			}
 		} else {

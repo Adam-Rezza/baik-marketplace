@@ -109,7 +109,7 @@ desired effect
 			}
 
 			$.ajax({
-				url: `<?= site_url(); ?>change_password`,
+				url: `<?= site_url(); ?>admin/change_password`,
 				method: 'post',
 				dataType: 'json',
 				data: {

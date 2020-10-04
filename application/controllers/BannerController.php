@@ -157,6 +157,12 @@ class BannerController extends CI_Controller
 			$ret = ['code' => 500, 'msg' => 'Hapus Banner Gagal'];
 		}
 
+		$reindent = $this->_reindent();
+
+		if ($reindent === FALSE) {
+			$ret = ['code' => 500, 'msg' => 'proses reindent gagal, silahkan hubungi team IT'];
+		}
+
 		echo json_encode($ret);
 	}
 
@@ -193,11 +199,17 @@ class BannerController extends CI_Controller
 			$delete = '<button class="btn btn-danger btn-xs" onclick="deleteData(\'' . $field->id . '\');"><i class="fa fa-trash fa-fw"></i> Delete</button>';
 			$edit = '<button class="btn btn-info btn-xs" onclick="editData(\'' . $field->id . '\');"><i class="fa fa-pencil fa-fw"></i> Edit</button>';
 
+			$status_btn = '<button type="button" class="btn btn-warning btn-xs" onclick="gantiStatus(\'' . $field->id . '\', \'1\')"><i class="fa fa-times fa-fw"></i> Non Aktifkan</button>';
+			if ($field->active == FALSE) {
+				$status_btn = '<button type="button" class="btn btn-success btn-xs" onclick="gantiStatus(\'' . $field->id . '\', \'0\')"><i class="fa fa-check fa-fw"></i> Aktifkan</button>';
+			}
+
 			$row['actions'] = '
 			<div class="text-center">
 				<div class="btn-group">
 				' . $delete . '
 				' . $edit . '
+				' . $status_btn . '
 				</div>
 			</div>
 			';
@@ -217,7 +229,7 @@ class BannerController extends CI_Controller
 
 	public function up()
 	{
-		$id = $this->input->get('id');
+		$id    = $this->input->get('id');
 		$count = $this->mcore->count('banner', ['id' => $id]);
 
 		if ($count == 0) {
@@ -225,19 +237,17 @@ class BannerController extends CI_Controller
 		} else {
 			$cur = $this->mcore->get('banner', 'id, urutan', ['id' => $id]);
 			$cur_urutan = $cur->row()->urutan;
-			$prev_urutan = $cur_urutan - 1;
+
+			$where_prev  = "urutan = (select max(urutan) from banner where urutan < '" . $cur_urutan . "' AND del = false) ";
+			$prev        = $this->mcore->get('banner', 'id, urutan', $where_prev);
+			$prev_id     = $prev->row()->id;
+			$prev_urutan = $prev->row()->urutan;
+
 			if ($prev_urutan <= 0) {
 				$prev_urutan = 1;
 			}
-			$where_prev = [
-				'urutan' => $prev_urutan,
-				'del'    => NULL
-			];
-			$prev = $this->mcore->get('banner', 'id, urutan', $where_prev);
-			$id_prev = $prev->row()->id;
 
-			$update_prev = $this->mcore->update('banner', ['urutan' => $cur_urutan], ['id' => $id_prev]);
-
+			$update_prev = $this->mcore->update('banner', ['urutan' => $cur_urutan], ['id' => $prev_id]);
 			$update_cur = $this->mcore->update('banner', ['urutan' => $prev_urutan], ['id' => $id]);
 
 			if ($update_prev && $update_cur) {
@@ -247,34 +257,33 @@ class BannerController extends CI_Controller
 			}
 		}
 
+		$reindent = $this->_reindent();
+
+		if ($reindent === FALSE) {
+			$ret = ['code' => 500, 'msg' => 'proses reindent gagal, silahkan hubungi team IT'];
+		}
+
 		echo json_encode($ret);
 	}
 
 	public function down()
 	{
-		$id = $this->input->get('id');
+		$id    = $this->input->get('id');
 		$count = $this->mcore->count('banner', ['id' => $id]);
 
 		if ($count == 0) {
 			$ret = ['code' => 404, 'msg' => 'Data tidak ditemukan'];
 		} else {
-			$cur = $this->mcore->get('banner', 'id, urutan', ['id' => $id]);
+			$cur        = $this->mcore->get('banner', 'id, urutan', ['id' => $id]);
 			$cur_urutan = $cur->row()->urutan;
-			$next_urutan = $cur_urutan + 1;
-			$where_next = [
-				'urutan' => $next_urutan,
-				'del'    => NULL
-			];
-			$next = $this->mcore->get('banner', 'id, urutan', $where_next);
 
-			$update_next = TRUE;
-			if ($next->num_rows() != 0) {
-				$id_next = $next->row()->id;
-				$update_next = $this->mcore->update('banner', ['urutan' => $cur_urutan], ['id' => $id_next]);
-			}
+			$where_next  = "urutan = (select min(urutan) from banner where urutan > '" . $cur_urutan . "' AND del = false) ";
+			$next        = $this->mcore->get('banner', 'id, urutan', $where_next);
+			$next_id     = $next->row()->id;
+			$next_urutan = $next->row()->urutan;
 
-
-			$update_cur = $this->mcore->update('banner', ['urutan' => $next_urutan], ['id' => $id]);
+			$update_next = $this->mcore->update('banner', ['urutan' => $cur_urutan], ['id' => $next_id]);
+			$update_cur  = $this->mcore->update('banner', ['urutan' => $next_urutan], ['id' => $id]);
 
 			if ($update_next && $update_cur) {
 				$ret = ['code' => 200, 'msg' => ""];
@@ -283,7 +292,67 @@ class BannerController extends CI_Controller
 			}
 		}
 
+		$reindent = $this->_reindent();
+
+		if ($reindent === FALSE) {
+			$ret = ['code' => 500, 'msg' => 'proses reindent gagal, silahkan hubungi team IT'];
+		}
+
 		echo json_encode($ret);
+	}
+
+	public function ganti_status()
+	{
+		$id = $this->input->post('id');
+		$status = $this->input->post('status');
+
+		if (!$id) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+
+		$new_status = FALSE;
+		if ($status == '1') {
+			$new_status = TRUE;
+		}
+
+		$exec = $this->mcore->update('banner', ['active' => $new_status], ['id' => $id]);
+
+		if ($exec) {
+			$ret = ['code' => 200];
+		} else {
+			$ret = ['code' => 500];
+		}
+
+		echo json_encode($ret);
+	}
+
+	public function _reindent()
+	{
+		$arr = $this->mcore->get('banner', 'id', ['del' => FALSE], 'urutan', 'ASC');
+
+		if ($arr->num_rows() == 0) {
+			return FALSE;
+		}
+
+		$data = [];
+
+		$no_urut = 1;
+		foreach ($arr->result() as $key) {
+			$id     = $key->id;
+
+			$data  = ['urutan' => $no_urut];
+			$where = ['id' => $id];
+			$exec  = $this->mcore->update('banner', $data, $where);
+
+			$no_urut++;
+		}
+
+		if ($exec) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 }
         

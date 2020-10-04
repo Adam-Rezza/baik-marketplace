@@ -133,14 +133,15 @@ $route['produk/ban']            = 'ProdukController/ban';
 $route['datatables/produk']     = 'ProdukController/datatables';
 
 # BANNER
-$route['banner']            = 'BannerController/index';
-$route['banner/show']       = 'BannerController/show';
-$route['banner/store']      = 'BannerController/store';
-$route['banner/update']     = 'BannerController/update';
-$route['banner/destroy']    = 'BannerController/destroy';
-$route['banner/up']         = 'BannerController/up';
-$route['banner/down']       = 'BannerController/down';
-$route['datatables/banner'] = 'BannerController/datatables';
+$route['banner']              = 'BannerController/index';
+$route['banner/show']         = 'BannerController/show';
+$route['banner/store']        = 'BannerController/store';
+$route['banner/update']       = 'BannerController/update';
+$route['banner/destroy']      = 'BannerController/destroy';
+$route['banner/up']           = 'BannerController/up';
+$route['banner/down']         = 'BannerController/down';
+$route['banner/ganti_status'] = 'BannerController/ganti_status';
+$route['datatables/banner']   = 'BannerController/datatables';
 
 # USER
 $route['user']                = 'UsersController/index';

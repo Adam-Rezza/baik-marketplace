@@ -229,4 +229,71 @@
 			});
 		}
 	}
+
+	function gantiStatus(id, status) {
+		let url = `<?= site_url(); ?>banner/ganti_status`;
+
+		let new_status = '1';
+		let text_status = 'Aktif';
+		if (status == '1') {
+			new_status = '0';
+			text_status = 'Non Aktif';
+		}
+
+		Swal.fire({
+			title: 'Apakah kamu yakin?',
+			text: `Kamu akan mengganti status menjadi ${text_status}`,
+			icon: 'question',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Ya, Ganti!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					url: url,
+					method: 'post',
+					dataType: 'json',
+					data: {
+						id: id,
+						status: new_status
+					},
+					beforeSend: function() {
+						$.blockUI();
+					}
+				}).fail(function(res) {
+					console.log(res);
+				}).done(function(res) {
+					console.log(res);
+
+					if (res.code == 404) {
+						Swal.fire(
+							'404',
+							'Banner tidak ditemukan, silahkan, refresh halaman',
+							'error'
+						);
+					} else if (res.code == 200) {
+						Swal.fire(
+							'Success',
+							'Proses Ganti Status Berhasil',
+							'success'
+						);
+					} else if (res.code == 500) {
+						Swal.fire(
+							'500',
+							'Proses Ganti Status Gagal',
+							'error'
+						);
+					} else {
+						console.log("unknown response");
+					}
+
+					table.draw();
+					$.unblockUI();
+				});
+			}
+		})
+
+
+	}
 </script>
