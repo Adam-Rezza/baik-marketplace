@@ -45,6 +45,8 @@ class M_transaction extends CI_Model
         $this->db->where('a.user_id', $user_id);
         $this->db->where('a.transaksi_id is null');
         $this->db->where('b.del', 0);
+        $this->db->where('b.ban', 0);
+        $this->db->where('d.ban', '0');
         $this->db->where('c.urutan', 1);
         $this->db->order_by('a.created_date');
         return $this->db->get();
@@ -81,10 +83,14 @@ class M_transaction extends CI_Model
         // $this->db->update('keranjang', $data);
         $this->db->query('UPDATE `keranjang` as `a` '.
                             'JOIN `produk` as `b` on `a`.`produk_id` = `b`.`id` '.
+                            'JOIN `toko` as `c` on `b`.`toko_id` = `c`.`id` '.
                             'SET `transaksi_id` = '.$transaksi_id.' '.
                             'WHERE `b`.`toko_id` = '.$toko_id.' '.
                                 'AND `a`.`user_id` = '.$user_id.' '.
-                                'AND `a`.`transaksi_id` is null ');
+                                'AND `a`.`transaksi_id` is null '.
+                                'AND `b`.`del` = 0 '.
+                                'AND `b`.`ban` = 0 '.
+                                'AND `c`.`ban` = 0 ');
         return $this->db->affected_rows();
     }
 
@@ -95,6 +101,9 @@ class M_transaction extends CI_Model
         $this->db->join('produk b','a.produk_id = b.id');
         $this->db->join('toko c','b.toko_id = c.id');
         $this->db->where('a.transaksi_id is null');
+        $this->db->where('b.del', 0);
+        $this->db->where('b.ban', 0);
+        $this->db->where('c.ban', 0);
         $this->db->group_by('c.id');
         return $this->db->get();
     }

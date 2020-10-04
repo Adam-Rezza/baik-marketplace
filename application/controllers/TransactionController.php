@@ -37,38 +37,42 @@ class TransactionController extends CI_Controller
 	public function add_to_cart($product_id, $qty)
 	{
 		$user_id = $this->session->userdata(SESSUSER . 'id');
-		$where_product = ['id' => $product_id];
+		$where_product = ['id' => $product_id, 'del' => 0, 'ban' => 0];
 		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
 		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
-		if ($user_id && $cart && $product) {
-			$data = [
-				'user_id' => $user_id,
-				'produk_id' => $product->id,
-				'harga' => $product->harga_disc,
-				'qty' => $cart->qty + intval($qty),
-				'created_date' => date('Y-m-d h:i:s')
-			];
-			$result = $this->ci->transaction->update('keranjang', $data, $cart->id);
-			echo $result ? 'true' : 'false';
-		} else if ($user_id && $product) {
-			$data = [
-				'user_id' => $user_id,
-				'produk_id' => $product->id,
-				'harga' => $product->harga_disc,
-				'qty' => $qty,
-				'created_date' => date('Y-m-d h:i:s')
-			];
-			$result = $this->ci->transaction->insert('keranjang', $data);
-			echo $result ? 'true' : 'false';
+		if ($product->toko_id == $this->session->userdata('merchant_id')) {
+			if ($user_id && $cart && $product) {
+				$data = [
+					'user_id' => $user_id,
+					'produk_id' => $product->id,
+					'harga' => $product->harga_disc,
+					'qty' => $cart->qty + intval($qty),
+					'created_date' => date('Y-m-d h:i:s')
+				];
+				$result = $this->ci->transaction->update('keranjang', $data, $cart->id);
+				echo $result ? 'true' : 'false';
+			} else if ($user_id && $product) {
+				$data = [
+					'user_id' => $user_id,
+					'produk_id' => $product->id,
+					'harga' => $product->harga_disc,
+					'qty' => $qty,
+					'created_date' => date('Y-m-d h:i:s')
+				];
+				$result = $this->ci->transaction->insert('keranjang', $data);
+				echo $result ? 'true' : 'false';
+			} else {
+				echo 'false';
+			}
 		} else {
-			echo 'false';
+			echo 'merchant';
 		}
 	}
 
 	public function update_product_cart($product_id, $qty)
 	{
 		$user_id = $this->session->userdata(SESSUSER . 'id');
-		$where_product = ['id' => $product_id];
+		$where_product = ['id' => $product_id, 'del' => 0, 'ban' => 0];
 		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
 		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
 		if ($user_id && $cart && $product) {
@@ -126,6 +130,8 @@ class TransactionController extends CI_Controller
 				if ($transaction) {
 					$data = ['transaksi_id' => $transaction];
 					$keranjang = $this->ci->transaction->updateKeranjangByUserIdAndMerchantId($transaction, $user_id, $f->id);
+					$invoice = ['invoice' => $f->id . date('dmYHis') . $transaction];
+					$this->ci->transaction->update('transaksi', $invoice, $transaction);
 					$msg = "Pesanan anda di teruskan ke <b>" . $f->nama . "</b>";
 					$url = "my_order";
 					$this->create_notification($user_id, $msg, $url);
@@ -140,8 +146,7 @@ class TransactionController extends CI_Controller
 			$this->db->trans_commit();
 			echo json_encode($status ? 'true' : '1'); // 1 => transaksi gagal 
 		} else {
-			$this->session->set_flashdata('checkout', true);
-			echo json_encode('2');
+			echo json_encode('2'); // 1 => blm ada alamat 
 		}
 	}
 

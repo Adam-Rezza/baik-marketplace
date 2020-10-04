@@ -151,6 +151,16 @@
                             setTimeout(() => {
                                 window.location.href = '<?= base_url() ?>checkout'
                             }, 1000);
+                        } else if (res == "merchant") {
+                            Swal.fire({
+                                icon: 'error',
+                                text: 'Produk ini milik toko anda',
+                                showConfirmButton: false,
+                                timer: 1000,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            })
                         } else {
                             Swal.fire({
                                 icon: 'error',

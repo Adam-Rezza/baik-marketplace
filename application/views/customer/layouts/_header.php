@@ -20,8 +20,10 @@
 		<?php foreach ($category as $f) { ?>
 			<li class="parentCategory">
 				<!-- <a href="<?= base_url() ?>category"> -->
-				<a href="<?= base_url() ?>category/<?= $f->id ?>" data-id="<?= $f->id ?>">
-					<i class="fa fa-caret-right" aria-hidden="true"></i>
+				<a href="<?= base_url() ?>category=<?= $f->id ?>%26page=1" data-id="<?= $f->id ?>">
+					<?php if (count($sub_category[$f->id]) > 0) { ?>
+						<i class="fa fa-caret-right" aria-hidden="true"></i>
+					<?php } ?>
 					<p><?= $f->nama ?></p>
 				</a>
 			</li>
@@ -186,7 +188,7 @@
 				<li class="parentCategory">
 					<!-- <a href="<?= base_url() ?>category"> -->
 					<a href="<?= base_url() ?>category=<?= $f->id ?>%26page=1" data-id="<?= $f->id ?>">
-						<?php if(count($sub_category[$f->id]) > 0) { ?>
+						<?php if (count($sub_category[$f->id]) > 0) { ?>
 							<i class="fa fa-caret-right" aria-hidden="true"></i>
 						<?php } ?>
 						<p><?= $f->nama ?></p>

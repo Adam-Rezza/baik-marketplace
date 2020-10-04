@@ -1,3 +1,11 @@
+<style>
+    .merchant-header-container{
+        text-align: center;
+    }
+    .left-content-shoping .merchant-header{
+        max-height: 150px;
+    }
+</style>
 <script>
     $(document).ready(function() {
         $('#provinsi').select2()

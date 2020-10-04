@@ -4,7 +4,7 @@
     <div class="clearfix box-product full-width top-padding-default bg-gray">
         <div class=" container">
             <div class="row ">
-                <?php if (count($product_pictures) > 0 && $product->del == 0  && $product->ban == 0) { ?>
+                <?php if (count($product_pictures) > 0 && $product != null && $product->del == 0  && $product->ban == 0) { ?>
                     <!-- Content Category -->
                     <div class="col-md-9 relative clear-padding">
                         <!-- Product Content Detail -->

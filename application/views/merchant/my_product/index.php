@@ -27,7 +27,7 @@
                                     <img src="<?= base_url(); ?>public/megastore/img/no-image-available.png" id="image-product-<?= $f->id ?>" alt="No image">
                                 <?php } ?></button>
                             </div>
-                            <ul class="option-product animate-default clear-margin">
+                            <ul class="option-product animate-default clear-margin hidden">
                                 <li class="relative">
                                     <a href="#" class="edit-image-product" data-id="<?= $f->id ?>" data-product-name="<?= $f->nama ?>">
                                         <i class="fa fa-edit" aria-hidden="true"></i>
@@ -141,7 +141,7 @@
                                 <div class="image-add-product-container" id="image-add-product-sortable">
 
                                 </div>
-                                <div class="image-add-product-container" style="display: inline">
+                                <div class="image-add-product-container" id="image-add-product-container" style="display: inline">
                                     <div class="image-product-add-item" id="image-product-item-example-4">
                                         <div class="image-product-item-content">
                                             <img src="<?= base_url(); ?>public/megastore/img/add-image.png" class="btn-image-product" data-target="add-image-new-product">
