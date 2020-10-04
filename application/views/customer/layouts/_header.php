@@ -120,7 +120,7 @@
 							<?php foreach ($notification as $f) { ?>
 								<div class="product-cart-son notification-son clearfix <?= $f->read ? '' : 'bg-red' ?>" id="notification-son-<?= $i ?>" data-view="<?$f->read?>" data-id="<?= $f->id ?>">
 									<div class="info-product-cart float-left">
-										<p style="margin-bottom: 0"><?=date('Y-m-d H:i', strtotime($f->datetime))?></p>
+										<p style="margin-bottom: 0"><?= date('Y-m-d H:i', strtotime($f->datetime)) ?></p>
 										<p class="notif-text title-hover-black">
 											<a class="animate-default" href="<?= base_url($f->url) ?>"><?= $f->msg ?></a>
 										</p>
@@ -186,7 +186,9 @@
 				<li class="parentCategory">
 					<!-- <a href="<?= base_url() ?>category"> -->
 					<a href="<?= base_url() ?>category=<?= $f->id ?>%26page=1" data-id="<?= $f->id ?>">
-						<i class="fa fa-caret-right" aria-hidden="true"></i>
+						<?php if(count($sub_category[$f->id]) > 0) { ?>
+							<i class="fa fa-caret-right" aria-hidden="true"></i>
+						<?php } ?>
 						<p><?= $f->nama ?></p>
 					</a>
 				</li>

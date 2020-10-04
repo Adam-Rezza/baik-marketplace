@@ -19,6 +19,8 @@ $route['get_kelurahan/(:any)'] = 'AuthController/get_kelurahan/$1';
 $route['save_basic_info'] = 'AuthController/save_basic_info';
 $route['save_address'] = 'AuthController/save_address';
 $route['change_password'] = 'AuthController/change_password';
+$route['save_profile_merchant'] = 'AuthController/save_profile_merchant';
+$route['save_address_merchant'] = 'AuthController/save_address_merchant';
 $route['upload_image_profile'] = 'AuthController/upload_image_profile';
 
 # CUSTOMER
@@ -59,7 +61,7 @@ $route['get_product_detail/(:any)'] = 'MerchantController/get_product_detail/$1'
 $route['on_change_category/(:any)'] = 'MerchantController/on_change_category/$1';
 $route['get_images_product/(:any)'] = 'MerchantController/get_images_product/$1';
 $route['insert_update_product'] = 'MerchantController/insert_update_product';
-$route['delete_produk/(:any)'] = 'MerchantController/delete_produk/$1';
+$route['delete_product/(:any)'] = 'MerchantController/delete_product/$1';
 $route['upload_image_product'] = 'MerchantController/upload_image_product';
 $route['sort_image_product'] = 'MerchantController/sort_image_product';
 $route['delete_image_product'] = 'MerchantController/delete_image_product';

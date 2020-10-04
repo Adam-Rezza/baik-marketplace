@@ -5,7 +5,7 @@
     </div>
     <div class="bar-category bottom-margin-default border no-border-r no-border-l no-border-t">
         <div class="row">
-            <div class="col-md-5 col-sm-5 col-xs-4">
+            <div class="col-md-12 col-sm-12 col-xs-12">
                 <p class="title-category-page clear-margin">Produk saya</p>
                 <button class="btn btn-add-product add-product bg-orange"><i class="fa fa-plus"></i> Produk baru</button>
             </div>
@@ -56,6 +56,7 @@
                         <div class="relative button-product-list clearfix">
                             <ul class="clear-margin">
                                 <li class=""><a href="#" class="animate-default edit-product bg-orange" data-id="<?= $f->id ?>">Edit</a></li>
+                                <li class=""><a href="#" class="animate-default delete-product bg-orange" data-id="<?= $f->id ?>">Hapus</a></li>
                             </ul>
                         </div>
                     </div>

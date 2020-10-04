@@ -311,6 +311,12 @@
         font-size: 11px;
     }
 
+    .has-error .select2-selection,
+    .has-error input,
+    .has-error textarea {
+        border: 2px solid red !important;
+    }
+
     @media only screen and (max-width: 480px) {
         .price-product {
             margin-bottom: 0;

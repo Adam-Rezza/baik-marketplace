@@ -904,7 +904,7 @@ header {
 .search-box {
     border: 2px solid #00ae4f;
     width: 525px;
-    margin: 0 0 0 60px;
+    margin: 0 0 0 30px;
 }
 
 @media(min-width:1025px) {
@@ -1841,7 +1841,6 @@ header {
 
 .product-category .image-product-merhcant {
     height: 100%;
-    max-width: 150px;
 }
 
 .button-show-sidebar {
@@ -2381,6 +2380,10 @@ body {
         top: 0px;
         width: 100%;
         z-index: 4;
+    }
+    .product-category .image-product-merhcant {
+        height: 100%;
+        max-width: 150px;
     }
 }
 

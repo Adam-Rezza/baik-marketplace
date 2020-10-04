@@ -45,23 +45,36 @@ class MerchantController extends CI_Controller
 
 	public function auth()
 	{
-		if ($this->session->userdata(SESSUSER . 'merchant_id') === null || $this->session->userdata(SESSUSER . 'merchant_active') === 0) {
-			// $data = $this->init();
-			$data['title']   = 'Daftar Toko';
-			$data['content'] = 'auth/index';
-			$data['vitamin'] = 'auth/index_vitamin';
-			$data['province'] = $this->customer->get('provinsi', '*')->result();
+		if ($this->session->userdata(SESSUSER . 'id')) {
+			if ($this->session->userdata(SESSUSER . 'merchant_id') === null || $this->session->userdata(SESSUSER . 'merchant_active') === 0) {
+				// $data = $this->init();
+				$data['title']   = 'Daftar Toko';
+				$data['content'] = 'auth/index';
+				$data['vitamin'] = 'auth/index_vitamin';
+				$data['province'] = $this->customer->get('provinsi', '*')->result();
 
-			$data['keyword'] = '';
-			$data['search_category'] = null;
-			$data['search_sub_category'] = null;
-			$data['notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id')], 'datetime', 'desc', 100, 0)->result();
-			$data['unread_notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id'), 'read' => 0], 'datetime', 'desc', 100, 0)->num_rows();
+				$data['keyword'] = '';
+				$data['search_category'] = null;
+				$data['search_sub_category'] = null;
 
-			// var_dump($this->session->userdata());
-			$this->customer_template->template($data);
+				$data['cart'] = $this->customer->findCartByUserIdAndNotTransactionId($this->session->userdata(SESSUSER . 'id'))->result();
+				$data['notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id')], 'datetime', 'desc', 100, 0)->result();
+				$data['unread_notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id'), 'read' => 0], 'datetime', 'desc', 100, 0)->num_rows();
+
+				$where_category = ['active' => 1, 'del' => 0];
+				$data['category'] = $this->customer->get('kategori', '*', $where_category, 'urutan', 'ASC')->result();
+				foreach ($data['category'] as $f) {
+					$where_sub_category = ['active' => 1, 'del' => 0, 'parent' => $f->id];
+					$data['sub_category'][$f->id] = $this->customer->get('sub_kategori', '*', $where_sub_category, 'urutan', 'ASC')->result();
+				}
+
+				// var_dump($this->session->userdata());
+				$this->customer_template->template($data);
+			} else {
+				$this->my_profile();
+			}
 		} else {
-			$this->my_product();
+			redirect(base_url());
 		}
 	}
 
@@ -172,8 +185,21 @@ class MerchantController extends CI_Controller
 		}
 	}
 
+	public function delete_product($product_id)
+	{
+		$product = $this->merchant->findProductByMerhanctIdAndProductId($this->session->userdata(SESSUSER . 'merchant_id'), $product_id, 1);
+		if ($product) {
+			$data = [
+				"del" => 1
+			];
+			$result = $this->merchant->update('produk', $data, $product_id);
+			echo json_encode($result ? 'true' : 'false');
+		}
+	}
+
 	public function upload_gambar_new_product($gambar, $product_id)
-	{	$i = 0;
+	{
+		$i = 0;
 		foreach ($gambar as $image) {
 			$i++;
 			$product = $this->merchant->findProductByMerhanctIdAndProductId($this->session->userdata(SESSUSER . 'merchant_id'), $product_id, 1);

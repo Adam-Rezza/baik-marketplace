@@ -1,9 +1,9 @@
 <script>
     $(document).ready(function() {
-        $('#provinsi').select2();
-        $('#kabupaten').select2();
-        $('#kecamatan').select2();
-        $('#kelurahan').select2();
+        $('#provinsi').select2()
+        $('#kabupaten').select2()
+        $('#kecamatan').select2()
+        $('#kelurahan').select2()
         $('#provinsi').change(function(e) {
             e.preventDefault()
             parent = $(this).val()
@@ -77,6 +77,16 @@
             }
         })
         $("#registerMerchantForm").validate({
+            highlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .addClass('has-error')
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .removeClass('has-error')
+            },
             rules: {
                 nama: {
                     required: true,

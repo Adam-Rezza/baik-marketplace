@@ -103,6 +103,13 @@
         color: red;
         top: 0;
     }
+
+    @media(max-width:679px) {
+        .button-product-list ul li a {
+            font-size: 14px;
+            padding: 5px 5px !important;
+        }
+    }
 </style>
 <script>
     $(document).ready(function() {
@@ -111,8 +118,10 @@
         $('#modalAddProduct').on('shown.bs.modal', () => {
             $("#productForm").find('input.error').removeClass('error')
             tempImageContainer = []
-            $('#image-add-product-sortable').html('');
-            $('.image-add-container').show()
+            $('#image-add-product-sortable').html('')
+            if ($('#produk_id').val()) {
+                $('.image-add-container').hide()
+            }
         })
         $('.add-product').click(function() {
             $('.title-modal-product').html('Tambah Produk');
@@ -146,7 +155,7 @@
 
                     $('.title-modal-product').html('Edit Produk')
                     $('#modalAddProduct').modal('show')
-                    
+
                     $('.image-add-container').hide()
                 },
                 error: function(res) {
@@ -156,6 +165,42 @@
                 $('#sub_kategori').val(res.sub_kategori_id)
                 if (res.kategori_id) {
                     $('#sub-kategori-parent').show();
+                }
+            })
+        })
+        $('.delete-product').click(function(e) {
+            e.preventDefault()
+            id = $(this).data('id')
+            Swal.fire({
+                title: 'Konfirmasi?',
+                text: "Hapus produk",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "post",
+                        url: "<?= base_url() ?>delete_product/" + id,
+                        dataType: "json",
+                        success: function(res) {
+                            $.unblockUI()
+                            Swal.fire({
+                                title: 'Berhasil',
+                                text: "Produk berhasil di hapus",
+                                icon: 'success'
+                            })
+                            setTimeout(() => {
+                                window.location.href = '<?= base_url('my_product') ?>'
+                            }, 1000)
+                        },
+                        error: function(res) {
+                            console.log(res)
+                        }
+                    })
                 }
             })
         })
@@ -306,7 +351,7 @@
                                 $.unblockUI()
                                 Swal.fire({
                                     title: 'Berhasil',
-                                    text: "Hapus gambar",
+                                    text: "Gambar berhasil dihapus",
                                     icon: 'success',
                                     timer: 1000,
                                 })
@@ -329,7 +374,7 @@
             id = $(this).data('id')
             tempImageContainer.splice(id, 1)
             $('#add-image-product-' + id).remove()
-            
+
             $.unblockUI()
         })
         $('#save_sort').click(function(e) {
@@ -582,7 +627,7 @@
                             },
                         })
                         setTimeout(() => {
-                            window.location.href = '<?= base_url('merchant') ?>'
+                            window.location.href = '<?= base_url('my_product') ?>'
                         }, 1000)
                     },
                     error: function(res) {

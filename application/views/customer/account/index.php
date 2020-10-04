@@ -5,7 +5,7 @@
 			<!-- Sider Bar -->
 			<div class="col-md-3 relative top-padding-default top-margin-default" id="slide-bar-category">
 				<div class="col-md-12 col-sm-12 col-xs-12 sider-bar-category border bottom-margin-default">
-					<img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile/<?=$user->gambar ? $user->gambar : "user.png"?>" alt="">
+					<img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile/<?= $user->gambar ? $user->gambar : "user.png" ?>" alt="">
 					<div class="text-center top-margin-15-default">
 						<button id="btn-profil-foto">Upload foto</button>
 						<input type="file" id="profil-foto" accept="image/*" class="hidden">
@@ -16,7 +16,7 @@
 						<li><a href="<?= base_url() ?>my_recent_order">Pesanan selesai</a></li>
 					</ul>
 					<div class="text-center top-margin-15-default">
-						<a class="btn-daftar-toko" href="<?=base_url()?>">Lanjut Belanja</a>
+						<a class="btn-daftar-toko" href="<?= base_url() ?>">Lanjut Belanja</a>
 					</div>
 				</div>
 			</div>
@@ -27,7 +27,7 @@
 				</div>
 				<div class="bar-category bottom-margin-default border no-border-r no-border-l no-border-t">
 					<div class="row">
-						<div class="col-md-5 col-sm-5 col-xs-4">
+						<div class="col-md-12 col-sm-12 col-xs-12">
 							<p class="title-category-page clear-margin">Informasi Akun</p>
 						</div>
 					</div>
@@ -43,15 +43,15 @@
 						<form method="post" action="" id="basicInfoForm" enctype="multipart/form-data">
 							<div class="form-input full-width clearfix relative">
 								<label>Nama *</label>
-								<input class="full-width" type="text" name="name_u" id="name_u" value="<?=$user->nama?>">
+								<input class="full-width" type="text" name="name_u" id="name_u" value="<?= $user->nama ?>">
 							</div>
 							<div class="form-input full-width clearfix relative">
 								<label>Username *</label>
-								<input class="full-width" type="text" name="username_u" id="username_u" value="<?=$user->username?>" disabled readonly>
+								<input class="full-width" type="text" name="username_u" id="username_u" value="<?= $user->username ?>" disabled readonly>
 							</div>
 							<div class="form-input full-width clearfix relative">
 								<label>Nomor Telepon *</label>
-								<input class="full-width" type="phone" name="phone_u" id="phone_u" value="<?=$user->telp?>">
+								<input class="full-width" type="phone" name="phone_u" id="phone_u" value="<?= $user->telp ?>">
 							</div>
 							<div class="form-input full-width clearfix relative text-center top-padding-15-default">
 								<button class="btn-daftar-toko full-width" id="saveBasicInfo">Simpan</button>
@@ -65,7 +65,7 @@
 								<label>Alamat *</label>
 								<textarea class="full-width" type="text" name="alamat" id="alamat" rows="2" style="resize: none; line-height: 1.6em; padding: 3px 8px"><?= $address ? $address->alamat : '' ?></textarea>
 							</div>
-							<div class="form-input full-width clearfix relative">
+							<div class="form-input form-group full-width clearfix relative">
 								<label>Provinsi *</label>
 								<select class="full-width" name="provinsi" id="provinsi">
 									<option value="">--Pilih Provinsi--</option>
@@ -74,7 +74,7 @@
 									<?php } ?>
 								</select>
 							</div>
-							<div class="form-input full-width clearfix relative">
+							<div class="form-input form-group full-width clearfix relative">
 								<label>Kota *</label>
 								<select class="full-width" name="kabupaten" id="kabupaten">
 									<?php if ($address) { ?>
@@ -84,7 +84,7 @@
 									<?php } ?>
 								</select>
 							</div>
-							<div class="form-input full-width clearfix relative">
+							<div class="form-input form-group full-width clearfix relative">
 								<label>Kecamatan *</label>
 								<select class="full-width" name="kecamatan" id="kecamatan">
 									<?php if ($address) { ?>
@@ -94,7 +94,7 @@
 									<?php } ?>
 								</select>
 							</div>
-							<div class="form-input full-width clearfix relative">
+							<div class="form-input form-group full-width clearfix relative">
 								<label>Kelurahan *</label>
 								<select class="full-width" name="kelurahan" id="kelurahan">
 									<?php if ($address) { ?>

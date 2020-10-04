@@ -1,5 +1,13 @@
 <script>
     $(document).ready(function() {
+        $('.qna-form').submit(function(e) {
+            e.preventDefault()
+            if (<?= $this->session->userdata(SESSUSER . 'id') ? 1 : 0 ?>) {
+                $(this).unbind('submit').submit()
+            } else {
+                $('#modalAuth').modal('show');
+            }
+        })
         $('.msg-content-reply').click(function(e) {
             e.preventDefault()
             id = $(this).data('id')

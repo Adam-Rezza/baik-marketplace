@@ -6,10 +6,26 @@
         width: 100% !important;
     }
 
+    .form-input .select2-selection {
+        border: 1px solid #444;
+    }
+
+    .has-error .select2-selection,
+    .has-error input,
+    .has-error textarea {
+        border: 2px solid red !important;
+    }
+
+    .has-error .select2-selection:focus,
+    .has-error input:focus,
+    .has-error textarea:focus {
+        border: 2px solid red !important;
+    }
+
     @media only screen and (max-width: 480px) {
-        .title-tabs li{
+        .title-tabs li {
             font-size: 12px;
-            padding : 5px;
+            padding: 5px;
         }
     }
 </style>
@@ -17,10 +33,10 @@
 <script>
     $(document).ready(function() {
         //////////////////////////////////////////////////////////////////////
-        $('#provinsi').select2();
-        $('#kabupaten').select2();
-        $('#kecamatan').select2();
-        $('#kelurahan').select2();
+        $('#provinsi').select2()
+        $('#kabupaten').select2()
+        $('#kecamatan').select2()
+        $('#kelurahan').select2()
         $('#provinsi').change(function(e) {
             e.preventDefault()
             parent = $(this).val()
@@ -30,7 +46,6 @@
                     url: "<?= base_url() ?>get_kabupaten/" + parent,
                     dataType: 'json',
                     success: function(res) {
-                        // console.log('success', res)
                         kab = '<option value="">--Pilih Kota--</option>'
                         kec = '<option value="">--Pilih Kecamatan--</option>'
                         kel = '<option value="">--Pilih Kelurahan--</option>'
@@ -63,7 +78,6 @@
                     url: "<?= base_url() ?>get_kecamatan/" + parent,
                     dataType: 'json',
                     success: function(res) {
-                        // console.log('success', res)
                         kec = '<option value="">--Pilih Kecamatan--</option>'
                         kel = '<option value="">--Pilih Kelurahan--</option>'
                         $.each(res, function(i, v) {
@@ -87,7 +101,6 @@
                     url: "<?= base_url() ?>get_kelurahan/" + parent,
                     dataType: 'json',
                     success: function(res) {
-                        // console.log('success', res)
                         kel = '<option value="">--Pilih Kelurahan--</option>'
                         $.each(res, function(i, v) {
                             kel += '<option value="' + v.id_kel + '">' + v.nama + '</option>'
@@ -102,6 +115,16 @@
         })
         // Basic Info ///////////////////////////////////////////////////////
         $("#basicInfoForm").validate({
+            highlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .addClass('has-error')
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .removeClass('has-error')
+            },
             rules: {
                 name_u: {
                     required: true,
@@ -111,6 +134,7 @@
                 },
                 phone_u: {
                     required: true,
+                    phone: true,
                 },
             },
             messages: {
@@ -122,6 +146,7 @@
                 },
                 phone_u: {
                     required: "Phone wajib diisi",
+                    phone: "Nomor handphone tidak valid"
                 },
             },
             submitHandler: function(form, e) {
@@ -133,7 +158,6 @@
                     data: data,
                     dataType: 'json',
                     success: function(res) {
-                        // console.log('success', res)
                         if (res == 'true') {
                             Swal.fire({
                                 icon: 'success',
@@ -157,6 +181,16 @@
         })
         // Change Password ///////////////////////////////////////////////////////
         $("#passwordForm").validate({
+            highlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .addClass('has-error')
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .removeClass('has-error')
+            },
             rules: {
                 password_old_u: {
                     required: true,
@@ -188,7 +222,6 @@
                     data: data,
                     dataType: 'json',
                     success: function(res) {
-                        // console.log('success', res == "true")
                         if (res == "true") {
                             Swal.fire({
                                 icon: 'success',
@@ -222,6 +255,16 @@
         })
         // Address ///////////////////////////////////////////////////////
         $("#addressForm").validate({
+            highlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .addClass('has-error')
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .removeClass('has-error')
+            },
             rules: {
                 alamat: {
                     required: true,
@@ -265,7 +308,6 @@
                     data: data,
                     dataType: 'json',
                     success: function(res) {
-                        console.log('success<?= $on_shopping ?>', res)
                         if (<?= $on_shopping ? "true" : "false" ?>) {
                             Swal.fire({
                                 icon: 'success',

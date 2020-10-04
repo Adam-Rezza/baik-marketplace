@@ -17,7 +17,7 @@
 							<img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile_toko/<?= $merchant->gambar ? $merchant->gambar : "merchant.png" ?>" alt="">
 							<div class="text-center top-margin-15-default">
 								<button id="btn-profil-merchant-foto">Upload foto</button>
-								<input type="file" id="profil-merchant-foto" class="hidden">
+								<input type="file" id="profil-merchant-foto" class="hidden" accept="image/*">
 							</div>
 							<ul class="clear-margin list-siderbar top-margin-15-default relative">
 								<li><a href="<?= base_url() ?>my_profile">Informasi Toko </a></li>
@@ -58,35 +58,35 @@
 
 	</div>
 
-    <div class="modal fade bs-example-modal-lg out" id="modalCropImageProfile" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="min-height: 229.25px; width: 830px!important">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="relative">
-                        <button type="button" class="close-modal animate-default" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true" class="ti-close"></span>
-                        </button>
-                        <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default grid-stack-container">
-                            <h3>Upload foto profil</h3>
+	<div class="modal fade bs-example-modal-lg out" id="modalCropImageProfile" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="min-height: 229.25px; width: 830px!important">
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="relative">
+						<button type="button" class="close-modal animate-default" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="ti-close"></span>
+						</button>
+						<div class="col-md-12 relative overfollow-hidden bottom-margin-15-default grid-stack-container">
+							<h3>Upload foto profil</h3>
 
-                            <div class="img-container">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <img id="imageProfileCrop" src="https://avatars0.githubusercontent.com/u/3456749">
-                                    </div>
-                                    <div class="full-width clearfix relative text-center">
-                                        <button class="btn-daftar-toko full-width top-margin-15-default" id="cropImageProfile">Simpan</button>
-                                    </div>
-                                </div>
-                            </div>
+							<div class="img-container">
+								<div class="row">
+									<div class="col-md-12">
+										<img id="imageProfileCrop" src="https://avatars0.githubusercontent.com/u/3456749">
+									</div>
+									<div class="full-width clearfix relative text-center">
+										<button class="btn-daftar-toko full-width top-margin-15-default" id="cropImageProfile">Simpan</button>
+									</div>
+								</div>
+							</div>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	
+
 	<?php $this->load->view('merchant/layouts/_footer') ?>
 
 	<!-- <script src="<?= base_url() ?>public/megastore/js/jquery-2.2.4.min.js" defer=""></script>
@@ -101,7 +101,7 @@
 	<!-- <script src="<?= base_url() ?>public/megastore/js/sync_owl_carousel.js" defer=""></script> -->
 	<script src="<?= base_url() ?>public/megastore/js/scripts.js?123" defer=""></script>
 	<script src="<?= base_url() ?>public/megastore/js/slick.min.js" defer=""></script>
-    <script src="<?= base_url() ?>public/js/select2.min.js"></script>
+	<script src="<?= base_url() ?>public/js/select2.min.js"></script>
 	<script src="<?= base_url() ?>public/megastore/js/sweetalert2@9" defer=""></script>
 	<script src="<?= base_url() ?>public/js/jquery.blockUI.min.js" defer=""></script>
 	<script src="<?= base_url() ?>public/js/jquery-ui-sortable.min.js" defer=""></script>
@@ -110,6 +110,15 @@
 <?php $this->load->view('merchant/' . $vitamin) ?>
 <script>
 	$(document).ready(function() {
+        $.validator.addMethod('phone', function(value, element) {
+            return this.optional(element) || /^08[0-9]{9,}$/.test(value);
+        }, "Please enter a valid phone number")
+        $.validator.addMethod('alphanumericDash', function(value, element) {
+            return this.optional(element) || /^[a-z0-9\_]+$/i.test(value);
+        }, "Please enter a valid phone number")
+        $.validator.addMethod('namespace', function(value, element) {
+            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
+        }, "Please enter a valid phone number")
 		//////////////////////////////////////////////////////////////////////
 		$('#btn-profil-merchant-foto').click(function(e) {
 			e.preventDefault()
@@ -132,18 +141,15 @@
 			var file
 			var url
 			if (files && files.length > 0) {
-				if ((files[0].type).search("image") > -1) {
-					file = files[0]
-					console.log(files[0])
-					if (URL) {
-						done(URL.createObjectURL(file))
-					} else if (FileReader) {
-						reader = new FileReader()
-						reader.onload = function(e) {
-							done(reader.result)
-						}
-						reader.readAsDataURL(file)
+				file = files[0]
+				if (URL) {
+					done(URL.createObjectURL(file))
+				} else if (FileReader) {
+					reader = new FileReader()
+					reader.onload = function(e) {
+						done(reader.result)
 					}
+					reader.readAsDataURL(file)
 				}
 			}
 		})
