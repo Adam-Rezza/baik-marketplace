@@ -40,7 +40,7 @@ class TransactionController extends CI_Controller
 		$where_product = ['id' => $product_id, 'del' => 0, 'ban' => 0];
 		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
 		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
-		if ($product->toko_id == $this->session->userdata('merchant_id')) {
+		if (!($product->toko_id == $this->session->userdata(SESSUSER.'merchant_id'))) {
 			if ($user_id && $cart && $product) {
 				$data = [
 					'user_id' => $user_id,
@@ -97,6 +97,24 @@ class TransactionController extends CI_Controller
 			echo $result ? 'true' : 'false';
 		} else {
 			echo 'false';
+		}
+	}
+
+	public function delete_cart($cart_id)
+	{
+		$user_id = $this->session->userdata(SESSUSER . 'id');
+		$cart = $this->ci->transaction->findCartByUserIdAndCartIdAndNotTransactionId($user_id, $cart_id)->row();
+		if ($user_id && $cart) {
+			$where = [
+				'id' => $cart_id,
+			];
+			$result = $this->ci->transaction->delete('keranjang', $where);
+			if ($result){
+				redirect(base_url('checkout'));
+			} else {
+				show_404();
+			}
+
 		}
 	}
 

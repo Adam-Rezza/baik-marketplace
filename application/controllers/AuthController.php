@@ -21,18 +21,21 @@ class AuthController extends CI_Controller
 		$this->form_validation->set_rules('password', 'Password', 'callback_password_check');
 		if ($this->form_validation->run() === FALSE) {
 			// $this->load->view('login');
-			echo 'false';
+			echo json_encode('false');
 		} else {
 			$username = $this->input->post('username');
 			$where = [
 				'username' => $username,
-				'active' => 1,
-				'ban' => 0
+				'active' => 1
 			];
 			$arr 	  = $this->authorized->get('user', '*', $where);
-			$this->_set_session($arr->row());
-			$this->login_merchant($arr->row()->id);
-			echo 'true';
+			if ($arr->row()->ban == 0) {
+				$this->_set_session($arr->row());
+				$this->login_merchant($arr->row()->id);
+				echo json_encode('true');
+			} else {
+				echo json_encode('ban');
+			}
 		}
 	}
 
@@ -40,8 +43,7 @@ class AuthController extends CI_Controller
 	{
 		$where = [
 			'username' => $str,
-			'active' => 1,
-			'ban' => 0
+			'active' => 1
 		];
 		$arr = $this->authorized->get('user', '*', $where);
 		if ($arr->num_rows() == 0) {
@@ -57,8 +59,7 @@ class AuthController extends CI_Controller
 		$password = $str;
 		$where = [
 			'username'   => $username,
-			'active' => 1,
-			'ban' => 0
+			'active' => 1
 		];
 		$arr = $this->authorized->get('user', '*', $where);
 		if ($arr->num_rows() == 1) {

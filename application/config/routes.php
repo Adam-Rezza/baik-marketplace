@@ -71,6 +71,7 @@ $route['get_transaction_detail/(:any)'] = 'MerchantController/get_transaction_de
 $route['get_cart_detail']                   = 'TransactionController/get_cart_detail';
 $route['add_to_cart/(:any)/(:any)']         = 'TransactionController/add_to_cart/$1/$2';
 $route['update_product_cart/(:any)/(:any)'] = 'TransactionController/update_product_cart/$1/$2';
+$route['delete_cart/(:any)'] = 'TransactionController/delete_cart/$1';
 $route['checkout_transaction'] = 'TransactionController/checkout_transaction';
 
 $route['process_order/(:any)'] = 'TransactionController/process_order/$1';
