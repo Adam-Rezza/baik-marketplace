@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-md-5 col-sm-5 col-xs-4">
                 <p class="title-category-page clear-margin">Produk saya</p>
-                <button class="btn btn-add-product add-product"><i class="fa fa-plus"></i> Produk baru</button>
+                <button class="btn btn-add-product add-product bg-orange"><i class="fa fa-plus"></i> Produk baru</button>
             </div>
         </div>
     </div>
@@ -18,27 +18,33 @@
         ?>
             <?php foreach ($product as $f) {  ?>
                 <div class="col-md-12 clear-padding border no-border-t no-border-l no-border-r product-category bottom-margin-default product-category-list relative">
-                    <div class="image-product image-product-merhcant relative overfollow-hidden">
-                        <div class="center-vertical-image">
-                            <?php if ($f->gambar) { ?>
-                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" id="image-product-<?= $f->id ?>" alt="Product">
-                            <?php } else { ?>
-                                <img src="<?= base_url(); ?>public/megastore/img/no-image-available.png" id="image-product-<?= $f->id ?>" alt="No image">
-                            <?php } ?>
+                    <div class="col-sm-12 col-md-4 col-lg-2">
+                        <div class="image-product image-product-merhcant relative overfollow-hidden">
+                            <div class="center-vertical-image">
+                                <?php if ($f->gambar) { ?>
+                                    <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" id="image-product-<?= $f->id ?>" alt="Product">
+                                <?php } else { ?>
+                                    <img src="<?= base_url(); ?>public/megastore/img/no-image-available.png" id="image-product-<?= $f->id ?>" alt="No image">
+                                <?php } ?></button>
+                            </div>
+                            <ul class="option-product animate-default clear-margin">
+                                <li class="relative">
+                                    <a href="#" class="edit-image-product" data-id="<?= $f->id ?>" data-product-name="<?= $f->nama ?>">
+                                        <i class="fa fa-edit" aria-hidden="true"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="text-center top-margin-15-default bottom-margin-15-default">
+                                <button class="btn btn-sm bg-orange edit-image-product bold" data-id="<?= $f->id ?>" data-product-name="<?= $f->nama ?>">Edit Gambar
+                            </div>
                         </div>
-                        <ul class="option-product animate-default clear-margin">
-                            <li class="relative">
-                                <a href="#" class="edit-image-product" data-id="<?= $f->id ?>" data-product-name="<?= $f->nama ?>">
-                                    <i class="fa fa-edit" aria-hidden="true"></i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
-                    <div class="relative overfollow-hidden info-product-list">
+                    <div class="col-sm-12 col-md-8 col-md-10 relative overfollow-hidden">
                         <h3 class="title-product clearfix full-width title-hover-black clear-margin">
                             <a href="#"><?= $f->nama ?></a>
-                            <?php if (!$f->gambar) { ?>
-                                <span>(Belum aktif, tambah gambar)</span>
+                            <span class="no-image-product" id="no-image-product-<?= $f->id ?>" style="display:<?= $f->gambar || $f->ban ? 'none' : 'inline' ?>">(Tidak aktif, tambah gambar)</span>
+                            <?php if ($f->ban) { ?>
+                                <span class="no-image-product" id="no-image-product-<?= $f->id ?>">(Produk di banned)</span>
                             <?php } ?>
                         </h3>
 
@@ -49,7 +55,7 @@
                         <p class="intro-product-category"><?= $f->desc ?></p>
                         <div class="relative button-product-list clearfix">
                             <ul class="clear-margin">
-                                <li class=""><a href="#" class="animate-default edit-product" data-id="<?= $f->id ?>">Edit</a></li>
+                                <li class=""><a href="#" class="animate-default edit-product bg-orange" data-id="<?= $f->id ?>">Edit</a></li>
                             </ul>
                         </div>
                     </div>
@@ -93,7 +99,7 @@
                     <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default">
                         <h3 class="title-modal-product">Tambah Produk Baru</h3>
                         <form method="post" action="" id="productForm" enctype="multipart/form-data">
-                            <input class="full-width" type="text" name="produk_id" id="produk_id" style="display: none">
+                            <input class="full-width hidden" type="text" name="produk_id" id="produk_id">
                             <div class="form-input full-width clearfix relative">
                                 <label>Nama Produk *</label>
                                 <input class="full-width" type="text" name="nama" id="nama">
@@ -126,11 +132,25 @@
                                 </select>
                             </div>
                             <div class="form-input full-width clearfix relative">
-                                <label>Deskripsi *</label>
+                                <label>Deskripsi</label>
                                 <textarea class="full-width" name="desc" id="desc" style="resize: none; line-height: 22px; padding: 7px" rows='5'></textarea>
                             </div>
+                            <div class="form-input full-width clearfix relative image-add-container">
+                                <label style="display: block;">Upload Gambar</label>
+                                <div class="image-add-product-container" id="image-add-product-sortable">
+
+                                </div>
+                                <div class="image-add-product-container" style="display: inline">
+                                    <div class="image-product-add-item" id="image-product-item-example-4">
+                                        <div class="image-product-item-content">
+                                            <img src="<?= base_url(); ?>public/megastore/img/add-image.png" class="btn-image-product" data-target="add-image-new-product">
+                                            <input type="file" class="input-new-image-product hidden" id="add-image-new-product" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-input full-width clearfix relative text-center">
-                                <button class="btn-daftar-toko full-width top-margin-15-default" id="register">Simpan</button>
+                                <button class="btn-daftar-toko full-width top-margin-15-default bg-orange" id="register">Simpan</button>
                             </div>
                         </form>
                     </div>
@@ -205,7 +225,7 @@
 </div>
 
 <div class="modal fade bs-example-modal-lg out" id="modalCropImage" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="min-height: 229.25px; width: 830px!important">
+    <div class="modal-dialog modal-dialog-centered modal-cropper" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="relative">
@@ -222,6 +242,35 @@
                                 </div>
                                 <div class="full-width clearfix relative text-center">
                                     <button class="btn-daftar-toko full-width top-margin-15-default" id="crop">Simpan</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg out" id="modalCropNewProduct" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-cropper" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="relative">
+                    <button type="button" class="close-modal animate-default" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="ti-close"></span>
+                    </button>
+                    <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default">
+                        <h3>Simpan Gambar</h3>
+
+                        <div class="img-container">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <img id="imageNewProduct" src="https://avatars0.githubusercontent.com/u/3456749">
+                                </div>
+                                <div class="full-width clearfix relative text-center">
+                                    <button class="btn-daftar-toko full-width top-margin-15-default" id="cropNewProduct">Simpan</button>
                                 </div>
                             </div>
                         </div>

@@ -42,10 +42,10 @@
 		<div class=" container">
 			<div class="row">
 				<div class=" header-top">
-					<?php if (!($this->session->userdata(SESS . 'id') === null)) { ?>
+					<?php if (!($this->session->userdata(SESSUSER . 'id') === null)) { ?>
 						<div class="menu-header-top text-right col-md-8 col-xs-12 col-sm-6 clear-padding">
 							<ul class="clear-margin">
-								<li class="relative"><span class='name'>Hi, <?= $this->session->userdata(SESS . 'nama') ?></span></li>
+								<li class="relative"><span class='name'>Hi, <?= $this->session->userdata(SESSUSER . 'nama') ?></span></li>
 								<li class="relative"><a href="<?= base_url() ?>my_account">Akun</a></li>
 								<li class="relative"><a href="<?= base_url() ?>merchant" id="userMerchant">Toko Saya</a></li>
 								<li class="relative"><a href="<?= base_url() ?>user/logout">Keluar</a></li>
@@ -136,7 +136,7 @@
 							<a href="#" class="uppercase bold button-hover-red animate-default float-right" id="notifNext" onclick="return false">>></a>
 						</div>
 					</div>
-					<?php if (!($this->session->userdata(SESS . 'id') === null)) { ?>
+					<?php if (!($this->session->userdata(SESSUSER . 'id') === null)) { ?>
 						<div class="clearfix bell-website absolute" onclick="showNotification()" id="showNotification">
 							<span class="icon-web"><i class="fa fa-bell"></i></span>
 							<p class="count-total-shopping absolute"><?= $unread_notification ?></p>

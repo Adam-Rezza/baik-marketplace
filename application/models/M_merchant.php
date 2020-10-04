@@ -37,8 +37,7 @@ class M_merchant extends CI_Model
 
     function delete($table, $where)
     {
-        $this->db->where($where);
-        $this->db->delete($table);
+        $this->db->delete($table, $where);
         return $this->db->affected_rows();
     }
 

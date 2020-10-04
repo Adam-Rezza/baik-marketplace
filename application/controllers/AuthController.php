@@ -74,18 +74,18 @@ class AuthController extends CI_Controller
 
 	private function _set_session($data)
 	{
-		$this->session->set_userdata(SESS . 'id', $data->id);
-		$this->session->set_userdata(SESS . 'nama', $data->nama);
-		$this->session->set_userdata(SESS . 'username', $data->username);
-		$this->session->set_userdata(SESS . 'telp', $data->telp);
+		$this->session->set_userdata(SESSUSER . 'id', $data->id);
+		$this->session->set_userdata(SESSUSER . 'nama', $data->nama);
+		$this->session->set_userdata(SESSUSER . 'username', $data->username);
+		$this->session->set_userdata(SESSUSER . 'telp', $data->telp);
 	}
 
 	public function logout()
 	{
 		delete_cookie(COOK);
-		$this->session->unset_userdata(SESS . 'id');
-		$this->session->unset_userdata(SESS . 'merchant_id');
-		$this->session->unset_userdata(SESS . 'username');
+		$this->session->unset_userdata(SESSUSER . 'id');
+		$this->session->unset_userdata(SESSUSER . 'merchant_id');
+		$this->session->unset_userdata(SESSUSER . 'username');
 		$this->session->set_flashdata('logout', LOGOUT_MSG);
 		redirect(site_url(), 'refresh');
 	}
@@ -122,10 +122,10 @@ class AuthController extends CI_Controller
 
 	private function _set_session_r($data)
 	{
-		$this->session->set_userdata(SESS . 'id', $data['id']);
-		$this->session->set_userdata(SESS . 'username', $data['username']);
-		$this->session->set_userdata(SESS . 'nama', $data['nama']);
-		$this->session->set_userdata(SESS . 'telp', $data['telp']);
+		$this->session->set_userdata(SESSUSER . 'id', $data['id']);
+		$this->session->set_userdata(SESSUSER . 'username', $data['username']);
+		$this->session->set_userdata(SESSUSER . 'nama', $data['nama']);
+		$this->session->set_userdata(SESSUSER . 'telp', $data['telp']);
 	}
 
 	################--------Change_Password--------##############################################
@@ -135,7 +135,7 @@ class AuthController extends CI_Controller
 		$password_old = $this->input->post('password_old_u');
 		$password_new = $this->input->post('password_u');
 		$where = [
-			'id'   => $this->session->userdata(SESS . 'id'),
+			'id'   => $this->session->userdata(SESSUSER . 'id'),
 		];
 		$arr = $this->authorized->get('user', 'password', $where);
 		if ($arr->num_rows() == 1) {
@@ -144,7 +144,7 @@ class AuthController extends CI_Controller
 				$data = [
 					'password' => password_hash($password_new, PASSWORD_BCRYPT)
 				];
-				$result = $this->authorized->update('user', $data, $this->session->userdata(SESS . 'id'));
+				$result = $this->authorized->update('user', $data, $this->session->userdata(SESSUSER . 'id'));
 				echo json_encode($result > 0 ? 'true' : 'false');
 			} else {
 				echo json_encode('false');
@@ -162,8 +162,8 @@ class AuthController extends CI_Controller
 			'nama' => $this->input->post('name_u'),
 			'telp' => $this->input->post('phone_u'),
 		];
-		if ($this->session->userdata(SESS . 'id')) {
-			$result = $this->authorized->update('user', $data, $this->session->userdata(SESS . 'id'));
+		if ($this->session->userdata(SESSUSER . 'id')) {
+			$result = $this->authorized->update('user', $data, $this->session->userdata(SESSUSER . 'id'));
 			echo json_encode($result > 0 ? 'true' : 'false');
 		}
 	}
@@ -173,7 +173,7 @@ class AuthController extends CI_Controller
 	public function save_address()
 	{
 		$data = [
-			'user_id' => $this->session->userdata(SESS . 'id'),
+			'user_id' => $this->session->userdata(SESSUSER . 'id'),
 			'alamat' => $this->input->post('alamat'),
 			'provinsi' => $this->input->post('provinsi'),
 			'kota' => $this->input->post('kabupaten'),
@@ -235,7 +235,7 @@ class AuthController extends CI_Controller
 		$data['kota'] = $this->input->post('kabupaten');
 		$data['kecamatan'] = $this->input->post('kecamatan');
 		$data['kelurahan'] = $this->input->post('kelurahan');
-		$data['user_id'] = $this->session->userdata(SESS . 'id');
+		$data['user_id'] = $this->session->userdata(SESSUSER . 'id');
 		$data['active'] = 1;
 		$data['ban'] = 0;
 		$result = $this->authorized->insert('toko', $data);
@@ -263,31 +263,31 @@ class AuthController extends CI_Controller
 
 	private function _set_session_merchant($data)
 	{
-		$this->session->set_userdata(SESS . 'merchant_id', $data->id);
-		$this->session->set_userdata(SESS . 'merchant_active', $data->active);
-		$this->session->set_userdata(SESS . 'merchant_nama', $data->nama);
-		$this->session->set_userdata(SESS . 'merchant_telp', $data->telp);
+		$this->session->set_userdata(SESSUSER . 'merchant_id', $data->id);
+		$this->session->set_userdata(SESSUSER . 'merchant_active', $data->active);
+		$this->session->set_userdata(SESSUSER . 'merchant_nama', $data->nama);
+		$this->session->set_userdata(SESSUSER . 'merchant_telp', $data->telp);
 	}
 
 	private function _set_session_r_merchant($data)
 	{
-		$this->session->set_userdata(SESS . 'merchant_id', $data['id']);
-		$this->session->set_userdata(SESS . 'merchant_active', $data['active']);
-		$this->session->set_userdata(SESS . 'merchant_nama', $data['nama']);
-		$this->session->set_userdata(SESS . 'merchant_telp', $data['telp']);
+		$this->session->set_userdata(SESSUSER . 'merchant_id', $data['id']);
+		$this->session->set_userdata(SESSUSER . 'merchant_active', $data['active']);
+		$this->session->set_userdata(SESSUSER . 'merchant_nama', $data['nama']);
+		$this->session->set_userdata(SESSUSER . 'merchant_telp', $data['telp']);
 	}
 
 	public function save_profile_merchant()
 	{
-		if ($this->session->userdata(SESS . 'merchant_id')) {
+		if ($this->session->userdata(SESSUSER . 'merchant_id')) {
 			$data['nama'] = $this->input->post('name_t');
 			$data['telp'] = $this->input->post('phone_t');
 			$data['desc'] = $this->input->post('desc_t');
 			// var_dump($this->input->post());
-			$result = $this->authorized->update('toko', $data, $this->session->userdata(SESS . 'merchant_id'));
+			$result = $this->authorized->update('toko', $data, $this->session->userdata(SESSUSER . 'merchant_id'));
 			if ($result > 0) {
-				$this->session->set_userdata(SESS . 'merchant_nama', $data['nama']);
-				$this->session->set_userdata(SESS . 'merchant_telp', $data['telp']);
+				$this->session->set_userdata(SESSUSER . 'merchant_nama', $data['nama']);
+				$this->session->set_userdata(SESSUSER . 'merchant_telp', $data['telp']);
 				echo json_encode("true");
 			} else {
 				echo json_encode("false");
@@ -297,13 +297,13 @@ class AuthController extends CI_Controller
 
 	public function save_address_merchant()
 	{
-		if ($this->session->userdata(SESS . 'merchant_id')) {
+		if ($this->session->userdata(SESSUSER . 'merchant_id')) {
 			$data['alamat'] = $this->input->post('alamat');
 			$data['provinsi'] = $this->input->post('provinsi');
 			$data['kota'] = $this->input->post('kabupaten');
 			$data['kecamatan'] = $this->input->post('kecamatan');
 			$data['kelurahan'] = $this->input->post('kelurahan');
-			$result = $this->authorized->update('toko', $data, $this->session->userdata(SESS . 'merchant_id'));
+			$result = $this->authorized->update('toko', $data, $this->session->userdata(SESSUSER . 'merchant_id'));
 			if ($result > 0) {
 				echo json_encode("true");
 			} else {
@@ -318,14 +318,14 @@ class AuthController extends CI_Controller
 	{
 		$modul = $this->input->post('modul');
 		$image = $this->input->post('image');
-		$filename = $this->session->userdata(SESS . 'id') . uniqid() . '.png';
+		$filename = $this->session->userdata(SESSUSER . 'id') . uniqid() . '.png';
 
 		if ($modul == 'user') {
 			$folderPath = 'public/img/profile/';
-			$id = $this->session->userdata(SESS . 'id');
+			$id = $this->session->userdata(SESSUSER . 'id');
 		} else if ($modul == 'toko') {
 			$folderPath = 'public/img/profile_toko/';
-			$id = $this->session->userdata(SESS . 'merchant_id');
+			$id = $this->session->userdata(SESSUSER . 'merchant_id');
 		}
 		$image_parts = explode(";base64,", $image);
 		$image_type_aux = explode("image/", $image_parts[0]);

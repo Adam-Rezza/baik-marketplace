@@ -25,7 +25,7 @@ class TransactionController extends CI_Controller
 
 	public function get_cart_detail()
 	{
-		$user_id = $this->session->userdata(SESS . 'id');
+		$user_id = $this->session->userdata(SESSUSER . 'id');
 		$cart = $this->ci->transaction->findCartByUserIdAndNotTransactionId($user_id)->row();
 		if ($user_id && $cart) {
 			echo json_encode($cart);
@@ -36,7 +36,7 @@ class TransactionController extends CI_Controller
 
 	public function add_to_cart($product_id, $qty)
 	{
-		$user_id = $this->session->userdata(SESS . 'id');
+		$user_id = $this->session->userdata(SESSUSER . 'id');
 		$where_product = ['id' => $product_id];
 		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
 		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
@@ -67,7 +67,7 @@ class TransactionController extends CI_Controller
 
 	public function update_product_cart($product_id, $qty)
 	{
-		$user_id = $this->session->userdata(SESS . 'id');
+		$user_id = $this->session->userdata(SESSUSER . 'id');
 		$where_product = ['id' => $product_id];
 		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
 		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
@@ -98,7 +98,7 @@ class TransactionController extends CI_Controller
 
 	public function checkout_transaction()
 	{
-		$user_id = $this->session->userdata(SESS . 'id');
+		$user_id = $this->session->userdata(SESSUSER . 'id');
 		$alamat = $this->ci->transaction->findAddressByUserId($user_id)->row();
 		$this->db->trans_begin();
 		if ($user_id && $alamat) {
@@ -111,9 +111,9 @@ class TransactionController extends CI_Controller
 					'toko_id' => $f->id,
 					'pengirim' => $f->nama,
 					'telp_pengirim' => $f->telp,
-					'user_id' => $this->session->userdata(SESS . 'id'),
-					'penerima' => $this->session->userdata(SESS . 'nama'),
-					'telp_penerima' => $this->session->userdata(SESS . 'telp'),
+					'user_id' => $this->session->userdata(SESSUSER . 'id'),
+					'penerima' => $this->session->userdata(SESSUSER . 'nama'),
+					'telp_penerima' => $this->session->userdata(SESSUSER . 'telp'),
 					'alamat' => $alamat_lengkap,
 					'kelurahan' => $alamat->kel,
 					'kecamatan' => $alamat->kec,
@@ -177,7 +177,7 @@ class TransactionController extends CI_Controller
 		$result = $this->transaction->update('transaksi', $data, $transaction_id);
 		$result2 = true;
 		if ($result) {
-			$product = $this->transaction->findProductByUserIdAndTransactionId($this->session->userdata(SESS . 'id'), $transaction_id)->result();
+			$product = $this->transaction->findProductByUserIdAndTransactionId($this->session->userdata(SESSUSER . 'id'), $transaction_id)->result();
 			foreach ($product as $f) {
 				$qty_produk = ['terjual' => $f->terjual + $f->qty];
 				$update = $this->transaction->update('produk', $qty_produk, $f->produk_id);

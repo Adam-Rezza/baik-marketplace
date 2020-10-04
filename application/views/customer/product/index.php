@@ -91,7 +91,7 @@
                                                     <span class="msg-content-reply" data-id="<?= $f->id ?>">
                                                         <i class="fa fa-reply"></i>
                                                     </span>
-                                                    <?php if ($this->session->userdata(SESS . 'id') == $f->user_id) { ?>
+                                                    <?php if ($this->session->userdata(SESSUSER . 'id') == $f->user_id) { ?>
                                                         <span class="msg-content-edit" data-id="<?= $f->id ?>">
                                                             <i class="fa fa-edit"></i>
                                                         </span>
@@ -104,7 +104,7 @@
                                                     <button class="btn btn-info absolute" name="btn-discuss-input">Submit</button>
                                                 </form>
                                             </div>
-                                            <?php if ($this->session->userdata(SESS . 'id') == $f->user_id) { ?>
+                                            <?php if ($this->session->userdata(SESSUSER . 'id') == $f->user_id) { ?>
                                                 <div class="msg-discuss-container full-width relative">
                                                     <form class="edit-qna" id="edit-qna-<?= $f->id ?>" action="<?= base_url() ?>edit_qna/<?= $product->id ?>/<?= $f->id ?>" method="post" style="display:none">
                                                         <textarea class="msg-discuss-input" name="discuss-input" rows="4" placeholder="" required><?= $f->msg ?></textarea>
@@ -119,14 +119,14 @@
                                                     </span>
                                                     <span class="msg-time"><?= date('d-M-Y H:i', strtotime($g->created)) ?></span>
                                                     <p class="msg-content"><?= nl2br($g->msg) ?>
-                                                        <?php if ($this->session->userdata(SESS . 'id') == $g->user_id) { ?>
+                                                        <?php if ($this->session->userdata(SESSUSER . 'id') == $g->user_id) { ?>
                                                             <span class="msg-content-edit-reply" data-id="<?= $g->id ?>">
                                                                 <i class="fa fa-edit"></i>
                                                             </span>
                                                         <?php } ?>
                                                     </p>
                                                 </div>
-                                                <?php if ($this->session->userdata(SESS . 'id') == $g->user_id) { ?>
+                                                <?php if ($this->session->userdata(SESSUSER . 'id') == $g->user_id) { ?>
                                                     <div class="msg-discuss-container full-width relative">
                                                         <form class="edit-qna" id="edit-qna-<?= $g->id ?>" action="<?= base_url() ?>edit_qna/<?= $product->id ?>/<?= $g->id ?>" method="post" style="display:none">
                                                             <textarea class="msg-discuss-input" name="discuss-input" rows="4" placeholder="" required><?= $g->msg ?></textarea>
