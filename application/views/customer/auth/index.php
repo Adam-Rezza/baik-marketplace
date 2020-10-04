@@ -6,9 +6,11 @@
                 <div class="col-md-3 col-sm-offset-4 relative left-content-shoping">
                     <img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile_toko/merchant.png" alt="">
                 </div>
-                <div class="col-md-4 col-sm-12 col-xs-12 relative left-content-shoping merchant-form">
-                    <form method="post" action="" id="registerMerchantForm" enctype="multipart/form-data">
+                <form method="post" action="" id="registerMerchantForm" enctype="multipart/form-data">
+                    <div class="col-md-8 col-sm-12 col-xs-12 relative">
                         <p class="title-shoping-cart">Daftar Toko</p>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 relative left-content-shoping merchant-form">
                         <div class="form-input full-width clearfix relative">
                             <label>Nama Toko *</label>
                             <input class="full-width" type="text" name="nama" id="nama">
@@ -17,6 +19,8 @@
                             <label>Nomor Telepon *</label>
                             <input class="full-width" type="text" name="telp" id="telp">
                         </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12 col-xs-12 relative left-content-shoping merchant-form">
                         <div class="form-input full-width clearfix relative">
                             <label>Alamat *</label>
                             <textarea class="full-width" type="text" name="alamat" id="alamat" style="resize:none"></textarea>
@@ -51,8 +55,8 @@
                         <div class="form-input full-width clearfix relative text-center">
                             <button class="btn-daftar-toko full-width top-margin-15-default">Daftarkan Toko</button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

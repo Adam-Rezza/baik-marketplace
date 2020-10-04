@@ -71,7 +71,7 @@
         margin: 0 0 15px 0;
     }
     .cart-website {
-        right: 30px;
+        /* right: 30px; */
     }
     .banner_full_width img {
         max-width: 100%;
@@ -412,7 +412,7 @@
         text-align: center;
     }
     .icon-search-mobile {
-        right: 45px;
+        right: 80px;
     }
     .active-box-category {
         position: relative;

@@ -202,19 +202,24 @@
             $('.cart-notification-header').focus()
         })
         //login / register
+        var intend = false
         $('#userAccount').click(function(e) {
             e.preventDefault()
             $('#modalAuth').modal('show')
+            intend = true
         })
+        $('#modalAuth').on('hidden.bs.modal', function(e) {
+            intend = false
+        });
         $.validator.addMethod('phone', function(value, element) {
-            return this.optional(element) || /\(?(?:\+62|62|0)(?:\d{2,3})?\)?[ .-]?\d{2,4}[ .-]?\d{2,4}[ .-]?\d{2,4}/.test(value);
-        }, "Please enter a valid phone number");
+            return this.optional(element) || /^08[0-9]{9,}$/.test(value);
+        }, "Please enter a valid phone number")
         $.validator.addMethod('alphanumericDash', function(value, element) {
             return this.optional(element) || /^[a-z0-9\_]+$/i.test(value);
-        }, "Please enter a valid phone number");
+        }, "Please enter a valid phone number")
         $.validator.addMethod('namespace', function(value, element) {
             return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
-        }, "Please enter a valid phone number");
+        }, "Please enter a valid phone number")
         $("#registerForm").validate({
             rules: {
                 name_r: {
@@ -283,7 +288,13 @@
                             },
                         })
                         setTimeout(() => {
-                            window.location.href = (window.location.href).replaceAll('#', '')
+                            setTimeout(() => {
+                                if (intend) {
+                                    window.location.href = '<?=base_url('my_account')?>'
+                                } else {
+                                    window.location.href = (window.location.href).replaceAll('#', '')
+                                }
+                            }, 1000);
                         }, 1000);
                     },
                     error: function(res) {
@@ -329,7 +340,11 @@
                                 },
                             })
                             setTimeout(() => {
-                                window.location.href = (window.location.href).replaceAll('#', '')
+                                if (intend) {
+                                    window.location.href = '<?=base_url('my_account')?>'
+                                } else {
+                                    window.location.href = (window.location.href).replaceAll('#', '')
+                                }
                             }, 1000);
                         } else if (res == 'false') {
                             Swal.fire({

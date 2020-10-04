@@ -55,10 +55,10 @@
 </style>
 <script>
     $(document).ready(function() {
-        $('#provinsi').select2();
-        $('#kabupaten').select2();
-        $('#kecamatan').select2();
-        $('#kelurahan').select2();
+        $('#provinsi').select2()
+        $('#kabupaten').select2()
+        $('#kecamatan').select2()
+        $('#kelurahan').select2()
         $('#provinsi').change(function(e) {
             e.preventDefault()
             parent = $(this).val()
@@ -140,12 +140,23 @@
         })
         // Basic Info ///////////////////////////////////////////////////////
         $("#basicInfoForm").validate({
+            highlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .addClass('has-error')
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .removeClass('has-error')
+            },
             rules: {
                 name_t: {
                     required: true,
                 },
                 phone_t: {
                     required: true,
+                    phone: true,
                 },
             },
             messages: {
@@ -154,6 +165,7 @@
                 },
                 phone_t: {
                     required: "Phone wajib diisi",
+                    phone: "Nomor handphone tidak valid"
                 },
             },
             submitHandler: function(form, e) {
@@ -189,6 +201,16 @@
         })
         // Address ///////////////////////////////////////////////////////
         $("#addressForm").validate({
+            highlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .addClass('has-error')
+            },
+            unhighlight: function(element) {
+                $(element)
+                    .closest('.form-input')
+                    .removeClass('has-error')
+            },
             rules: {
                 alamat: {
                     required: true,

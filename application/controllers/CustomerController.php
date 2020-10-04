@@ -13,7 +13,7 @@ class CustomerController extends CI_Controller
 
 	public function session_check()
 	{
-		if (!$this->session->userdata(SESS . 'id')) {
+		if (!$this->session->userdata(SESSUSER . 'id')) {
 			redirect(base_url());
 		}
 	}
@@ -29,10 +29,10 @@ class CustomerController extends CI_Controller
 		$data['keyword'] = '';
 		$data['search_category'] = null;
 		$data['search_sub_category'] = null;
-		if (($this->session->userdata(SESS . 'id'))) {
-			$data['cart'] = $this->customer->findCartByUserIdAndNotTransactionId($this->session->userdata(SESS . 'id'))->result();
-			$data['notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESS . 'id')], 'datetime', 'desc', 100, 0)->result();
-			$data['unread_notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESS . 'id'), 'read' => 0], 'datetime', 'desc', 100, 0)->num_rows();
+		if (($this->session->userdata(SESSUSER . 'id'))) {
+			$data['cart'] = $this->customer->findCartByUserIdAndNotTransactionId($this->session->userdata(SESSUSER . 'id'))->result();
+			$data['notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id')], 'datetime', 'desc', 100, 0)->result();
+			$data['unread_notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id'), 'read' => 0], 'datetime', 'desc', 100, 0)->num_rows();
 		}
 		return $data;
 	}
@@ -166,7 +166,7 @@ class CustomerController extends CI_Controller
 
 		$where_review = ['del' => 0, 'produk_id' => $id];
 		$data['review'] = $this->customer->getReview($where_review, 'created', 'DESC')->result();
-		$data['review_qualified'] = $this->review_qualified($this->session->userdata(SESS . 'id'), $id);
+		$data['review_qualified'] = $this->review_qualified($this->session->userdata(SESSUSER . 'id'), $id);
 
 		$this->template->template($data);
 	}
@@ -191,9 +191,9 @@ class CustomerController extends CI_Controller
 		$data['title']   = 'Akun Saya';
 		$data['content'] = 'account/index';
 		$data['vitamin'] = 'account/index_vitamin';
-		$data['address'] = $this->customer->findAddressByUserId($this->session->userdata(SESS . 'id'))->row();
+		$data['address'] = $this->customer->findAddressByUserId($this->session->userdata(SESSUSER . 'id'))->row();
 		$data['province'] = $this->customer->get('provinsi', '*')->result();
-		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESS . 'id')])->row();
+		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		$data['on_shopping'] = $on_shopping != null ? true : false;
 		$this->session->set_flashdata('checkout', $on_shopping != null ? true : false);
 		// print_r($data['address']);
@@ -207,11 +207,11 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'order/index';
 		$data['vitamin'] = 'order/index_vitamin';
 
-		$data['transaction'] = $this->customer->findTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'id'))->result();
+		$data['transaction'] = $this->customer->findTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESSUSER . 'id'))->result();
 		foreach ($data['transaction'] as $f) {
-			$data['order'][$f->id] = $this->customer->findTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
+			$data['order'][$f->id] = $this->customer->findTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
 		}
-		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESS . 'id')])->row();
+		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		// var_dump($data['transaction']);
 		$this->template->template($data);
 	}
@@ -223,11 +223,11 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'order/index';
 		$data['vitamin'] = 'order/index_vitamin';
 
-		$data['transaction'] = $this->customer->findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESS . 'id'))->result();
+		$data['transaction'] = $this->customer->findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESSUSER . 'id'))->result();
 		foreach ($data['transaction'] as $f) {
-			$data['order'][$f->id] = $this->customer->findCompleteTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESS . 'id'), $f->id)->result();
+			$data['order'][$f->id] = $this->customer->findCompleteTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
 		}
-		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESS . 'id')])->row();
+		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		// var_dump($data['transaction']);
 		$this->template->template($data);
 	}
@@ -236,17 +236,17 @@ class CustomerController extends CI_Controller
 
 	public function insert_qna($product_id)
 	{
-		if ($this->session->userdata(SESS . 'id')) {
+		if ($this->session->userdata(SESSUSER . 'id')) {
 			$data = [
-				'user_id' => $this->session->userdata(SESS . 'id'),
+				'user_id' => $this->session->userdata(SESSUSER . 'id'),
 				'produk_id' => $product_id,
 				'created' => date('Y-m-d H:i:s'),
 				'msg' => $this->input->post('discuss-input'),
 			];
-			if ($this->session->userdata(SESS . 'id')) {
+			if ($this->session->userdata(SESSUSER . 'id')) {
 				$product = $this->customer->get('produk', '*', ['id' => $product_id])->row();
-				if ($this->session->userdata(SESS . 'merchant_id') == $product->toko_id) {
-					$data['toko_id'] = $this->session->userdata(SESS . 'merchant_id');
+				if ($this->session->userdata(SESSUSER . 'merchant_id') == $product->toko_id) {
+					$data['toko_id'] = $this->session->userdata(SESSUSER . 'merchant_id');
 				}
 				$this->customer->insert('qna', $data);
 			}
@@ -256,18 +256,18 @@ class CustomerController extends CI_Controller
 
 	public function reply_qna($product_id, $qna_id)
 	{
-		if ($this->session->userdata(SESS . 'id')) {
+		if ($this->session->userdata(SESSUSER . 'id')) {
 			$data = [
-				'user_id' => $this->session->userdata(SESS . 'id'),
+				'user_id' => $this->session->userdata(SESSUSER . 'id'),
 				'produk_id' => $product_id,
 				'created' => date('Y-m-d H:i:s'),
 				'msg' => $this->input->post('discuss-input'),
 				'parent' => $qna_id,
 			];
-			if ($this->session->userdata(SESS . 'id')) {
+			if ($this->session->userdata(SESSUSER . 'id')) {
 				$product = $this->customer->get('produk', '*', ['id' => $product_id])->row();
-				if ($this->session->userdata(SESS . 'merchant_id') == $product->toko_id) {
-					$data['toko_id'] = $this->session->userdata(SESS . 'merchant_id');
+				if ($this->session->userdata(SESSUSER . 'merchant_id') == $product->toko_id) {
+					$data['toko_id'] = $this->session->userdata(SESSUSER . 'merchant_id');
 				}
 				$this->customer->insert('qna', $data);
 			}
@@ -277,12 +277,12 @@ class CustomerController extends CI_Controller
 
 	public function edit_qna($product_id, $qna_id)
 	{
-		if ($this->session->userdata(SESS . 'id')) {
+		if ($this->session->userdata(SESSUSER . 'id')) {
 			$data = [
 				'msg' => $this->input->post('discuss-input'),
 			];
 			$verifUser = $this->customer->get('qna', 'user_id', ['id' => $qna_id])->row();
-			if ($this->session->userdata(SESS . 'id') == $verifUser->user_id) {
+			if ($this->session->userdata(SESSUSER . 'id') == $verifUser->user_id) {
 				$this->customer->update('qna', $data, $qna_id);
 			}
 			redirect(base_url('product/' . $product_id));
@@ -291,7 +291,7 @@ class CustomerController extends CI_Controller
 
 	public function insert_review($product_id)
 	{
-		$review_qualified = $this->review_qualified($this->session->userdata(SESS . 'id'), $product_id);
+		$review_qualified = $this->review_qualified($this->session->userdata(SESSUSER . 'id'), $product_id);
 		$product = $this->customer->get('produk', '*', ['id' => $product_id])->row();
 		// var_dump($review_qualified);
 		if ($review_qualified) {
@@ -306,7 +306,7 @@ class CustomerController extends CI_Controller
 			$this->load->library('upload', $config);
 
 			$data = [
-				'user_id' => $this->session->userdata(SESS . 'id'),
+				'user_id' => $this->session->userdata(SESSUSER . 'id'),
 				'produk_id' => $product_id,
 				'rating' => $this->input->post('star-review'),
 				'msg' => $this->input->post('msg-review'),

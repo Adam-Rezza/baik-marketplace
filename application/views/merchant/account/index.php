@@ -4,7 +4,7 @@
     </div>
     <div class="bar-category bottom-margin-default border no-border-r no-border-l no-border-t">
         <div class="row">
-            <div class="col-md-5 col-sm-5 col-xs-4">
+            <div class="col-md-12 col-sm-12 col-xs-12">
                 <p class="title-category-page clear-margin">Informasi Akun</p>
             </div>
         </div>

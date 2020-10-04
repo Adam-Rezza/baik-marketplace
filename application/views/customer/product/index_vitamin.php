@@ -1,5 +1,13 @@
 <script>
     $(document).ready(function() {
+        $('.qna-form').submit(function(e) {
+            e.preventDefault()
+            if (<?= $this->session->userdata(SESSUSER . 'id') ? 1 : 0 ?>) {
+                $(this).unbind('submit').submit()
+            } else {
+                $('#modalAuth').modal('show');
+            }
+        })
         $('.msg-content-reply').click(function(e) {
             e.preventDefault()
             id = $(this).data('id')
@@ -123,7 +131,7 @@
         })
         $('#add-to-cart').click(function(e) {
             e.preventDefault()
-            if (<?= $this->session->userdata(SESS . 'id') !== null ? 1 : 0 ?>) {
+            if (<?= $this->session->userdata(SESSUSER . 'id') !== null ? 1 : 0 ?>) {
                 produk_id = $(this).data('id')
                 qty = $('#btn-qty').data('value')
                 $.ajax({

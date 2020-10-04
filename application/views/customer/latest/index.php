@@ -14,8 +14,8 @@
     <!-- Content Product -->
     <div class="clearfix box-product full-width top-padding-default bg-gray">
         <div class=" container">
+            <?php if (count($product) > 0) { ?>
             <div class="clearfix content-product-box full-width">
-
                 <?php foreach ($product as $f) { ?>
                     <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 product-category padding-5">
                         <div class="product-card relative effect-hover-boxshadow animate-default" data-id="<?= $f->id ?>">
@@ -78,6 +78,13 @@
                     </ul>
                 </div>
             </div>
+            <?php } else { ?>
+                <div class="clearfix content-product-box full-width">
+                    <div class="col-sm-12 product-category padding-5 text-grey" style="min-height: 400px">
+                        <h2>Tidak ada produk di temukan</h2>
+                    </div>
+                </div>
+            <?php } ?>
         </div>
     </div>
     <!-- End Content Product -->

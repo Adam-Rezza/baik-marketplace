@@ -454,6 +454,22 @@
         display: none;
     }
 
+    .form-input .select2-selection {
+        border: 1px solid #444;
+    }
+
+    .has-error .select2-selection,
+    .has-error input,
+    .has-error textarea {
+        border: 2px solid red !important;
+    }
+
+    .has-error .select2-selection:focus,
+    .has-error input:focus,
+    .has-error textarea:focus {
+        border: 2px solid red !important;
+    }
+
     @media only screen and (max-width: 480px) {
         .price-product {
             margin-bottom: 0;
