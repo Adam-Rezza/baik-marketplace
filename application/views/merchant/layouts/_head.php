@@ -317,6 +317,16 @@
         border: 2px solid red !important;
     }
 
+    .bg-orange {
+        background-color: #fe6600 !important;
+        color: #fff !important;
+    }
+
+    .bg-orange:hover {
+        background-color: #fe9900 !important;
+        color: #dfdfdf !important;
+    }
+
     @media only screen and (max-width: 480px) {
         .price-product {
             margin-bottom: 0;

@@ -55,7 +55,7 @@
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
-                                    text: 'Produk berhasil ditambahkan',
+                                    text: 'Produk berhasil di checkout',
                                     showConfirmButton: false,
                                     timer: 0,
                                     onBeforeOpen: () => {

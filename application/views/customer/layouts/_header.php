@@ -1,18 +1,4 @@
 <!-- push menu-->
-<div class="pushmenu menu-home5">
-	<div class="menu-push">
-		<span class="close-left js-close"><i class="fa fa-times f-20"></i></span>
-		<div class="clearfix"></div>
-		<form role="search" method="get" id="searchform" class="searchform" action="/search">
-			<div>
-				<label class="screen-reader-text" for="q"></label>
-				<input type="text" placeholder="Search for products" value="" name="q" id="q" autocomplete="off">
-				<input type="hidden" name="type" value="product">
-				<button type="submit" id="searchsubmit"><i class="ion-ios-search-strong"></i></button>
-			</div>
-		</form>
-	</div>
-</div>
 <!-- end push menu-->
 <!-- Menu Mobile -->
 <div class="menu-mobile-left-content">
@@ -61,8 +47,8 @@
 					<div class="clearfix logo">
 						<a href="<?= base_url() ?>"><img alt="Logo" src="<?= base_url(); ?>public\img\logo.jpg" /></a>
 					</div>
-					<div class="clearfix search-box relative float-left">
-						<form method="GET" action="/" class="searchform" id="search">
+					<div class="search-box relative float-left">
+						<form class="searchform" data-ajax="false">
 							<div class="clearfix category-box relative">
 								<select name="cate_search" id="cate_search">
 									<option class="optGroup" value="">Semua Kategori</option>
