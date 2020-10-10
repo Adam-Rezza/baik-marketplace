@@ -213,8 +213,18 @@
                                     <a href="#"><?= $f->toko ?></a>
                                 </h3>
                                 <p class="clearfix price-product">
-                                    <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
-                                    <span class="price-new">Rp <?= number_format($f->harga_disc, 0, ",", ".") ?></span>
+                                    <?php
+                                    if ($f->disc > 0) {
+                                    ?>
+                                        <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
+                                        <span class="price-new">Rp <?= number_format($f->harga_disc, 0, ",", ".") ?></span>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <span class="price-new">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
+                                    <?php
+                                    }
+                                    ?>
                                 </p>
                                 <div class="clearfix ranking-product-category ranking-color">
                                     <i class="fa fa-star-o" aria-hidden="true"></i>
