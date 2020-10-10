@@ -40,7 +40,7 @@ class CustomerController extends CI_Controller
 	public function index()
 	{
 		$data = $this->init();
-		$data['title'] = 'Pasar Online Baik';
+		$data['title']   = 'Pasar Online Baik';
 		$data['content'] = 'main/index';
 		$data['vitamin'] = 'main/index_vitamin';
 
@@ -48,6 +48,7 @@ class CustomerController extends CI_Controller
 		$data['banner'] = $this->customer->get('banner', '*', $where_banner, 'urutan', 'ASC')->result();
 		// $data['banner'] = $this->customer->findAllBanner()->result();
 		$data['sponsored'] = $this->customer->findSponsoredProduct()->result();
+		// echo $this->db->last_query();
 		$data['latest'] = $this->customer->findLatestProduct()->result();
 		// var_dump($this->session->userdata());
 		// var_dump($data['sponsored']);
