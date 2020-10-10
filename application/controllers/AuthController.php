@@ -78,6 +78,17 @@ class AuthController extends CI_Controller
 		$this->session->set_userdata(SESSUSER . 'nama', $data->nama);
 		$this->session->set_userdata(SESSUSER . 'username', $data->username);
 		$this->session->set_userdata(SESSUSER . 'telp', $data->telp);
+
+		$arr_toko = $this->mcore->get('toko', '*', ['user_id' => $data->id]);
+
+		$this->session->set_userdata(SESSUSER . 'merchant_id', null);
+		$this->session->set_userdata(SESSUSER . 'merchant_active', null);
+		$this->session->set_userdata(SESSUSER . 'merchant_ban', null);
+		if ($arr_toko->num_rows() > 0) {
+			$this->session->set_userdata(SESSUSER . 'merchant_id', $arr_toko->row()->id);
+			$this->session->set_userdata(SESSUSER . 'merchant_active', $arr_toko->row()->active);
+			$this->session->set_userdata(SESSUSER . 'merchant_ban', $arr_toko->row()->ban);
+		}
 	}
 
 	public function logout()
@@ -228,16 +239,18 @@ class AuthController extends CI_Controller
 
 	public function register_merchant()
 	{
-		$data['nama'] = $this->input->post('nama');
-		$data['telp'] = $this->input->post('telp');
-		$data['alamat'] = $this->input->post('alamat');
-		$data['provinsi'] = $this->input->post('provinsi');
-		$data['kota'] = $this->input->post('kabupaten');
+		$data['nama']      = $this->input->post('nama');
+		$data['telp']      = $this->input->post('telp');
+		$data['alamat']    = $this->input->post('alamat');
+		$data['provinsi']  = $this->input->post('provinsi');
+		$data['kota']      = $this->input->post('kabupaten');
 		$data['kecamatan'] = $this->input->post('kecamatan');
 		$data['kelurahan'] = $this->input->post('kelurahan');
-		$data['user_id'] = $this->session->userdata(SESSUSER . 'id');
-		$data['active'] = 1;
-		$data['ban'] = 0;
+		$data['user_id']   = $this->session->userdata(SESSUSER . 'id');
+		$data['active']    = 1;
+		$data['ban']       = 0;
+		$data['ekspedisi'] = json_encode($this->input->post('ekspedisi'));
+
 		$result = $this->authorized->insert('toko', $data);
 		if ($result > 0) {
 			$data['id'] = strval($result);
@@ -284,9 +297,10 @@ class AuthController extends CI_Controller
 	public function save_profile_merchant()
 	{
 		if ($this->session->userdata(SESSUSER . 'merchant_id')) {
-			$data['nama'] = $this->input->post('name_t');
-			$data['telp'] = $this->input->post('phone_t');
-			$data['desc'] = $this->input->post('desc_t');
+			$data['nama']      = $this->input->post('name_t');
+			$data['telp']      = $this->input->post('phone_t');
+			$data['desc']      = $this->input->post('desc_t');
+			$data['ekspedisi'] = json_encode($this->input->post('ekspedisi'));
 			// var_dump($this->input->post());
 			$result = $this->authorized->update('toko', $data, $this->session->userdata(SESSUSER . 'merchant_id'));
 			if ($result > 0) {
