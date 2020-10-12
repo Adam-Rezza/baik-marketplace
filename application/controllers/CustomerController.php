@@ -40,7 +40,7 @@ class CustomerController extends CI_Controller
 	public function index()
 	{
 		$data = $this->init();
-		$data['title'] = 'Pasar Online Baik';
+		$data['title']   = 'Pasar Online Baik';
 		$data['content'] = 'main/index';
 		$data['vitamin'] = 'main/index_vitamin';
 
@@ -48,6 +48,7 @@ class CustomerController extends CI_Controller
 		$data['banner'] = $this->customer->get('banner', '*', $where_banner, 'urutan', 'ASC')->result();
 		// $data['banner'] = $this->customer->findAllBanner()->result();
 		$data['sponsored'] = $this->customer->findSponsoredProduct()->result();
+		// echo $this->db->last_query();
 		$data['latest'] = $this->customer->findLatestProduct()->result();
 		// var_dump($this->session->userdata());
 		// var_dump($data['sponsored']);
@@ -165,8 +166,12 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'product/index';
 		$data['vitamin'] = 'product/index_vitamin';
 
-		$where_product = ['del' => 0, 'ban' => 0, 'id' => $id];
-		$data['product'] = $this->customer->get('produk', '*', $where_product)->row();
+		// $where_product = ['del' => 0, 'ban' => 0, 'id' => $id];
+		// $data['product'] = $this->customer->get('produk', '*', $where_product)->row();
+		$where_product = ['produk.del' => 0, 'produk.ban' => 0, 'produk.id' => $id];
+		$data['product'] = $this->customer->getProdukComplete($where_product)->row();
+		// var_dump($data['product']);
+    
 		$where_product_pictures = ['del' => 0, 'produk_id' => $id];
 		$data['product_pictures'] = $this->customer->get('gambar_produk', '*', $where_product_pictures, 'urutan', 'ASC')->result();
 
@@ -209,6 +214,48 @@ class CustomerController extends CI_Controller
 		$data['title']   = 'Checkout';
 		$data['content'] = 'checkout/index';
 		$data['vitamin'] = 'checkout/index_vitamin';
+
+		$user_id = $this->session->userdata(SESSUSER . 'id');
+		$arr_toko = $this->customer->getEkspedisiTokoByKeranjangUser($user_id);
+
+		$arr_ekspedisi = array();
+		if ($arr_toko->num_rows() > 0) {
+			foreach ($arr_toko->result() as $key) {
+				$toko_id            = $key->toko_id;
+				$nama_toko          = $key->nama_toko;
+				$arr_ekspedisi_toko = json_decode($key->ekspedisi);
+
+				$nested = [
+					'toko_id'   => $toko_id,
+					'nama_toko' => $nama_toko,
+					'ekspedisi' => array(),
+				];
+
+				if (count($arr_ekspedisi_toko) > 0) {
+					foreach ($arr_ekspedisi_toko as $key2 => $val2) {
+						$id_ekspedisi = $val2;
+
+						$arr_nama_ekspedisi = $this->mcore->get('ekspedisi', 'nama', ['id' => $id_ekspedisi]);
+
+						$nama_ekspedisi = "";
+						if ($arr_nama_ekspedisi->num_rows() == 1) {
+							$nama_ekspedisi = $arr_nama_ekspedisi->row()->nama;
+						}
+
+						$sub_nested = [
+							'id_ekspedisi'   => $id_ekspedisi,
+							'nama_ekspedisi' => $nama_ekspedisi,
+						];
+
+						array_push($nested['ekspedisi'], $sub_nested);
+						// echo $id_ekspedisi . '<br>';
+					}
+				}
+				array_push($arr_ekspedisi, $nested);
+			}
+		}
+
+		$data['arr_ekspedisi'] = $arr_ekspedisi;
 
 		$this->template->template($data);
 	}

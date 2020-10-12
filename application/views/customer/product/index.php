@@ -15,15 +15,15 @@
                                     <div id="owl-big-slide" class="relative sync-owl-big-image">
                                         <?php foreach ($product_pictures as $f) { ?>
                                             <div class="item center-vertical-image">
-                                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Big Slide">
+                                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Big Slide" class="img-thumbnail">
                                             </div>
                                         <?php } ?>
                                     </div>
                                     <div class="relative thumbnail-slide-detail">
-                                        <div id="owl-thumbnail-slide" class="sync-owl-thumbnail-image" data-items="3,4,3,2">
+                                        <div id="owl-thumbnail-slide" class="sync-owl-thumbnail-image" data-items="3,4,3,2" style="margin-top: 10px;">
                                             <?php foreach ($product_pictures as $f) { ?>
                                                 <div class="item center-vertical-image">
-                                                    <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Thumbnail Slide">
+                                                    <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Thumbnail Slide" class="img-thumbnail">
                                                 </div>
                                             <?php } ?>
                                         </div>
@@ -34,7 +34,22 @@
                                 <!-- Info Top Product -->
                                 <div class="col-md-5 col-sm-12 col-xs-12">
                                     <div class="name-ranking-product relative bottom-padding-15-default bottom-margin-15-default border no-border-r no-border-t no-border-l">
-                                        <h1 class="name-product"><?= $product->nama ?></h1>
+                                        <h1 class="name-product">
+                                            <?= $product->nama ?><br />
+                                            <small>
+                                                <?php
+                                                if ($product->kategori_id == 0) {
+                                                    echo 'Semua Kategori';
+                                                } else {
+                                                    echo $product->nama_kategori;
+                                                }
+
+                                                if ($product->sub_kategori_id != 0) {
+                                                    echo ' > ' . $product->nama_sub_kategori;
+                                                }
+                                                ?>
+                                            </small>
+                                        </h1>
                                         <div class=" ranking-color ">
                                             <?php
                                             $rate = $product->rating;
@@ -199,13 +214,13 @@
                         </div>
                         <!-- End Product Content Category -->
                     </div>
-            <?php } else { ?>
-                <div class="clearfix content-product-box full-width">
-                    <div class="col-sm-12 product-category padding-5 text-grey" style="min-height: 400px">
-                        <h2>Produk tidak di temukan</h2>
+                <?php } else { ?>
+                    <div class="clearfix content-product-box full-width">
+                        <div class="col-sm-12 product-category padding-5 text-grey" style="min-height: 400px">
+                            <h2>Produk tidak di temukan</h2>
+                        </div>
                     </div>
-                </div>
-            <?php } ?>
+                <?php } ?>
             </div>
         </div>
     </div>

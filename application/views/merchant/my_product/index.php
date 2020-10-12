@@ -49,8 +49,18 @@
                         </h3>
 
                         <p class="clearfix price-product">
-                            <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
-                            Rp <?= number_format($f->harga_disc, 0, ",", ".") ?>
+                            <?php
+                            if ($f->disc > 0) {
+                            ?>
+                                <span class="price-old">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
+                                Rp <?= number_format($f->harga_disc, 0, ",", ".") ?>
+                            <?php
+                            } else {
+                            ?>
+                                Rp <?= number_format($f->harga_asli, 0, ",", ".") ?>
+                            <?php
+                            }
+                            ?>
                         </p>
                         <p class="intro-product-category"><?= $f->desc ?></p>
                         <div class="relative button-product-list clearfix">

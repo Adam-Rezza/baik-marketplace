@@ -46,7 +46,7 @@ class MerchantController extends CI_Controller
 	public function auth()
 	{
 		if ($this->session->userdata(SESSUSER . 'id')) {
-			if ($this->session->userdata(SESSUSER . 'merchant_id') === null || $this->session->userdata(SESSUSER . 'merchant_active') === 0 || $this->session->userdata(SESSUSER . 'merchant_ban') == 1) {
+			if ($this->session->userdata(SESSUSER . 'merchant_id') === null) {
 				// $data = $this->init();
 				$data['title']   = 'Daftar Toko';
 				$data['content'] = 'auth/index';
@@ -81,12 +81,16 @@ class MerchantController extends CI_Controller
 	public function my_profile()
 	{
 		$data = $this->init();
-		$data['title']   = 'Produk Saya';
-		$data['content'] = 'account/index';
-		$data['vitamin'] = 'account/index_vitamin';
+		$data['title']    = 'Produk Saya';
+		$data['content']  = 'account/index';
+		$data['vitamin']  = 'account/index_vitamin';
 		$data['province'] = $this->customer->get('provinsi', '*')->result();
 
 		$data['toko'] = $this->merchant->findMerchantByMerchantId($this->session->userdata(SESSUSER . 'merchant_id'))->row();
+
+		$data['ekspedisi'] = json_decode($data['toko']->ekspedisi);
+		$data['list_ekspedisi'] = $this->mcore->get('ekspedisi', '*');
+
 		$this->template->template($data);
 	}
 

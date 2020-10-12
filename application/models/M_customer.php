@@ -77,6 +77,7 @@ class M_customer extends CI_Model
         $this->db->from('produk a');
         $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
         $this->db->join('toko c', 'a.toko_id = c.id');
+        $this->db->where('a.disc >', '0');
         $this->db->where('b.urutan', '1');
         // $this->db->where('sponsored_date >=', date('Y-m-d'));
         $this->db->where('a.del', '0');
@@ -256,6 +257,58 @@ class M_customer extends CI_Model
         $this->db->order_by('a.created_date', 'DESC');
         $this->db->limit(1, 0);
         return $this->db->get();
+    }
+
+    /**
+     * APM
+     * 2020-10-12
+     */
+    public function getProdukComplete($where = NULL)
+    {
+        $this->db->select([
+            'produk.id',
+            'produk.toko_id',
+            'produk.kategori_id',
+            'produk.sub_kategori_id',
+            'produk.nama',
+            'produk.`desc`',
+            'produk.harga_asli',
+            'produk.harga_disc',
+            'produk.disc',
+            'produk.terjual',
+            'produk.rating',
+            'produk.rating_count',
+            'produk.del',
+            'produk.ban',
+            'produk.created_date',
+            'produk.modified_date',
+            'toko.nama as nama_toko',
+            'kategori.nama as nama_kategori',
+            'sub_kategori.nama as nama_sub_kategori'
+        ]);
+        $this->db->join('toko', 'toko.id = produk.toko_id', 'left');
+        $this->db->join('kategori', 'kategori.id = produk.kategori_id', 'left');
+        $this->db->join('sub_kategori', 'sub_kategori.id = produk.sub_kategori_id', 'left');
+
+        if ($where != NULL) {
+            $this->db->where($where);
+        }
+
+        return $this->db->get('produk');
+    }
+
+    public function getEkspedisiTokoByKeranjangUser($user_id)
+    {
+        $this->db->select('
+        produk.toko_id,
+        toko.nama as nama_toko,
+        toko.ekspedisi
+        ');
+        $this->db->join('produk', 'produk.id = keranjang.produk_id', 'left');
+        $this->db->join('toko', 'toko.id = produk.toko_id', 'left');
+        $this->db->where('keranjang.user_id', $user_id);
+        $this->db->where('keranjang.transaksi_id IS NULL');
+        return $this->db->get('keranjang');
     }
 }
 

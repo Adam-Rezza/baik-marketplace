@@ -143,6 +143,9 @@
                     required: true,
                     phone: true,
                 },
+                eksepdisi: {
+                    required: true
+                }
             },
             messages: {
                 name_t: {
@@ -151,6 +154,9 @@
                 phone_t: {
                     required: "Phone wajib diisi",
                     phone: "Nomor handphone tidak valid"
+                },
+                eksepdisi: {
+                    required: "Ekespedisi wajib diisi",
                 },
             },
             submitHandler: function(form, e) {

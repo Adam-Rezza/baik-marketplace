@@ -29,6 +29,7 @@ class M_produk_less extends CI_Model
 		produk.nama,
 		produk.desc,
 		produk.harga_asli,
+		produk.disc,
 		produk.harga_disc,
 		produk.terjual,
 		produk.rating,

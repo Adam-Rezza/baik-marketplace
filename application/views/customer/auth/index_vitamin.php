@@ -1,8 +1,9 @@
 <style>
-    .merchant-header-container{
+    .merchant-header-container {
         text-align: center;
     }
-    .left-content-shoping .merchant-header{
+
+    .left-content-shoping .merchant-header {
         max-height: 150px;
     }
 </style>
@@ -104,6 +105,9 @@
                     required: true,
                     phone: true
                 },
+                desc: {
+                    required: true,
+                },
                 alamat: {
                     required: true,
                     minlength: 8
@@ -120,6 +124,9 @@
                 kelurahan: {
                     required: true,
                 },
+                ekspedisi: {
+                    required: true,
+                },
             },
             messages: {
                 nama: {
@@ -129,6 +136,9 @@
                 telp: {
                     required: "Masukkan nomor telepon",
                     phone: "Nomor handphone tidak valid"
+                },
+                desc: {
+                    required: "Masukan Deskripsi Toko",
                 },
                 alamat: {
                     required: "Masukkan alamat",
@@ -146,6 +156,9 @@
                 kelurahan: {
                     required: "Kelurahan wajib diisi",
                 },
+                ekspedisi: {
+                    required: "Ekspedisi wajib diisi",
+                },
             },
             submitHandler: function(form, e) {
                 e.preventDefault()
@@ -155,7 +168,7 @@
                     url: "<?= base_url('register_merchant') ?>",
                     data: data,
                     success: function(res) {
-                        // console.log('success', res)
+                        console.log('success', res)
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil mendaftarkan toko',

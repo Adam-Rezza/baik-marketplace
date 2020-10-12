@@ -125,13 +125,18 @@ class ProdukController extends CI_Controller
 			$row['kategori_id']       = $field->kategori_id;
 
 			$nama_kategori = "Semua Kategori";
-			if ($field->kategori_id != NULL) {
+			if (in_array($field->kategori_id, [NULL, '0']) === FALSE) {
 				$nama_kategori = $field->nama_kategori;
 			}
 
 			$nama_sub_kategori = "Semua Sub Kategori";
-			if ($field->sub_kategori_id != NULL) {
+			if (in_array($field->sub_kategori_id, [NULL, '0']) === FALSE) {
 				$nama_sub_kategori = $field->nama_sub_kategori;
+			}
+
+			$harga_disc = $field->harga_disc;
+			if ($field->disc == 0) {
+				$harga_disc = 0;
 			}
 
 			$row['nama_kategori']     = $nama_kategori;
@@ -140,9 +145,9 @@ class ProdukController extends CI_Controller
 			$row['desc']              = $field->desc;
 			$row['harga_asli']        = $field->harga_asli;
 			$row['harga_asli_rp']     = 'Rp.' . number_format($field->harga_asli, 0, ',', '.');
-			$row['harga_disc']        = $field->harga_disc;
-			$row['harga_disc_rp']     = 'Rp.' . number_format($field->harga_disc, 0, ',', '.');
-			$row['terjual']           = $field->terjual;
+			$row['harga_disc']        = $harga_disc;
+			$row['harga_disc_rp']     = 'Rp.' . number_format($harga_disc, 0, ',', '.');
+			$row['terjual']           = number_format($field->terjual, 0, ',', '.');
 			$row['rating']            = $field->rating;
 			$row['ban']               = $field->ban;
 
