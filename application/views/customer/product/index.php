@@ -15,15 +15,15 @@
                                     <div id="owl-big-slide" class="relative sync-owl-big-image">
                                         <?php foreach ($product_pictures as $f) { ?>
                                             <div class="item center-vertical-image">
-                                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Big Slide">
+                                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Big Slide" class="img-thumbnail">
                                             </div>
                                         <?php } ?>
                                     </div>
                                     <div class="relative thumbnail-slide-detail">
-                                        <div id="owl-thumbnail-slide" class="sync-owl-thumbnail-image" data-items="3,4,3,2">
+                                        <div id="owl-thumbnail-slide" class="sync-owl-thumbnail-image" data-items="3,4,3,2" style="margin-top: 10px;">
                                             <?php foreach ($product_pictures as $f) { ?>
                                                 <div class="item center-vertical-image">
-                                                    <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Thumbnail Slide">
+                                                    <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Thumbnail Slide" class="img-thumbnail">
                                                 </div>
                                             <?php } ?>
                                         </div>

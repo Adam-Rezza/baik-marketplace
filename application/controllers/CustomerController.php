@@ -184,6 +184,48 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'checkout/index';
 		$data['vitamin'] = 'checkout/index_vitamin';
 
+		$user_id = $this->session->userdata(SESSUSER . 'id');
+		$arr_toko = $this->customer->getEkspedisiTokoByKeranjangUser($user_id);
+
+		$arr_ekspedisi = array();
+		if ($arr_toko->num_rows() > 0) {
+			foreach ($arr_toko->result() as $key) {
+				$toko_id            = $key->toko_id;
+				$nama_toko          = $key->nama_toko;
+				$arr_ekspedisi_toko = json_decode($key->ekspedisi);
+
+				$nested = [
+					'toko_id'   => $toko_id,
+					'nama_toko' => $nama_toko,
+					'ekspedisi' => array(),
+				];
+
+				if (count($arr_ekspedisi_toko) > 0) {
+					foreach ($arr_ekspedisi_toko as $key2 => $val2) {
+						$id_ekspedisi = $val2;
+
+						$arr_nama_ekspedisi = $this->mcore->get('ekspedisi', 'nama', ['id' => $id_ekspedisi]);
+
+						$nama_ekspedisi = "";
+						if ($arr_nama_ekspedisi->num_rows() == 1) {
+							$nama_ekspedisi = $arr_nama_ekspedisi->row()->nama;
+						}
+
+						$sub_nested = [
+							'id_ekspedisi'   => $id_ekspedisi,
+							'nama_ekspedisi' => $nama_ekspedisi,
+						];
+
+						array_push($nested['ekspedisi'], $sub_nested);
+						// echo $id_ekspedisi . '<br>';
+					}
+				}
+				array_push($arr_ekspedisi, $nested);
+			}
+		}
+
+		$data['arr_ekspedisi'] = $arr_ekspedisi;
+
 		$this->template->template($data);
 	}
 

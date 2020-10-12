@@ -284,6 +284,20 @@ class M_customer extends CI_Model
 
         return $this->db->get('produk');
     }
+
+    public function getEkspedisiTokoByKeranjangUser($user_id)
+    {
+        $this->db->select('
+        produk.toko_id,
+        toko.nama as nama_toko,
+        toko.ekspedisi
+        ');
+        $this->db->join('produk', 'produk.id = keranjang.produk_id', 'left');
+        $this->db->join('toko', 'toko.id = produk.toko_id', 'left');
+        $this->db->where('keranjang.user_id', $user_id);
+        $this->db->where('keranjang.transaksi_id IS NULL');
+        return $this->db->get('keranjang');
+    }
 }
 
 /* End of file M_core.php */
