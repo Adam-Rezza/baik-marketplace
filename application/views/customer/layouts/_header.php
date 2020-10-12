@@ -64,7 +64,7 @@
 									<?php } ?>
 								</select>
 							</div>
-							<input type="text" name="keyword" id="keyword" placeholder="Enter keyword here . . ." value="<?= $keyword ?>">
+							<input type="text" name="keyword" id="keyword" placeholder="Enter keyword here . . ." value="<?= $keyword ?>" required>
 							<button type="submit" class="animate-default button-hover-red">Search</button>
 						</form>
 					</div>

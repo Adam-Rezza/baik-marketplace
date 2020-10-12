@@ -39,7 +39,6 @@ class CustomerController extends CI_Controller
 
 	public function index()
 	{
-		print_r($this->session->all_userdata());
 		$data = $this->init();
 		$data['title']   = 'Pasar Online Baik';
 		$data['content'] = 'main/index';
