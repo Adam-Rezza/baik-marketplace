@@ -410,8 +410,8 @@
         function collapseCategory(dataId) {
             $('.subCategory[data-id="' + dataId + '"]').slideUp(100)
         }
-        $('.searchform').submit(function(e) {
-            e.preventDefault()
+        $('#searchform').on('submit', function(e) {
+            e.preventDefault();
             // 'search%26keyword=(:any)%26category=(:any)%26subcategory=(:any)'
             var category = $('#cate_search option:selected')
             var param1 = $('#keyword').val()
