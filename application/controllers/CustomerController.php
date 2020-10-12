@@ -58,8 +58,10 @@ class CustomerController extends CI_Controller
 	{
 		$data = $this->init();
 		$data['title']   = 'Produk berdasarkan kategori';
-		$data['content'] = 'discount/index';
-		$data['vitamin'] = 'discount/index_vitamin';
+		$data['content'] = 'search/index';
+		$data['vitamin'] = 'search/index_vitamin';
+
+		$data['breadcrumb'] = "Produk dengan diskon terbaik";
 
 		$data['url'] = base_url('discount');
 
@@ -73,8 +75,10 @@ class CustomerController extends CI_Controller
 	{
 		$data = $this->init();
 		$data['title']   = 'Produk berdasarkan kategori';
-		$data['content'] = 'latest/index';
-		$data['vitamin'] = 'latest/index_vitamin';
+		$data['content'] = 'search/index';
+		$data['vitamin'] = 'search/index_vitamin';
+
+		$data['breadcrumb'] = "Produk terbaru";
 
 		$data['url'] = base_url('discount');
 
@@ -89,14 +93,19 @@ class CustomerController extends CI_Controller
 	{
 		$data = $this->init();
 		$data['title']   = 'Produk berdasarkan kategori';
-		$data['content'] = 'category/index';
-		$data['vitamin'] = 'category/index_vitamin';
+		$data['content'] = 'search/index';
+		$data['vitamin'] = 'search/index_vitamin';
 
 		$where_category = ['id' => $category];
 		$data['search_category'] = $this->customer->get('kategori', '*', $where_category)->row();
 
 		$where_sub_category = ['id' => $sub_category, 'parent' => $category];
 		$data['search_sub_category'] =  $sub_category ? $this->customer->get('sub_kategori', '*', $where_sub_category)->row() : null;
+
+		$category_info = "";
+		$category_info .= $category ? $data['search_category']->nama : "Semua Kategori";
+		$category_info .= $sub_category ? " > ".$data['search_sub_category']->nama : "";
+		$data['breadcrumb'] = "Produk di Kategori ".$category_info;
 
 		if ($data['search_category'] != null && ($sub_category == null || $data['search_sub_category'] != null)) {
 			$data['url'] = base_url();
@@ -128,6 +137,11 @@ class CustomerController extends CI_Controller
 		$where_sub_category = ['id' => $sub_category, 'parent' => $category];
 		$data['search_sub_category'] =  $sub_category ? $this->customer->get('sub_kategori', '*', $where_sub_category)->row() : null;
 
+		$category_info = "";
+		$category_info .= $category ? $data['search_category']->nama : "Semua Kategori";
+		$category_info .= $sub_category ? " > ".$data['search_sub_category']->nama : "";
+		$data['breadcrumb'] = "Pencarian \"".$keyword."\" di ".$category_info;
+
 		if (($category == null || $data['search_category'] != null) && ($sub_category == null || $data['search_sub_category'] != null)) {
 			$data['url'] = base_url();
 			$data['url'] .= 'search=' . urlencode($keyword);
@@ -137,7 +151,7 @@ class CustomerController extends CI_Controller
 			$data['page'] = $page;
 			$data['page_max'] = floor($this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, null, 0)->num_rows() / 20) + 1;
 			$data['product'] = $this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1) * 20)->result();
-			// var_dump($data['page_max']);
+
 			$this->template->template($data);
 		} else {
 			show_404();
@@ -153,7 +167,6 @@ class CustomerController extends CI_Controller
 
 		$where_product = ['del' => 0, 'ban' => 0, 'id' => $id];
 		$data['product'] = $this->customer->get('produk', '*', $where_product)->row();
-		// var_dump($data['product']);
 		$where_product_pictures = ['del' => 0, 'produk_id' => $id];
 		$data['product_pictures'] = $this->customer->get('gambar_produk', '*', $where_product_pictures, 'urutan', 'ASC')->result();
 
@@ -169,6 +182,22 @@ class CustomerController extends CI_Controller
 		$data['review_qualified'] = $this->review_qualified($this->session->userdata(SESSUSER . 'id'), $id);
 
 		$this->template->template($data);
+	}
+
+	public function merchant_detail($id)
+	{
+		$data = $this->init();
+		if ($id == $this->session->userdata(SESSUSER . 'merchant_id')) {
+			redirect(base_url('my_profile'));
+		} else {
+			$data['title']   = 'Detail toko';
+			$data['content'] = 'merchant_detail/index';
+			$data['vitamin'] = 'merchant_detail/index_vitamin';
+
+			$data['toko'] = $this->customer->getToko(['id' => $id])->row();
+
+			$this->template->template($data);
+		}
 	}
 
 	// Registered User

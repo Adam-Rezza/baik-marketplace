@@ -6,12 +6,7 @@
             <div class="row">
                 <div class="breadcrumb-web">
                     <ul class="clear-margin">
-                        <?php
-                            $category_info = "";
-                            $category_info .= $search_category ? $search_category->nama : "Semua Kategori";
-                            $category_info .= $search_sub_category ? " > ".$search_sub_category->nama : "";
-                        ?>
-                        <li class="animate-default title-hover-red">Pencarian "<?=$keyword?>" di <?=$category_info?></li>
+                        <li class="animate-default title-hover-red"><?=$breadcrumb?></li>
                     </ul>
                 </div>
             </div>
@@ -40,7 +35,7 @@
                         </h3>
                         <h3 class="title-merchant clearfix full-width title-hover-black">
                             <i class="fa fa-user icon-merchant"></i> 
-                                <a href="#"><?=$f->toko?></a>
+                                <a href="<?=base_url()?>merchant_detail/<?=$f->toko_id?>"><?=$f->toko?></a>
                         </h3>
                         <p class="clearfix price-product">
                             <span class="price-old">Rp <?=number_format($f->harga_asli, 0, ",", ".")?></span>

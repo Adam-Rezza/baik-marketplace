@@ -160,7 +160,7 @@
                                                     <option value="5"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></option>
                                                 </select>
                                                 <textarea class="msg-review-input" name="msg-review" rows="4" placeholder="Tulis penilaian anda.." required></textarea>
-                                                <input class="hidden" type="file" name="image-review" id="image-review" />
+                                                <input class="hidden" type="file" name="image-review" id="image-review" accept="image/*"/>
                                                 <button class="btn btn-sm btn-info absolute" id="btn-discuss-input-camera" onclick="return false">
                                                     <i class="fa fa-camera" aria-hidden="true"></i>
                                                 </button>
@@ -171,7 +171,7 @@
                                         <?php if (count($review) > 0) { ?>
                                             <?php foreach ($review as $f) { ?>
                                                 <div class="msg-discuss msg-discuss-start">
-                                                    <span class="msg-sender"><i class="fa fa-user icon-merchant"></i> Aang</span>
+                                                    <span class="msg-sender"><i class="fa fa-user icon-merchant"></i> <?=$f->user?></span>
                                                     <span class="msg-time"><?= date('d-M-Y H:i', strtotime($f->created)) ?></span>
                                                     <p class="msg-review"><?= $f->msg ?>
                                                         <span class="msg-review-star">

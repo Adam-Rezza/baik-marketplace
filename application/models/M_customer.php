@@ -57,11 +57,23 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
+    public function getToko($where = NULL)
+    {
+        $this->db->select('a.*, b.nama as prov, c.nama as kab, d.nama as kec, e.nama as kel');
+        $this->db->from('toko a');
+        $this->db->join('provinsi b', 'a.provinsi = b.id_prov');
+        $this->db->join('kabupaten c', 'a.kota = c.id_kab');
+        $this->db->join('kecamatan d', 'a.kecamatan = d.id_kec');
+        $this->db->join('kelurahan e', 'a.kelurahan = e.id_kel');
+        $this->db->where($where);
+        return $this->db->get();
+    }
+
     // Produk 
 
     function findSponsoredProduct($limit = 14, $offset = 0)
     {
-        $this->db->select('a.*, b.gambar, c.nama as toko');
+        $this->db->select('a.*, b.gambar, c.nama as toko, c.id as toko_id');
         $this->db->from('produk a');
         $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
         $this->db->join('toko c', 'a.toko_id = c.id');
@@ -79,7 +91,7 @@ class M_customer extends CI_Model
 
     function findLatestProduct($limit = 12, $offset = 0)
     {
-        $this->db->select('a.*, b.gambar, c.nama as toko');
+        $this->db->select('a.*, b.gambar, c.nama as toko, c.id as toko_id');
         $this->db->from('produk a');
         $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
         $this->db->join('toko c', 'a.toko_id = c.id');
@@ -94,7 +106,7 @@ class M_customer extends CI_Model
 
     function findProductByCategory($category, $sub_category, $limit, $offset)
     {
-        $this->db->select('a.*, b.gambar, c.nama as toko');
+        $this->db->select('a.*, b.gambar, c.nama as toko, c.id as toko_id');
         $this->db->from('produk a');
         $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
         $this->db->join('toko c', 'a.toko_id = c.id');
@@ -114,7 +126,7 @@ class M_customer extends CI_Model
 
     function findProductByKeyAndCategoryAndSubCategory($keyword, $category, $sub_category, $limit, $offset)
     {
-        $this->db->select('a.*, b.gambar, c.nama as toko');
+        $this->db->select('a.*, b.gambar, c.nama as toko, c.id as toko_id');
         $this->db->from('produk a');
         $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
         $this->db->join('toko c', 'a.toko_id = c.id');
@@ -139,7 +151,7 @@ class M_customer extends CI_Model
 
     function findCartByUserIdAndNotTransactionId($user_id)
     {
-        $this->db->select('a.*, b.nama as produk, b.harga_disc as harga, b.rating, c.gambar, d.nama as toko');
+        $this->db->select('a.*, b.nama as produk, b.harga_disc as harga, b.rating, c.gambar, d.nama as toko, d.id as toko_id');
         $this->db->from('keranjang a');
         $this->db->join('produk b', 'a.produk_id = b.id');
         $this->db->join('gambar_produk c', 'b.id = c.produk_id');
@@ -166,7 +178,7 @@ class M_customer extends CI_Model
 
     function findTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
@@ -181,7 +193,7 @@ class M_customer extends CI_Model
 
     function findTransactionByMerchantIdAndStatusAndTransactionId($user_id, $transaction_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
@@ -196,7 +208,7 @@ class M_customer extends CI_Model
 
     function findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
@@ -213,7 +225,7 @@ class M_customer extends CI_Model
 
     function findCompleteTransactionByMerchantIdAndStatusAndTransactionId($user_id, $transaction_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
@@ -230,7 +242,7 @@ class M_customer extends CI_Model
 
     function findLatestCompleteTransactionByUserIdAndProductIdLastWeek($user_id, $product_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
