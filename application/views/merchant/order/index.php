@@ -21,7 +21,7 @@
         </div>
     </div>
     <!-- Product Content Category -->
-    <div class="relative clearfix full-width">
+    <div class="relative clearfix full-width" style="overflow-x: scroll">
         <table class="table" id="tableOrders">
             <thead>
                 <tr>
@@ -73,12 +73,14 @@
                         <span aria-hidden="true" class="ti-close"></span>
                     </button>
                     <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default">
-                        <h3 class="title-modal-product">Detail Pesanan</h3>
-                        <div class="col-md-12 clear-padding product-category bottom-margin-default product-category-list relative">
-                            <div class="relative overfollow-hidden info-product-list">
-                                <div class="top-margin-15-default" id="customer-detail"></div>
+                        <h3 class="title-modal-product">Detail Pesanan <span id="order-invoice"></span></h3>
+                        <div class="col-md-12 clear-padding product-category bottom-margin-default relative">
+                            <div class="col-md-6">
+                                <div class="relative overfollow-hidden">
+                                    <div class="top-margin-15-default" id="customer-detail"></div>
+                                </div>
                             </div>
-                            <div class="relative overfollow-hidden info-product-list">
+                            <div class="relative overfollow-hidden">
                                 <div class="top-margin-15-default" id="list-product"></div>
                                 <div class="top-margin-default">
                                     Total :
@@ -102,20 +104,20 @@
                                             <p id="failed-reason">aaa</p>
                                         </b>
                                     <?php } ?>
-                                </div>
-                                <div class="relative button-product-list clearfix">
-                                    <ul class="clear-margin">
-                                        <?php if ($status == 1) { ?>
-                                            <li class=""><a href="#" class="animate-default btn-order-update cancel-order bg-grey" data-id="0">Tolak Pesanan</a></li>
-                                            <li class=""><a href="#" class="animate-default btn-order-update process-order" data-id="0">Terima Pesanan</a></li>
-                                        <?php } else if ($status == 2) { ?>
-                                            <li class=""><a href="#" class="animate-default btn-order-update send-order" data-id="0">Kirim Pesanan</a></li>
-                                        <?php } else if ($status == 3) { ?>
-                                            <li class=""><a href="#" class="animate-default btn-order-update delivered-order btn-bg-grey" data-id="0" disabled>Sedang dikirim</a></li>
-                                        <?php } else if ($status == 9) { ?>
-                                            <li class=""><a href="#" class="animate-default btn-order-update complete-order btn-bg-grey" data-id="0" disabled>Selesai</a></li>
-                                        <?php } ?>
-                                    </ul>
+                                    <div class="col-md-6">
+                                        <div class="relative button-product-list clearfix">
+                                            <?php if ($status == 1) { ?>
+                                                <a href="#" class="btn animate-default btn-order-update cancel-order bg-grey top-margin-15-default" data-id="0">Tolak Pesanan</a>
+                                                <a href="#" class="btn animate-default btn-order-update process-order bg-orange top-margin-15-default" data-id="0">Terima Pesanan</a>
+                                            <?php } else if ($status == 2) { ?>
+                                                <a href="#" class="btn animate-default btn-order-update send-order bg-orange top-margin-15-default" data-id="0">Kirim Pesanan</a>
+                                            <?php } else if ($status == 3) { ?>
+                                                <a href="#" class="btn animate-default btn-order-update delivered-order btn-bg-grey bg-grey top-margin-15-default" data-id="0" disabled>Sedang dikirim</a>
+                                            <?php } else if ($status == 9) { ?>
+                                                <a href="#" class="btn animate-default btn-order-update complete-order btn-bg-grey bg-grey top-margin-15-default" data-id="0" disabled>Selesai</a>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

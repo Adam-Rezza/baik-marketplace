@@ -98,7 +98,7 @@ class M_merchant extends CI_Model
 
     function findTransactionByMerchantIdAndStatusAndTransactionId($merchant_id, $status, $tansaksi_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, c.id as produk_id');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');
@@ -111,7 +111,7 @@ class M_merchant extends CI_Model
 
     function findTransactionByMerchantIdAndTransactionId($merchant_id, $tansaksi_id)
     {
-        $this->db->select('a.*, b.harga, b.qty, c.nama as produk');
+        $this->db->select('a.*, b.harga, b.qty, c.nama as produk, c.id as produk_id');
         $this->db->from('transaksi a');
         $this->db->join('keranjang b', 'a.id = b.transaksi_id');
         $this->db->join('produk c', 'b.produk_id = c.id');

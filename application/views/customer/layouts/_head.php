@@ -282,6 +282,16 @@
         border-radius: 10px;
     }
 
+    .bg-orange {
+        background-color: #fe6600 !important;
+        color: #fff !important;
+    }
+
+    .bg-orange:hover {
+        background-color: #fe9900 !important;
+        color: #dfdfdf !important;
+    }
+
     .msg-discuss-container #btn-discuss-input-camera {
         bottom: 18px;
         right: 75px;

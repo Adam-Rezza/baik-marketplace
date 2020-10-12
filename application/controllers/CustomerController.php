@@ -65,7 +65,7 @@ class CustomerController extends CI_Controller
 		$data['url'] = base_url('discount');
 
 		$data['page'] = $page;
-		$data['page_max'] = round($this->customer->findSponsoredProduct(null, 0)->num_rows() / 20) + 1;
+		$data['page_max'] = floor($this->customer->findSponsoredProduct(null, 0)->num_rows() / 20) + 1;
 		$data['product'] = $this->customer->findSponsoredProduct(20, ($page - 1) * 20)->result();
 		$this->template->template($data);
 	}
@@ -80,7 +80,7 @@ class CustomerController extends CI_Controller
 		$data['url'] = base_url('discount');
 
 		$data['page'] = $page;
-		$data['page_max'] = round($this->customer->findLatestProduct(null, 0)->num_rows() / 20) + 1;
+		$data['page_max'] = floor($this->customer->findLatestProduct(null, 0)->num_rows() / 20) + 1;
 		$data['product'] = $this->customer->findLatestProduct(20, ($page - 1) * 20)->result();
 
 		$this->template->template($data);
@@ -105,7 +105,7 @@ class CustomerController extends CI_Controller
 			$data['url'] .= $sub_category ? '%26sub_category=' . $sub_category : "";
 
 			$data['page'] = $page;
-			$data['page_max'] = round($this->customer->findProductByCategory($category, $sub_category, null, 0)->num_rows() / 20) + 1;
+			$data['page_max'] = floor($this->customer->findProductByCategory($category, $sub_category, null, 0)->num_rows() / 20) + 1;
 			$data['product'] = $this->customer->findProductByCategory($category, $sub_category, 20, ($page - 1) * 20)->result();
 
 			$this->template->template($data);
@@ -136,7 +136,7 @@ class CustomerController extends CI_Controller
 			$data['url'] .= $sub_category ? '%26sub_category=' . $sub_category : "";
 
 			$data['page'] = $page;
-			$data['page_max'] = round($this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, null, 0)->num_rows() / 20) + 1;
+			$data['page_max'] = floor($this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, null, 0)->num_rows() / 20) + 1;
 			$data['product'] = $this->customer->findProductByKeyAndCategoryAndSubCategory(urldecode($keyword), $category, $sub_category, 20, ($page - 1) * 20)->result();
 			// var_dump($data['page_max']);
 			$this->template->template($data);

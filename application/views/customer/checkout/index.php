@@ -33,6 +33,7 @@
                                     <button class="btn-sub-qty" data-id="<?= $f->produk_id ?>">-</button>
                                     <button class="btn-qty" id="p-qty-<?= $f->produk_id ?>" data-value="<?= $f->qty ?>" data-harga="<?= $f->harga ?>" data-id="<?= $f->produk_id ?>" disabled><?= $f->qty ?></button>
                                     <button class="btn-add-qty" data-id="<?= $f->produk_id ?>">+</button>
+                                    <a class="btn bg-orange btn-delete-cart top-margin-15-default" href="<?=base_url('delete_cart/'). $f->id ?>"><b>Hapus</b></a>
                                 </div>
                             </div>
                         <?php } ?>
