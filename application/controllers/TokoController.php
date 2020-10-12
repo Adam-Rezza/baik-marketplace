@@ -134,6 +134,10 @@ class TokoController extends CI_Controller
 			$rating          = $key->rating;
 			$created_date    = $key->created_date;
 
+			if ($key->disc == 0) {
+				$harga_disc = 0;
+			}
+
 			$exec_toko = $this->mcore->get(TABLE_TOKO, 'nama', ['id' => $toko_id]);
 
 			$nama_toko = $exec_toko->row()->nama;
