@@ -53,7 +53,7 @@
                 <form id="form_checkout">
                     <div class="col-md-4 col-sm-12 col-xs-12 right-content-shoping top-padding-default relative clear-padding-right">
                         <p class="title-shoping-cart">Total Pembayaran</p>
-                        <div class="full-width relative cart-total bg-gray  clearfix">
+                        <div class="full-width relative cart-total bg-gray clearfix">
                             <div class="relative justify-content bottom-padding-15-default border no-border-t no-border-r no-border-l">
                                 <p>Subtotal</p>
                                 <p class="text-red price-shoping-cart" id="total-price-cart">Rp <?= number_format($total_price_cart, 0, ",", ".") ?></p>

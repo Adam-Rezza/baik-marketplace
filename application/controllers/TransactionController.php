@@ -124,12 +124,18 @@ class TransactionController extends CI_Controller
 		$this->db->trans_begin();
 		if ($user_id && $alamat) {
 			$toko_pemilik_keranjang = $this->ci->transaction->findMerchantOwnerCartByUserIdGroupByMerchantId($user_id)->result();
-			print_r($toko_pemilik_keranjang);
-			exit;
 			// echo json_encode($toko_pemilik_keranjang);
 			$status = true;
+			$i = 0;
 			foreach ($toko_pemilik_keranjang as $f) {
 				$alamat_lengkap = $alamat->alamat . ", " . $alamat->kel . ", " . $alamat->kec . ", " . $alamat->kab . ", " . $alamat->prov;
+				$id_ekspedisi = NULL;
+				foreach ($this->input->post('id_toko') as $x => $y) {
+					if ($this->input->post('id_toko')[$x] == $f->id) {
+						$id_ekspedisi = $this->input->post('id_ekspedisi')[$x];
+					}
+				}
+
 				$data = [
 					'toko_id'       => $f->id,
 					'pengirim'      => $f->nama,
@@ -143,7 +149,8 @@ class TransactionController extends CI_Controller
 					'kota'          => $alamat->kab,
 					'provinsi'      => $alamat->prov,
 					'status'        => 1,
-					'created_date'  => date('Y-m-d h:i:s')
+					'created_date'  => date('Y-m-d h:i:s'),
+					'id_ekspedisi'  => $id_ekspedisi,
 				];
 				$transaction = $this->ci->transaction->insert('transaksi', $data);
 				if ($transaction) {
@@ -161,6 +168,7 @@ class TransactionController extends CI_Controller
 					echo json_encode($status ? 'true' : '1'); // 1 => transaksi gagal 
 					exit;
 				}
+				$i++;
 			}
 			$this->db->trans_commit();
 			echo json_encode($status ? 'true' : '1'); // 1 => transaksi gagal 
