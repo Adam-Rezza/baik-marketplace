@@ -246,6 +246,44 @@ class M_customer extends CI_Model
         $this->db->limit(1, 0);
         return $this->db->get();
     }
+
+    /**
+     * APM
+     * 2020-10-12
+     */
+    public function getProdukComplete($where = NULL)
+    {
+        $this->db->select([
+            'produk.id',
+            'produk.toko_id',
+            'produk.kategori_id',
+            'produk.sub_kategori_id',
+            'produk.nama',
+            'produk.`desc`',
+            'produk.harga_asli',
+            'produk.harga_disc',
+            'produk.disc',
+            'produk.terjual',
+            'produk.rating',
+            'produk.rating_count',
+            'produk.del',
+            'produk.ban',
+            'produk.created_date',
+            'produk.modified_date',
+            'toko.nama as nama_toko',
+            'kategori.nama as nama_kategori',
+            'sub_kategori.nama as nama_sub_kategori'
+        ]);
+        $this->db->join('toko', 'toko.id = produk.toko_id', 'left');
+        $this->db->join('kategori', 'kategori.id = produk.kategori_id', 'left');
+        $this->db->join('sub_kategori', 'sub_kategori.id = produk.sub_kategori_id', 'left');
+
+        if ($where != NULL) {
+            $this->db->where($where);
+        }
+
+        return $this->db->get('produk');
+    }
 }
 
 /* End of file M_core.php */

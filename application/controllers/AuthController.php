@@ -250,6 +250,7 @@ class AuthController extends CI_Controller
 	{
 		$data['nama']      = $this->input->post('nama');
 		$data['telp']      = $this->input->post('telp');
+		$data['desc']      = trim($this->input->post('desc', TRUE));
 		$data['alamat']    = $this->input->post('alamat');
 		$data['provinsi']  = $this->input->post('provinsi');
 		$data['kota']      = $this->input->post('kabupaten');

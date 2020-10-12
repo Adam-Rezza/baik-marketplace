@@ -105,6 +105,9 @@
                     required: true,
                     phone: true
                 },
+                desc: {
+                    required: true,
+                },
                 alamat: {
                     required: true,
                     minlength: 8
@@ -133,6 +136,9 @@
                 telp: {
                     required: "Masukkan nomor telepon",
                     phone: "Nomor handphone tidak valid"
+                },
+                desc: {
+                    required: "Masukan Deskripsi Toko",
                 },
                 alamat: {
                     required: "Masukkan alamat",

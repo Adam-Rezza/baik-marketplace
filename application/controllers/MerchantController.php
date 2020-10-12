@@ -81,9 +81,9 @@ class MerchantController extends CI_Controller
 	public function my_profile()
 	{
 		$data = $this->init();
-		$data['title']   = 'Produk Saya';
-		$data['content'] = 'account/index';
-		$data['vitamin'] = 'account/index_vitamin';
+		$data['title']    = 'Produk Saya';
+		$data['content']  = 'account/index';
+		$data['vitamin']  = 'account/index_vitamin';
 		$data['province'] = $this->customer->get('provinsi', '*')->result();
 
 		$data['toko'] = $this->merchant->findMerchantByMerchantId($this->session->userdata(SESSUSER . 'merchant_id'))->row();
