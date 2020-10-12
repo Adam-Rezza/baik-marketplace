@@ -35,14 +35,15 @@ $route['discount%26page=(:any)'] = 'CustomerController/discount/$1/';
 $route['latest%26page=(:any)'] = 'CustomerController/latest/$1/';
 
 // $route['category'] = 'CustomerController/category';
-$route['category=(:any)%26page=(:any)'] = 'CustomerController/category/$1//$2';
 $route['category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/category/$1/$2/$3';
+$route['category=(:any)%26page=(:any)'] = 'CustomerController/category/$1//$2';
 
 // $route['search'] = 'CustomerController/search';
 $route['search%26keyword=(:any)%26category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/search/$1/$2/$3/$4';
 $route['search%26keyword=(:any)%26category=(:any)%26page=(:any)'] = 'CustomerController/search/$1/$2//$3';
 $route['search%26keyword=(:any)%26page=(:any)'] = 'CustomerController/search/$1///$2';
 
+$route['merchant_detail/(:any)'] = 'CustomerController/merchant_detail/$1';
 $route['product'] = 'CustomerController/product';
 $route['product/(:any)'] = 'CustomerController/product/$1';
 
