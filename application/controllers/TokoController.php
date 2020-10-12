@@ -138,13 +138,13 @@ class TokoController extends CI_Controller
 
 			$nama_toko = $exec_toko->row()->nama;
 
-			$nama_kategori = '';
+			$nama_kategori = 'SEMUA KATEGORI';
 			if (in_array($kategori_id, [NULL, '0']) === FALSE) {
 				$exec_kategori = $this->mcore->get('kategori', '*', ['id' => $kategori_id]);
 				$nama_kategori = $exec_kategori->row()->nama;
 			}
 
-			$nama_sub_kategori = '';
+			$nama_sub_kategori = 'SEMUA SUB KATEGORI';
 			if (in_array($sub_kategori_id, [NULL, '0']) === FALSE) {
 				$exec_sub_kategori = $this->mcore->get('sub_kategori', '*', ['id' => $sub_kategori_id]);
 				if ($exec_sub_kategori->num_rows() > 0) {
@@ -152,9 +152,7 @@ class TokoController extends CI_Controller
 				}
 			}
 
-			if ($sub_kategori_id != NULL && $sub_kategori_id != '0') {
-				$nama_kategori = $nama_kategori . " > " . $nama_sub_kategori;
-			}
+			$nama_kategori = $nama_kategori . " > " . $nama_sub_kategori;
 
 			$nested = [
 				'id'            => $id,
