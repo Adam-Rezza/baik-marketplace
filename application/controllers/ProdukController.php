@@ -134,14 +134,19 @@ class ProdukController extends CI_Controller
 				$nama_sub_kategori = $field->nama_sub_kategori;
 			}
 
+			$harga_disc = $field->harga_disc;
+			if ($field->disc == 0) {
+				$harga_disc = 0;
+			}
+
 			$row['nama_kategori']     = $nama_kategori;
 			$row['nama_sub_kategori'] = $nama_sub_kategori;
 			$row['nama']              = $field->nama;
 			$row['desc']              = $field->desc;
 			$row['harga_asli']        = $field->harga_asli;
 			$row['harga_asli_rp']     = 'Rp.' . number_format($field->harga_asli, 0, ',', '.');
-			$row['harga_disc']        = $field->harga_disc;
-			$row['harga_disc_rp']     = 'Rp.' . number_format($field->harga_disc, 0, ',', '.');
+			$row['harga_disc']        = $harga_disc;
+			$row['harga_disc_rp']     = 'Rp.' . number_format($harga_disc, 0, ',', '.');
 			$row['terjual']           = number_format($field->terjual, 0, ',', '.');
 			$row['rating']            = $field->rating;
 			$row['ban']               = $field->ban;

@@ -96,8 +96,16 @@ class AuthController extends CI_Controller
 	{
 		delete_cookie(COOK);
 		$this->session->unset_userdata(SESSUSER . 'id');
+		$this->session->unset_userdata(SESSUSER . 'nama');
+		$this->session->unset_userdata(SESSUSER . 'telp');
 		$this->session->unset_userdata(SESSUSER . 'merchant_id');
 		$this->session->unset_userdata(SESSUSER . 'username');
+		$this->session->unset_userdata(SESSUSER . 'merchant_user_id');
+		$this->session->unset_userdata(SESSUSER . 'merchant_active');
+		$this->session->unset_userdata(SESSUSER . 'merchant_active');
+		$this->session->unset_userdata(SESSUSER . 'merchant_ban');
+		$this->session->unset_userdata(SESSUSER . 'merchant_nama');
+		$this->session->unset_userdata(SESSUSER . 'merchant_telp');
 		$this->session->set_flashdata('logout', LOGOUT_MSG);
 		redirect(site_url(), 'refresh');
 	}
