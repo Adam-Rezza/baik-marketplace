@@ -14,6 +14,7 @@
 					<!-- Sider Bar -->
 					<div class="col-md-3 relative top-padding-default" id="slide-bar-category">
 						<div class="col-md-12 col-sm-12 col-xs-12 sider-bar-category border bottom-margin-default">
+							<h4 class="text-center"><?= $this->session->userdata(SESSUSER . 'merchant_nama'); ?></h4>
 							<img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile_toko/<?= $merchant->gambar ? $merchant->gambar : "merchant.png" ?>" alt="">
 							<div class="text-center top-margin-15-default">
 								<button id="btn-profil-merchant-foto">Upload foto</button>
@@ -111,15 +112,15 @@
 <?php $this->load->view('merchant/' . $vitamin) ?>
 <script>
 	$(document).ready(function() {
-        $.validator.addMethod('phone', function(value, element) {
-            return this.optional(element) || /^08[0-9]{9,}$/.test(value);
-        }, "Please enter a valid phone number")
-        $.validator.addMethod('alphanumericDash', function(value, element) {
-            return this.optional(element) || /^[a-z0-9\_]+$/i.test(value);
-        }, "Please enter a valid phone number")
-        $.validator.addMethod('namespace', function(value, element) {
-            return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
-        }, "Please enter a valid phone number")
+		$.validator.addMethod('phone', function(value, element) {
+			return this.optional(element) || /^08[0-9]{9,}$/.test(value);
+		}, "Please enter a valid phone number")
+		$.validator.addMethod('alphanumericDash', function(value, element) {
+			return this.optional(element) || /^[a-z0-9\_]+$/i.test(value);
+		}, "Please enter a valid phone number")
+		$.validator.addMethod('namespace', function(value, element) {
+			return this.optional(element) || /^[a-z0-9\-\s]+$/i.test(value);
+		}, "Please enter a valid phone number")
 		//////////////////////////////////////////////////////////////////////
 		$('#btn-profil-merchant-foto').click(function(e) {
 			e.preventDefault()
@@ -156,8 +157,8 @@
 		})
 
 		$modal.on('shown.bs.modal', function() {
-            widthContainer = $(this).width()
-            $('#imageProfileCrop').height(widthContainer)
+			widthContainer = $(this).width()
+			$('#imageProfileCrop').height(widthContainer)
 			cropper = new Cropper(image, {
 				aspectRatio: 1,
 				viewMode: 1,

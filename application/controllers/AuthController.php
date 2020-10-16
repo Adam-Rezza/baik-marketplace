@@ -21,18 +21,21 @@ class AuthController extends CI_Controller
 		$this->form_validation->set_rules('password', 'Password', 'callback_password_check');
 		if ($this->form_validation->run() === FALSE) {
 			// $this->load->view('login');
-			echo 'false';
+			echo json_encode('false');
 		} else {
 			$username = $this->input->post('username');
 			$where = [
 				'username' => $username,
-				'active' => 1,
-				'ban' => 0
+				'active' => 1
 			];
 			$arr 	  = $this->authorized->get('user', '*', $where);
-			$this->_set_session($arr->row());
-			$this->login_merchant($arr->row()->id);
-			echo 'true';
+			if ($arr->row()->ban == 0) {
+				$this->_set_session($arr->row());
+				$this->login_merchant($arr->row()->id);
+				echo json_encode('true');
+			} else {
+				echo json_encode('ban');
+			}
 		}
 	}
 
@@ -40,8 +43,7 @@ class AuthController extends CI_Controller
 	{
 		$where = [
 			'username' => $str,
-			'active' => 1,
-			'ban' => 0
+			'active' => 1
 		];
 		$arr = $this->authorized->get('user', '*', $where);
 		if ($arr->num_rows() == 0) {
@@ -57,8 +59,7 @@ class AuthController extends CI_Controller
 		$password = $str;
 		$where = [
 			'username'   => $username,
-			'active' => 1,
-			'ban' => 0
+			'active' => 1
 		];
 		$arr = $this->authorized->get('user', '*', $where);
 		if ($arr->num_rows() == 1) {
@@ -95,8 +96,16 @@ class AuthController extends CI_Controller
 	{
 		delete_cookie(COOK);
 		$this->session->unset_userdata(SESSUSER . 'id');
+		$this->session->unset_userdata(SESSUSER . 'nama');
+		$this->session->unset_userdata(SESSUSER . 'telp');
 		$this->session->unset_userdata(SESSUSER . 'merchant_id');
 		$this->session->unset_userdata(SESSUSER . 'username');
+		$this->session->unset_userdata(SESSUSER . 'merchant_user_id');
+		$this->session->unset_userdata(SESSUSER . 'merchant_active');
+		$this->session->unset_userdata(SESSUSER . 'merchant_active');
+		$this->session->unset_userdata(SESSUSER . 'merchant_ban');
+		$this->session->unset_userdata(SESSUSER . 'merchant_nama');
+		$this->session->unset_userdata(SESSUSER . 'merchant_telp');
 		$this->session->set_flashdata('logout', LOGOUT_MSG);
 		redirect(site_url(), 'refresh');
 	}
@@ -241,6 +250,7 @@ class AuthController extends CI_Controller
 	{
 		$data['nama']      = $this->input->post('nama');
 		$data['telp']      = $this->input->post('telp');
+		$data['desc']      = trim($this->input->post('desc', TRUE));
 		$data['alamat']    = $this->input->post('alamat');
 		$data['provinsi']  = $this->input->post('provinsi');
 		$data['kota']      = $this->input->post('kabupaten');

@@ -107,7 +107,7 @@
                                                 </div>
                                                 <h3 class="title-merchant clearfix full-width title-hover-black">
                                                     <i class="fa fa-user icon-merchant"></i>
-                                                    <a href="#"><?= $f->toko ?></a>
+                                                    <a href="<?= base_url() ?>merchant_detail/<?= $f->toko_id ?>"><?= $f->toko ?></a>
                                                 </h3>
                                                 <p class="clearfix price-product-slide-product">
                                                     <span class="price-old-slide-product">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
@@ -151,7 +151,7 @@
                                 </h3>
                                 <h3 class="title-merchant clearfix full-width title-hover-black">
                                     <i class="fa fa-user icon-merchant"></i>
-                                    <a href="#"><?= $f->toko ?></a>
+                                    <a href="<?= base_url() ?>merchant_detail/<?= $f->toko_id ?>"><?= $f->toko ?></a>
                                 </h3>
                                 <p class="clearfix price-product">
                                     <span class="price-old-sponsored">Rp <?= number_format($f->harga_asli, 0, ",", ".") ?></span>
@@ -210,7 +210,7 @@
                                 </h3>
                                 <h3 class="title-merchant clearfix full-width title-hover-black">
                                     <i class="fa fa-user icon-merchant"></i>
-                                    <a href="#"><?= $f->toko ?></a>
+                                    <a href="<?= base_url() ?>merchant_detail/<?= $f->toko_id ?>"><?= $f->toko ?></a>
                                 </h3>
                                 <p class="clearfix price-product">
                                     <?php

@@ -121,6 +121,7 @@ class TokoController extends CI_Controller
 			echo json_encode(['code' => 404]);
 			exit();
 		}
+
 		foreach ($exec->result() as $key) {
 			$id              = $key->id;
 			$toko_id         = $key->toko_id;
@@ -133,25 +134,29 @@ class TokoController extends CI_Controller
 			$rating          = $key->rating;
 			$created_date    = $key->created_date;
 
+			if ($key->disc == 0) {
+				$harga_disc = 0;
+			}
+
 			$exec_toko = $this->mcore->get(TABLE_TOKO, 'nama', ['id' => $toko_id]);
 
 			$nama_toko = $exec_toko->row()->nama;
 
-			$nama_kategori = '';
+			$nama_kategori = 'SEMUA KATEGORI';
 			if (in_array($kategori_id, [NULL, '0']) === FALSE) {
 				$exec_kategori = $this->mcore->get('kategori', '*', ['id' => $kategori_id]);
 				$nama_kategori = $exec_kategori->row()->nama;
 			}
 
-			$nama_sub_kategori = '';
+			$nama_sub_kategori = 'SEMUA SUB KATEGORI';
 			if (in_array($sub_kategori_id, [NULL, '0']) === FALSE) {
 				$exec_sub_kategori = $this->mcore->get('sub_kategori', '*', ['id' => $sub_kategori_id]);
-				$nama_sub_kategori = $exec_sub_kategori->row()->nama;
+				if ($exec_sub_kategori->num_rows() > 0) {
+					$nama_sub_kategori = $exec_sub_kategori->row()->nama;
+				}
 			}
 
-			if ($sub_kategori_id != NULL && $sub_kategori_id != '0') {
-				$nama_kategori = $nama_kategori . " > " . $nama_sub_kategori;
-			}
+			$nama_kategori = $nama_kategori . " > " . $nama_sub_kategori;
 
 			$nested = [
 				'id'            => $id,

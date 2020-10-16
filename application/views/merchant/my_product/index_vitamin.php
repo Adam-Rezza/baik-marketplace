@@ -67,16 +67,6 @@
         margin-left: 20px;
     }
 
-    .bg-orange {
-        background-color: #fe6600 !important;
-        color: #fff !important;
-    }
-
-    .bg-orange:hover {
-        background-color: #fe9900 !important;
-        color: #dfdfdf !important;
-    }
-
     .modal-cropper {
         min-height: auto;
         width: auto;

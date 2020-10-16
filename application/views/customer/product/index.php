@@ -15,15 +15,15 @@
                                     <div id="owl-big-slide" class="relative sync-owl-big-image">
                                         <?php foreach ($product_pictures as $f) { ?>
                                             <div class="item center-vertical-image">
-                                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Big Slide">
+                                                <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Big Slide" class="img-thumbnail">
                                             </div>
                                         <?php } ?>
                                     </div>
                                     <div class="relative thumbnail-slide-detail">
-                                        <div id="owl-thumbnail-slide" class="sync-owl-thumbnail-image" data-items="3,4,3,2">
+                                        <div id="owl-thumbnail-slide" class="sync-owl-thumbnail-image" data-items="3,4,3,2" style="margin-top: 10px;">
                                             <?php foreach ($product_pictures as $f) { ?>
                                                 <div class="item center-vertical-image">
-                                                    <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Thumbnail Slide">
+                                                    <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="Image Thumbnail Slide" class="img-thumbnail">
                                                 </div>
                                             <?php } ?>
                                         </div>
@@ -34,7 +34,22 @@
                                 <!-- Info Top Product -->
                                 <div class="col-md-5 col-sm-12 col-xs-12">
                                     <div class="name-ranking-product relative bottom-padding-15-default bottom-margin-15-default border no-border-r no-border-t no-border-l">
-                                        <h1 class="name-product"><?= $product->nama ?></h1>
+                                        <h1 class="name-product">
+                                            <?= $product->nama ?><br />
+                                            <small>
+                                                <?php
+                                                if ($product->kategori_id == 0) {
+                                                    echo 'Semua Kategori';
+                                                } else {
+                                                    echo $product->nama_kategori;
+                                                }
+
+                                                if ($product->sub_kategori_id != 0) {
+                                                    echo ' > ' . $product->nama_sub_kategori;
+                                                }
+                                                ?>
+                                            </small>
+                                        </h1>
                                         <div class=" ranking-color ">
                                             <?php
                                             $rate = $product->rating;
@@ -170,7 +185,7 @@
                                                     <option value="5"><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></option>
                                                 </select>
                                                 <textarea class="msg-review-input" name="msg-review" rows="4" placeholder="Tulis penilaian anda.." required></textarea>
-                                                <input class="hidden" type="file" name="image-review" id="image-review" />
+                                                <input class="hidden" type="file" name="image-review" id="image-review" accept="image/*"/>
                                                 <button class="btn btn-sm btn-info absolute" id="btn-discuss-input-camera" onclick="return false">
                                                     <i class="fa fa-camera" aria-hidden="true"></i>
                                                 </button>
@@ -181,7 +196,7 @@
                                         <?php if (count($review) > 0) { ?>
                                             <?php foreach ($review as $f) { ?>
                                                 <div class="msg-discuss msg-discuss-start">
-                                                    <span class="msg-sender"><i class="fa fa-user icon-merchant"></i> Aang</span>
+                                                    <span class="msg-sender"><i class="fa fa-user icon-merchant"></i> <?=$f->user?></span>
                                                     <span class="msg-time"><?= date('d-M-Y H:i', strtotime($f->created)) ?></span>
                                                     <p class="msg-review"><?= $f->msg ?>
                                                         <span class="msg-review-star">

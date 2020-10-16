@@ -35,6 +35,12 @@ class M_transaction extends CI_Model
         return $this->db->affected_rows();
     }
 
+    function delete($tabel, $where)
+    {
+        $this->db->delete($tabel, $where);
+        return $this->db->affected_rows();
+    }
+
     function findCartByUserIdAndNotTransactionId($user_id)
     {
         $this->db->select('a.*, b.nama as produk, b.harga_disc as harga, b.rating, c.gambar, d.nama as toko');
@@ -58,6 +64,17 @@ class M_transaction extends CI_Model
         $this->db->from('keranjang a');
         $this->db->where('a.user_id', $user_id);
         $this->db->where('a.produk_id', $produk_id);
+        $this->db->where('a.transaksi_id is null');
+        $this->db->order_by('a.created_date', 'asc');
+        return $this->db->get();
+    }
+
+    function findCartByUserIdAndCartIdAndNotTransactionId($user_id, $id)
+    {
+        $this->db->select('*');
+        $this->db->from('keranjang a');
+        $this->db->where('a.user_id', $user_id);
+        $this->db->where('a.id', $id);
         $this->db->where('a.transaksi_id is null');
         $this->db->order_by('a.created_date', 'asc');
         return $this->db->get();

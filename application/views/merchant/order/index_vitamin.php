@@ -56,7 +56,7 @@
                         totalPrice += (v.harga * v.qty)
                         listProduct += `
                                         <div style="clear: both">
-                                            <p class="float-left"><b>${v.produk}</b> (x${v.qty})</p>
+                                            <p class="float-left"><b><a href="<?= base_url() ?>product/${v.produk_id}">${v.produk}</a></b> (x${v.qty})</p>
                                             <p class="float-right">Rp. ${rupiahFormat((v.harga * v.qty).toString())}</p>
                                         </div>`
                     })
@@ -82,6 +82,7 @@
                                                 <td>${res[0].alamat}</td>
                                             </tr>
                                     </table>`
+                    $('#order-invoice').html(res[0].invoice)
                     $('.btn-order-update').data('id', transaksi_id)
                     $('#list-product').html(listProduct)
                     $('#customer-detail').html(customerDetail)

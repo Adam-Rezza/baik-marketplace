@@ -1,5 +1,15 @@
+<style>
+    .form-input>.select2,
+    .form-input>select,
+    .form-input>label {
+        display: block;
+        width: 100% !important;
+    }
+</style>
+
 <script>
     $(document).ready(function() {
+        $('.select2').select2();
         $('.btn-sub-qty').click(function(e) {
             e.preventDefault()
             id = $(this).data('id')
@@ -33,8 +43,8 @@
                 }
             });
         })
-        $('#checkout').click(function(e) {
-            e.preventDefault()
+        $('#form_checkout').on('submit', function(e) {
+            e.preventDefault();
             Swal.fire({
                 title: 'Konfirmasi Pembayaran?',
                 text: "Anda akan membayaran pesanan anda",
@@ -49,13 +59,15 @@
                     $.ajax({
                         url: "<?= base_url() ?>checkout_transaction",
                         dataType: "json",
+                        method: 'post',
+                        data: $('#form_checkout').serialize(),
                         success: function(res) {
                             console.log(res)
                             if (res == 'true') {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil',
-                                    text: 'Produk berhasil ditambahkan',
+                                    text: 'Produk berhasil di checkout',
                                     showConfirmButton: false,
                                     timer: 0,
                                     onBeforeOpen: () => {
@@ -65,7 +77,7 @@
                                 setTimeout(() => {
                                     window.location.href = '<?= base_url('my_order') ?>'
                                 }, 1000)
-                            } else if (res == '1'){
+                            } else if (res == '1') {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal',
@@ -76,7 +88,7 @@
                                         Swal.showLoading()
                                     },
                                 })
-                            } else if (res == '2'){
+                            } else if (res == '2') {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Gagal',
@@ -91,11 +103,16 @@
                                     window.location.href = '<?= base_url('my_account/checkout') ?>'
                                 }, 1000)
                             }
+                        },
+                        error: function(res) {
+                            console.log(res);
                         }
-                    })
+                    });
+                    return false;
                 }
-            })
-        })
+            });
+            return false;
+        });
         $('input[name="shipping"]').click(() => {
             update_cart_all()
         })

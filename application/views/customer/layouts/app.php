@@ -320,14 +320,13 @@
             },
             submitHandler: function(form, e) {
                 e.preventDefault()
-                // console.log($(form).serialize())
                 data = $('#loginForm').serialize()
                 $.ajax({
                     type: "post",
                     url: "<?= base_url('user/login') ?>",
                     data: data,
+                    dataType: 'json',
                     success: function(res) {
-                        // console.log('success', res)
                         if (res == 'true') {
                             Swal.fire({
                                 icon: 'success',
@@ -351,6 +350,14 @@
                                 icon: 'error',
                                 title: 'Gagal!',
                                 text: 'Username atau password salah',
+                                showConfirmButton: false,
+                                timer: 0
+                            })
+                        } else if (res == 'ban') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal!',
+                                text: 'Akun anda di banned',
                                 showConfirmButton: false,
                                 timer: 0
                             })
@@ -403,8 +410,8 @@
         function collapseCategory(dataId) {
             $('.subCategory[data-id="' + dataId + '"]').slideUp(100)
         }
-        $('.searchform').submit(function(e) {
-            e.preventDefault()
+        $('#searchform').on('submit', function(e) {
+            e.preventDefault();
             // 'search%26keyword=(:any)%26category=(:any)%26subcategory=(:any)'
             var category = $('#cate_search option:selected')
             var param1 = $('#keyword').val()
