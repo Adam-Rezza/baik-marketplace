@@ -40,7 +40,7 @@ class TransactionController extends CI_Controller
 		$where_product = ['id' => $product_id, 'del' => 0, 'ban' => 0];
 		$product = $this->ci->transaction->get('produk', '*', $where_product)->row();
 		$cart = $this->ci->transaction->findCartByUserIdAndProductIdAndNotTransactionId($user_id, $product_id)->row();
-		if ($product->toko_id == $this->session->userdata('merchant_id')) {
+		if ($product->toko_id != $this->session->userdata(SESSUSER . 'merchant_id')) {
 			if ($user_id && $cart && $product) {
 				$data = [
 					'user_id' => $user_id,

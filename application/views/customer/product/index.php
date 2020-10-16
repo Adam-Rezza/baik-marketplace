@@ -45,8 +45,18 @@
                                             ?>
                                         </div>
                                         <p class="clearfix price-product">
-                                            <span class="price-old <?= $product->disc < 1 ? "hidden" : "" ?>">Rp <?= number_format($product->harga_asli, '0', ',', '.') ?></span>
-                                            Rp <?= number_format($product->harga_disc, '0', ',', '.') ?>
+                                            <?php
+                                            if ($product->disc > 0) {
+                                            ?>
+                                                <span class="price-old">Rp <?= number_format($product->harga_asli, '0', ',', '.') ?></span>
+                                                Rp <?= number_format($product->harga_disc, '0', ',', '.') ?>
+                                            <?php
+                                            } else {
+                                            ?>
+                                                Rp <?= number_format($product->harga_asli, '0', ',', '.') ?>
+                                            <?php
+                                            }
+                                            ?>
                                         </p>
                                     </div>
                                     <div class="relative intro-product-detail bottom-margin-15-default bottom-padding-15-default border no-border-r no-border-t no-border-l">
@@ -56,7 +66,7 @@
                                     </div>
                                     <div class="relative button-product-list clearfix full-width clear-margin text-center no-padding">
                                         <button class="btn-sub-qty" id="btn-sub-qty">-</button>
-                                        <button class="btn-qty" id="btn-qty" disabled="" data-value="1">1</button>
+                                        <button class="btn-qty" id="btn-qty" disabled="" data-value="1" style="text-align:center;">1</button>
                                         <button class="btn-add-qty" id="btn-add-qty">+</button>
                                     </div>
                                     <div class="relative button-product-list clearfix full-width clear-margin text-center no-padding">
@@ -199,13 +209,13 @@
                         </div>
                         <!-- End Product Content Category -->
                     </div>
-            <?php } else { ?>
-                <div class="clearfix content-product-box full-width">
-                    <div class="col-sm-12 product-category padding-5 text-grey" style="min-height: 400px">
-                        <h2>Produk tidak di temukan</h2>
+                <?php } else { ?>
+                    <div class="clearfix content-product-box full-width">
+                        <div class="col-sm-12 product-category padding-5 text-grey" style="min-height: 400px">
+                            <h2>Produk tidak di temukan</h2>
+                        </div>
                     </div>
-                </div>
-            <?php } ?>
+                <?php } ?>
             </div>
         </div>
     </div>
