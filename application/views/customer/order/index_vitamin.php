@@ -38,7 +38,7 @@
                                     },
                                 })
                                 setTimeout(() => {
-                                    window.location.href = (window.location.href).replaceAll('#', '')
+                                    window.location.href = '<?=base_url('my_recent_order')?>'
                                 }, 1000)
                             }
                         }
