@@ -328,6 +328,7 @@ class M_customer extends CI_Model
         $this->db->join('toko', 'toko.id = produk.toko_id', 'left');
         $this->db->where('keranjang.user_id', $user_id);
         $this->db->where('keranjang.transaksi_id IS NULL');
+        $this->db->group_by('toko.id');
         return $this->db->get('keranjang');
     }
 }

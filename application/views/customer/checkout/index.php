@@ -27,7 +27,7 @@
                                         <a href="#"><?= $f->toko ?></a>
                                     </h3>
                                 </div>
-                                <div class="relative product-in-cart-col-3">
+                                <div class="relative product-in-cart-col-3" style="min-width: 110px;">
                                     <span class="ti-close relative remove-product"></span>
                                     <p class="text-red price-shoping-cart" id="p-price-<?= $f->produk_id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?></p>
                                     <button class="btn-sub-qty" data-id="<?= $f->produk_id ?>">-</button>

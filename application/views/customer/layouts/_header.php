@@ -48,7 +48,7 @@
 						<a href="<?= base_url() ?>"><img alt="Logo" src="<?= base_url(); ?>public\img\logo.jpg" /></a>
 					</div>
 					<div class="search-box relative float-left">
-						<form class="searchform" data-ajax="false">
+						<form id="searchform" class="searchform" data-ajax="false">
 							<div class="clearfix category-box relative">
 								<select name="cate_search" id="cate_search">
 									<option class="optGroup" value="">Semua Kategori</option>
