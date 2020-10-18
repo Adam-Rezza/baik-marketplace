@@ -148,6 +148,26 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
+    function findMerchantProduct($id, $limit = 14, $offset = 0)
+    {
+        $this->db->select('a.*, b.gambar, c.nama as toko, c.id as toko_id');
+        $this->db->from('produk a');
+        $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
+        $this->db->join('toko c', 'a.toko_id = c.id');
+        $this->db->where('c.id', $id);
+        $this->db->where('a.disc >', '0');
+        $this->db->where('b.urutan', '1');
+        // $this->db->where('sponsored_date >=', date('Y-m-d'));
+        $this->db->where('a.del', '0');
+        $this->db->where('a.ban', '0');
+        $this->db->where('c.ban', '0');
+        $this->db->order_by('CASE WHEN a.terjual > 0 THEN a.disc else 0 END', 'desc', false);
+        $this->db->order_by('CASE WHEN a.terjual > 0 THEN a.rating else 0 END', 'desc', false);
+        $this->db->order_by('CASE WHEN a.modified_date is not null THEN a.modified_date else a.created_date END', 'desc', false);
+        $this->db->limit($limit, $offset);
+        return $this->db->get();
+    }
+
     // Customer registered
 
     function findCartByUserIdAndNotTransactionId($user_id)

@@ -44,6 +44,8 @@ $route['search%26keyword=(:any)%26category=(:any)%26page=(:any)'] = 'CustomerCon
 $route['search%26keyword=(:any)%26page=(:any)'] = 'CustomerController/search/$1///$2';
 
 $route['merchant_detail/(:any)'] = 'CustomerController/merchant_detail/$1';
+$route['merchant_product/(:any)'] = 'CustomerController/merchant_product/$1';
+$route['merchant_product/(:any)/(:any)'] = 'CustomerController/merchant_product/$1/$2';
 $route['product'] = 'CustomerController/product';
 $route['product/(:any)'] = 'CustomerController/product/$1';
 
