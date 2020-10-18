@@ -90,6 +90,14 @@
                     if (res[0].status == 10) {
                         $('#failed-reason').html('"' + res[0].failed_reason + '"');
                     }
+                    $('.send-order').data('kurir', res[0].id_ekspedisi)
+                    $('.kurir').html(res[0].id_ekspedisi.toUpperCase())
+                    if(res[0].resi){
+                        $('.resi-container').show()
+                        $('.resi').html(res[0].resi.toUpperCase())
+                    } else {
+                        $('.resi-container').hide()
+                    }
                     $.unblockUI()
                     $('#modalOrderDetail').modal('show')
                 }
@@ -150,20 +158,26 @@
         $('.send-order').click(function(e) {
             e.preventDefault();
             id = $(this).data('id')
+            kurir = $(this).data('kurir')
             Swal.fire({
-                title: 'Konfirmasi?',
+                title: 'Masukan resi pengiriman ' + kurir.toUpperCase() + '',
                 text: "Kirim pesanan",
                 icon: 'warning',
+                input: 'textarea',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ya',
                 cancelButtonText: 'Batal'
             }).then((result) => {
-                if (result.isConfirmed) {
+                if (result.value != "" && result.isConfirmed) {
                     $.ajax({
+                        method: "post",
                         url: "<?= base_url() ?>send_order/" + id,
                         dataType: "json",
+                        data: {
+                            resi: result.value.toUpperCase()
+                        },
                         success: function(res) {
                             if (res == "true") {
                                 Swal.fire({
@@ -191,6 +205,17 @@
                                     },
                                 })
                             }
+                        }
+                    })
+                } else if (result.value == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Resi harus di isi',
+                        showConfirmButton: false,
+                        timer: 1000,
+                        onBeforeOpen: () => {
+                            Swal.showLoading()
                         }
                     })
                 }

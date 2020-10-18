@@ -107,6 +107,16 @@
 											Rp <?= number_format($total_price, 0, ",", ".") ?>
 										</p>
 										<p class="intro-product-category"><?= $f->alamat ?></p>
+										<div class="top-margin-15-default">
+											Kurir :
+											<b class="kurir"><?= strtoupper($f->id_ekspedisi) ?></b>
+										</div>
+										<?php if ($f->resi) { ?>
+											<div class="resi-container">
+												Resi :
+												<b class="resi"><?= strtoupper($f->resi) ?></b>
+											</div>
+										<?php } ?>
 										<div class="relative button-product-list clearfix">
 											<ul class="clear-margin">
 												<?php if ($f->status == 1) { ?>
@@ -117,7 +127,11 @@
 													<li class=""><a href="#" class="animate-default delivered-order top-margin-15-default" data-id="<?= $f->id ?>" disabled>Terima pesanan</a></li>
 													<li class=""><a href="#" class="animate-default complain-order top-margin-15-default" data-id="<?= $f->id ?>" disabled>Komplain</a></li>
 												<?php } else if ($f->status == 9) { ?>
-													<li class=""><a href="#" class="animate-default complete-order btn-bg-grey top-margin-15-default" data-id="<?= $f->id ?>" disabled>Selesai</a></li>
+													<?php if ($review_qualified[$f->id]) { ?>
+														<li class=""><a href="#" class="animate-default review-order top-margin-15-default" data-id="<?= $f->id ?>" disabled>Review</a></li>
+													<?php } else { ?>
+														<li class=""><a href="#" class="animate-default complete-order btn-bg-grey  top-margin-15-default" data-id="<?= $f->id ?>" disabled>Selesai</a></li>
+													<?php } ?>
 												<?php } ?>
 											</ul>
 										</div>

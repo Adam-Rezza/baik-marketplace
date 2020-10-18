@@ -54,6 +54,7 @@ $route['reply_qna/(:any)/(:any)'] = 'CustomerController/reply_qna/$1/$2';
 $route['edit_qna/(:any)/(:any)'] = 'CustomerController/edit_qna/$1/$2';
 
 $route['insert_review/(:any)'] = 'CustomerController/insert_review/$1';
+$route['review_transaction/(:any)'] = 'CustomerController/review_transaction/$1';
 
 # MERCHANT
 $route['merchant'] = 'MerchantController/index';

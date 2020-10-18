@@ -69,6 +69,15 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
+    public function getProductCart($where = NULL)
+    {
+        $this->db->select('b.*');
+        $this->db->from('keranjang a');
+        $this->db->join('produk b', 'a.produk_id = b.id');
+        $this->db->where($where);
+        return $this->db->get();
+    }
+
     // Produk 
 
     function findSponsoredProduct($limit = 14, $offset = 0)
@@ -197,7 +206,7 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
-    function findTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
+    function findTransactionByUserIdAndStatusGroupByTransaction($user_id)
     {
         $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
@@ -212,7 +221,7 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
-    function findTransactionByMerchantIdAndStatusAndTransactionId($user_id, $transaction_id)
+    function findTransactionByUserIdAndStatusAndTransactionId($user_id, $transaction_id)
     {
         $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
@@ -227,7 +236,7 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
-    function findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($user_id)
+    function findCompleteTransactionByUserIdAndStatusGroupByTransaction($user_id)
     {
         $this->db->select('a.*, b.harga, b.qty, c.id as produk_id, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');
@@ -244,7 +253,7 @@ class M_customer extends CI_Model
         return $this->db->get();
     }
 
-    function findCompleteTransactionByMerchantIdAndStatusAndTransactionId($user_id, $transaction_id)
+    function findCompleteTransactionByUserIdAndStatusAndTransactionId($user_id, $transaction_id)
     {
         $this->db->select('a.*, b.harga, b.qty, c.nama as produk, d.nama as toko, d.id as toko_id');
         $this->db->from('transaksi a');

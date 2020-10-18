@@ -214,7 +214,11 @@ class CustomerController extends CI_Controller
 
 		$data['toko'] = $this->customer->getToko(['id' => $id])->row();
 
-		$data['breadcrumb'] = "Produk dari toko <b>" . $data['toko']->nama . "</b>";
+		if($data['toko']){
+			$data['breadcrumb'] = "Produk dari toko <b>" . $data['toko']->nama . "</b>";
+		} else {
+			$data['breadcrumb'] = "Toko tidak ditemukan";
+		}
 
 		$data['url'] = base_url('merchant_product/' . $id);
 
@@ -302,9 +306,9 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'order/index';
 		$data['vitamin'] = 'order/index_vitamin';
 
-		$data['transaction'] = $this->customer->findTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESSUSER . 'id'))->result();
+		$data['transaction'] = $this->customer->findTransactionByUserIdAndStatusGroupByTransaction($this->session->userdata(SESSUSER . 'id'))->result();
 		foreach ($data['transaction'] as $f) {
-			$data['order'][$f->id] = $this->customer->findTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
+			$data['order'][$f->id] = $this->customer->findTransactionByUserIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
 		}
 		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		// var_dump($data['transaction']);
@@ -318,9 +322,10 @@ class CustomerController extends CI_Controller
 		$data['content'] = 'order/index';
 		$data['vitamin'] = 'order/index_vitamin';
 
-		$data['transaction'] = $this->customer->findCompleteTransactionByMerchantIdAndStatusGroupByTransaction($this->session->userdata(SESSUSER . 'id'))->result();
+		$data['transaction'] = $this->customer->findCompleteTransactionByUserIdAndStatusGroupByTransaction($this->session->userdata(SESSUSER . 'id'))->result();
 		foreach ($data['transaction'] as $f) {
-			$data['order'][$f->id] = $this->customer->findCompleteTransactionByMerchantIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
+			$data['review_qualified'][$f->id] = strtotime($f->delivery_date) < strtotime('+7 days');
+			$data['order'][$f->id] = $this->customer->findCompleteTransactionByUserIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
 		}
 		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		// var_dump($data['transaction']);
@@ -436,6 +441,16 @@ class CustomerController extends CI_Controller
 		} else {
 			return false;
 		}
+	}
+
+	public function review_transaction($transaction_id)
+	{
+		$where_cart = [
+			'user_id' => $this->session->userdata(SESSUSER . 'id'),
+			'transaksi_id' => $transaction_id
+		];
+		$cart = $this->customer->getProductCart($where_cart)->result();
+		echo json_encode($cart);
 	}
 }
 

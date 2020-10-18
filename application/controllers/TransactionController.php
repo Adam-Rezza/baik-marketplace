@@ -47,7 +47,7 @@ class TransactionController extends CI_Controller
 					'produk_id' => $product->id,
 					'harga' => $product->harga_disc,
 					'qty' => $cart->qty + intval($qty),
-					'created_date' => date('Y-m-d h:i:s')
+					'created_date' => date('Y-m-d H:i:s')
 				];
 				$result = $this->ci->transaction->update('keranjang', $data, $cart->id);
 				echo $result ? 'true' : 'false';
@@ -57,7 +57,7 @@ class TransactionController extends CI_Controller
 					'produk_id' => $product->id,
 					'harga' => $product->harga_disc,
 					'qty' => $qty,
-					'created_date' => date('Y-m-d h:i:s')
+					'created_date' => date('Y-m-d H:i:s')
 				];
 				$result = $this->ci->transaction->insert('keranjang', $data);
 				echo $result ? 'true' : 'false';
@@ -81,7 +81,7 @@ class TransactionController extends CI_Controller
 				'produk_id' => $product->id,
 				'harga' => $product->harga_disc,
 				'qty' => $qty,
-				'created_date' => date('Y-m-d h:i:s')
+				'created_date' => date('Y-m-d H:i:s')
 			];
 			$result = $this->ci->transaction->update('keranjang', $data, $cart->id);
 			echo $result ? 'true' : 'false';
@@ -91,7 +91,7 @@ class TransactionController extends CI_Controller
 				'produk_id' => $product->id,
 				'harga' => $product->harga_disc,
 				'qty' => $qty,
-				'created_date' => date('Y-m-d h:i:s')
+				'created_date' => date('Y-m-d H:i:s')
 			];
 			$result = $this->ci->transaction->insert('keranjang', $data);
 			echo $result ? 'true' : 'false';
@@ -148,7 +148,7 @@ class TransactionController extends CI_Controller
 					'kota'          => $alamat->kota,
 					'provinsi'      => $alamat->provinsi,
 					'status'        => 1,
-					'created_date'  => date('Y-m-d h:i:s'),
+					'created_date'  => date('Y-m-d H:i:s'),
 					'id_ekspedisi'  => $id_ekspedisi,
 				];
 				$transaction = $this->ci->transaction->insert('transaksi', $data);
@@ -191,7 +191,8 @@ class TransactionController extends CI_Controller
 
 	public function send_order($transaction_id)
 	{
-		$data = ['status' => 3, 'shipment_date' => date('Y-m-d H:i:s')];
+		$resi = $this->input->post('resi');
+		$data = ['status' => 3, 'shipment_date' => date('Y-m-d H:i:s'), 'resi' => $resi];
 		$result = $this->transaction->update('transaksi', $data, $transaction_id);
 		if ($result) {
 			$transaction = $this->transaction->get('transaksi', '*', ['id' => $transaction_id])->row();

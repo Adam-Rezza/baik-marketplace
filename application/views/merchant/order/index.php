@@ -89,6 +89,14 @@
                                     </p>
                                 </div>
                                 <div class="top-margin-default">
+                                    Kurir :
+                                    <b class="kurir"></b>
+                                </div>
+                                <div class="resi-container">
+                                    Resi :
+                                    <b class="resi"></b>
+                                </div>
+                                <div class="">
                                     Status :
                                     <?php if ($status == 1) { ?>
                                         Pesanan masuk
@@ -107,8 +115,8 @@
                                     <div class="col-md-6">
                                         <div class="relative button-product-list clearfix">
                                             <?php if ($status == 1) { ?>
-                                                <a href="#" class="btn animate-default btn-order-update cancel-order bg-grey top-margin-15-default" data-id="0">Tolak Pesanan</a>
                                                 <a href="#" class="btn animate-default btn-order-update process-order bg-orange top-margin-15-default" data-id="0">Terima Pesanan</a>
+                                                <a href="#" class="btn animate-default btn-order-update cancel-order bg-grey top-margin-15-default" data-id="0">Tolak Pesanan</a>
                                             <?php } else if ($status == 2) { ?>
                                                 <a href="#" class="btn animate-default btn-order-update send-order bg-orange top-margin-15-default" data-id="0">Kirim Pesanan</a>
                                             <?php } else if ($status == 3) { ?>

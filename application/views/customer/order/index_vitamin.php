@@ -58,5 +58,39 @@
                 },
             })
         })
+        $('.review-order').click(function(e) {
+            e.preventDefault()
+            id = $(this).data('id')
+            $.ajax({
+                url: "<?= base_url() ?>review_transaction/" + id,
+                dataType: "json",
+                success: function(res) {
+                    if (res) {
+                        listProduct = `
+                                <div class="review ranking-color" style="clear: both">
+                                <h4>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                    <i class="fa fa-star" aria-hidden="true"></i>
+                                </h4>
+                                </div>`
+                        $.each(res, function(i, v) {
+                            listProduct += `
+                                <div class="review" style="clear: both; text-align: left">
+                                    <h5><a target="_blank" href="<?= base_url() ?>product/${v.id}">${v.nama}</a></h5>
+                                </div>`
+                        })
+                        Swal.fire({
+                            title: 'Review Pesanan Selesai',
+                            html: listProduct,
+                            showConfirmButton: false,
+                            timer: 0,
+                        })
+                    }
+                }
+            })
+        })
     })
 </script>
