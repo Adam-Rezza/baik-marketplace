@@ -201,6 +201,12 @@ class CustomerController extends CI_Controller
 
 			$data['toko'] = $this->customer->getToko(['id' => $id])->row();
 
+			$data['url'] = base_url('merchant_product/' . $id);
+	
+			$data['page'] = 1;
+			$data['page_max'] = floor($this->customer->findMerchantProduct($id, null, 0)->num_rows() / 20) + 1;
+			$data['product'] = $this->customer->findMerchantProduct($id, 20, (1 - 1) * 20)->result();
+
 			$this->template->template($data);
 		}
 	}

@@ -44,10 +44,11 @@
 			</div>
 			<div class="row">
 				<div class="clearfix header-content full-width relative">
-					<div class="clearfix logo">
+					<div class="clearfix relative logo">
 						<a href="<?= base_url() ?>"><img alt="Logo" src="<?= base_url(); ?>public\img\logo.jpg" /></a>
+						<a class="btn-daftar-toko btn-logo" href="<?= base_url() ?>">Ke halaman utama</a>
 					</div>
-					<div class="search-box relative float-left">
+					<div class="search-box relative float-left top-margin-15-default">
 						<form id="searchform" class="searchform" data-ajax="false">
 							<div class="clearfix category-box relative">
 								<select name="cate_search" id="cate_search">

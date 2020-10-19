@@ -164,9 +164,7 @@ class M_customer extends CI_Model
         $this->db->join('gambar_produk b', 'a.id = b.produk_id', 'left');
         $this->db->join('toko c', 'a.toko_id = c.id');
         $this->db->where('c.id', $id);
-        $this->db->where('a.disc >', '0');
         $this->db->where('b.urutan', '1');
-        // $this->db->where('sponsored_date >=', date('Y-m-d'));
         $this->db->where('a.del', '0');
         $this->db->where('a.ban', '0');
         $this->db->where('c.ban', '0');

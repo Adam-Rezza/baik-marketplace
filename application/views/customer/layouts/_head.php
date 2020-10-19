@@ -47,9 +47,23 @@
     }
 
     .clearfix .logo img {
-        height: 38px;
+        height: 50px;
         width: auto;
         overflow-x: hidden;
+    }
+
+    .search-box {
+        height: 39px;
+    }
+
+    .btn-logo {
+        font-size: 12px !important;
+        padding: 5px !important;
+        line-height: 12px !important;
+        color: #ffffff !important;
+        position: absolute;
+        top: 52px;
+        left: 20px;
     }
 
     .category-image {

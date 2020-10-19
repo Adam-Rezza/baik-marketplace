@@ -9,6 +9,13 @@
         padding-left: 10px;
         padding-right: 10px;
     }
+    .merchant-detail-table tr td:nth-child(3){
+        width: 130px;
+    }
+    .merchant-detail-table tr:first-child,
+    .merchant-detail-table tr:nth-child(2n+1){
+        font-weight: bold;
+    }
 </style>
 
 <script>
