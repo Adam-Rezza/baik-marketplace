@@ -1,0 +1,18 @@
+- saldo ketika di klik direct ke halaman "mutasi dompet"
+- penghitungan rating dan counter terjual (ketika apa nilai bertambah ?)
+- tambah tipe di tabel user tipe
+    - 0 == penampung
+    - 1 == user
+- tambah field cif_no di tabel user
+- _header.php saldo ketika di klik direct ke halaman "mutasi dompet"
+
+------------------------------------------------------------------------
+tanggal transaksi 01/10/2020 s/d 24/10/2020
+------------------------------------------------------------------------
+tanggal 	keterangan 			        debit 		kredit	saldo
+------------------------------------------------------------------------
+01/10/2020	saldo awal			        1.000.000	0	    1.000.000
+01/10/2020	belanja <a>no invoice</a>	0		    20.000	980.000
+10/10/2020	belanja no invoice	        0		    80.000	180.000
+23/10/2020	top up			            500.000		0	    680.000
+------------------------------------------------------------------------
