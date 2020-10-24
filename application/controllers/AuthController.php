@@ -106,6 +106,7 @@ class AuthController extends CI_Controller
 		$this->session->unset_userdata(SESSUSER . 'merchant_ban');
 		$this->session->unset_userdata(SESSUSER . 'merchant_nama');
 		$this->session->unset_userdata(SESSUSER . 'merchant_telp');
+		$this->session->unset_userdata(SESSUSER . 'saldo');
 		$this->session->set_flashdata('logout', LOGOUT_MSG);
 		redirect(site_url(), 'refresh');
 	}

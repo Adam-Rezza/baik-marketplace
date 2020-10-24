@@ -92,7 +92,7 @@
                     }
                     $('.send-order').data('kurir', res[0].id_ekspedisi)
                     $('.kurir').html(res[0].id_ekspedisi.toUpperCase())
-                    if(res[0].resi){
+                    if (res[0].resi) {
                         $('.resi-container').show()
                         $('.resi').html(res[0].resi.toUpperCase())
                     } else {

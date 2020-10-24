@@ -102,6 +102,50 @@
                                 setTimeout(() => {
                                     window.location.href = '<?= base_url('my_account/checkout') ?>'
                                 }, 1000)
+                            } else if (res == '3') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Terjadi kesalahan dengan database',
+                                    showConfirmButton: false,
+                                    timer: 0,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                            } else if (res == '4') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Saldo Nol, Silahkan isi saldo',
+                                    showConfirmButton: false,
+                                    timer: 0,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                            } else if (res == '5') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Total Keranjang Nol, Isi keranjang terlebih dahulu',
+                                    showConfirmButton: false,
+                                    timer: 0,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                            } else if (res == '6') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Gagal',
+                                    text: 'Saldo Kurang, Silahkan isi saldo',
+                                    showConfirmButton: false,
+                                    timer: 0,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
                             }
                         },
                         error: function(res) {

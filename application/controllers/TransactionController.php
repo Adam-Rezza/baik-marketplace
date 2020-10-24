@@ -120,6 +120,43 @@ class TransactionController extends CI_Controller
 	public function checkout_transaction()
 	{
 		$user_id = $this->session->userdata(SESSUSER . 'id');
+		$saldo = $this->_get_saldo($user_id);
+
+		if ($saldo['code'] == 500) {
+			echo json_encode('3');
+			exit;
+		}
+
+		if ($saldo['code'] == 404) {
+			echo json_encode('4');
+			exit;
+		}
+
+		if ($saldo['code'] == 200) {
+			$saldo = $saldo['saldo'];
+		}
+
+		$total_keranjang = $this->_get_total_keranjang($user_id);
+
+		if ($total_keranjang['code'] == 500) {
+			echo json_encode('3');
+			exit;
+		}
+
+		if ($total_keranjang['code'] == 404) {
+			echo json_encode('5');
+			exit;
+		}
+
+		if ($total_keranjang['code'] == 200) {
+			$total_keranjang = $total_keranjang['total'];
+		}
+
+		if ($saldo < $total_keranjang) {
+			echo json_encode('6');
+			exit;
+		}
+
 		$alamat  = $this->ci->transaction->findAddressByUserId($user_id)->row();
 		$this->db->trans_begin();
 		if ($user_id && $alamat) {
@@ -135,7 +172,14 @@ class TransactionController extends CI_Controller
 					}
 				}
 
+				$invoice = date('dmYHis');
+
+				$grand_total = 0;
+
+				$grand_total = $this->ci->transaction->getSumHargaByUserIdAndTokoId($user_id, $f->id)->row()->sum_harga;
+
 				$data = [
+					'invoice'       => $invoice,
 					'toko_id'       => $f->id,
 					'pengirim'      => $f->nama,
 					'telp_pengirim' => $f->telp,
@@ -150,13 +194,19 @@ class TransactionController extends CI_Controller
 					'status'        => 1,
 					'created_date'  => date('Y-m-d H:i:s'),
 					'id_ekspedisi'  => $id_ekspedisi,
+					'grand_total'   => $grand_total,
 				];
 				$transaction = $this->ci->transaction->insert('transaksi', $data);
 				if ($transaction) {
 					$data = ['transaksi_id' => $transaction];
 					$keranjang = $this->ci->transaction->updateKeranjangByUserIdAndMerchantId($transaction, $user_id, $f->id);
-					$invoice = ['invoice' => $f->id . date('dmYHis') . $transaction];
-					$this->ci->transaction->update('transaksi', $invoice, $transaction);
+
+					$jurnal = $this->_jurnal($transaction, $grand_total, $user_id);
+					if ($jurnal === FALSE) {
+						echo json_encode('3');
+						exit;
+					}
+
 					$msg = "Pesanan anda di teruskan ke <b>" . $f->nama . "</b>";
 					$url = "my_order";
 					$this->create_notification($user_id, $msg, $url);
@@ -174,6 +224,49 @@ class TransactionController extends CI_Controller
 		} else {
 			echo json_encode('2'); // 1 => blm ada alamat 
 		}
+	}
+
+	public function _get_saldo($id_user)
+	{
+		$arr_saldo = $this->mcore->get('user', 'saldo', ['id' => $id_user]);
+
+		if (!$arr_saldo) {
+			return ['code' => 500];
+		}
+
+		if ($arr_saldo->num_rows() == 0) {
+			return ['code' => 404];
+		}
+
+		if ($arr_saldo->row()->saldo == 0) {
+			return ['code' => 404];
+		}
+
+		return ['code' => 200, 'saldo' => $arr_saldo->row()->saldo];
+	}
+
+	public function _get_total_keranjang($id_user)
+	{
+		$arr_keranjang = $this->mcore->get('keranjang', 'harga', ['user_id' => $id_user, 'transaksi_id' => NULL]);
+
+		if (!$arr_keranjang) {
+			return ['code' => 500];
+		}
+
+		if ($arr_keranjang->num_rows() == 0) {
+			return ['code' => 404];
+		}
+
+		$total = 0;
+		foreach ($arr_keranjang->result() as $key) {
+			$total += $key->harga;
+		}
+
+		if ($total == 0) {
+			return ['code' => 404];
+		}
+
+		return ['code' => 200, 'total' => $total];
 	}
 
 	public function process_order($transaction_id)
@@ -205,6 +298,40 @@ class TransactionController extends CI_Controller
 
 	public function delivered_order($transaction_id)
 	{
+		$user_id       = $this->session->userdata(SESSUSER . 'id');
+		$grand_total   = 0;
+		$id_toko       = NULL;
+		$id_user_toko  = NULL;
+		$arr_transaksi = $this->mcore->get('transaksi', 'toko_id, grand_total', ['id' => $transaction_id]);
+
+		if ($arr_transaksi) {
+			if ($arr_transaksi->num_rows() == 1) {
+				$grand_total = $arr_transaksi->row()->grand_total;
+				$id_toko     = $arr_transaksi->row()->toko_id;
+
+				$arr_toko = $this->mcore->get('toko', 'user_id', ['id' => $id_toko]);
+
+				if ($arr_toko) {
+					if ($arr_toko->num_rows() == 1) {
+						$id_user_toko = $arr_toko->row()->user_id;
+					}
+				}
+			}
+		}
+
+		if ($id_user_toko != NULL && $id_toko != NULL) {
+			$jurnal = $this->_jurnal_selesai($transaction_id, $grand_total, $id_user_toko);
+		} else {
+			echo json_encode(FALSE);
+			exit;
+		}
+
+
+		if (!$jurnal) {
+			echo json_encode(FALSE);
+			exit;
+		}
+
 		$data = ['status' => 9, 'delivery_date' => date('Y-m-d H:i:s')];
 		$result = $this->transaction->update('transaksi', $data, $transaction_id);
 		$result2 = true;
@@ -260,6 +387,66 @@ class TransactionController extends CI_Controller
 		$data = ['read' => 1];
 		$result = $this->transaction->update('notifikasi', $data, $notification_id);
 		echo $result ? 'true' : 'false';
+	}
+
+	public function _jurnal($id_transaksi, $grand_total, $id_user)
+	{
+		$data = [
+			'id_user'      => $id_user,
+			'id_transaksi' => $id_transaksi,
+			'tipe'         => 'kredit',
+			'total'        => $grand_total,
+			'created_at'   => date('Y-m-d H:i:s'),
+		];
+		$exec = $this->mcore->store_uuid('jurnal', $data);
+
+		$data = [
+			'id_user'      => '0',
+			'id_transaksi' => $id_transaksi,
+			'tipe'         => 'debit',
+			'total'        => $grand_total,
+			'created_at'   => date('Y-m-d H:i:s'),
+		];
+		$exec = $this->mcore->store_uuid('jurnal', $data);
+
+		if (!$exec) {
+			return FALSE;
+		}
+
+		$pengurangan_saldo = $this->ci->transaction->penguranganSaldo($id_user, $grand_total);
+		$penambahan_saldo = $this->ci->transaction->penambahanSaldo('0', $grand_total);
+
+		return TRUE;
+	}
+
+	public function _jurnal_selesai($id_transaksi, $grand_total, $id_user)
+	{
+		$data = [
+			'id_user'      => '0',
+			'id_transaksi' => $id_transaksi,
+			'tipe'         => 'kredit',
+			'total'        => $grand_total,
+			'created_at'   => date('Y-m-d H:i:s'),
+		];
+		$exec = $this->mcore->store_uuid('jurnal', $data);
+
+		$data = [
+			'id_user'      => $id_user,
+			'id_transaksi' => $id_transaksi,
+			'tipe'         => 'debit',
+			'total'        => $grand_total,
+			'created_at'   => date('Y-m-d H:i:s'),
+		];
+		$exec = $this->mcore->store_uuid('jurnal', $data);
+
+		if (!$exec) {
+			return FALSE;
+		}
+
+		$pengurangan_saldo = $this->ci->transaction->penguranganSaldo('0', $grand_total);
+		$penambahan_saldo = $this->ci->transaction->penambahanSaldo($id_user, $grand_total);
+
+		return TRUE;
 	}
 }
 

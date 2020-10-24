@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class TemplateCustomer
 {
@@ -7,7 +7,7 @@ class TemplateCustomer
 
 	public function __construct()
 	{
-		$this->ci =& get_instance();
+		$this->ci = &get_instance();
 		$this->ci->load->model('M_customer', 'customer');
 		$this->ci->load->helper(['cookie', 'string']);
 	}
@@ -18,7 +18,7 @@ class TemplateCustomer
 
 		// if($check_cookies === TRUE){
 
-			$this->render_view($data);
+		$this->render_view($data);
 
 		// }else{
 
@@ -37,17 +37,17 @@ class TemplateCustomer
 	{
 		$cookies = get_cookie(COOK);
 
-		if($cookies === NULL){
+		if ($cookies === NULL) {
 			return FALSE;
-		}else{
+		} else {
 			$arr        = $this->ci->mcore->get(TABLE_ADMINS, '*', ['cookies' => $cookies]);
 			$id         = $arr->row()->id;
 			$username   = $arr->row()->username;
 			$remember   = $arr->row()->remember;
 			$cookies_db = $arr->row()->cookies;
 
-			if($remember == 'yes'){
-				if($cookies == $cookies_db){
+			if ($remember == 'yes') {
+				if ($cookies == $cookies_db) {
 					$this->reset_session($id, $username);
 					return TRUE;
 				}
@@ -59,10 +59,10 @@ class TemplateCustomer
 
 	public function check_session()
 	{
-		$id       = $this->ci->session->userdata(SESS.'id');
-		$username = $this->ci->session->userdata(SESS.'username');
+		$id       = $this->ci->session->userdata(SESS . 'id');
+		$username = $this->ci->session->userdata(SESS . 'username');
 
-		if($id && $username){
+		if ($id && $username) {
 			return TRUE;
 		}
 		return FALSE;
@@ -70,9 +70,10 @@ class TemplateCustomer
 
 	public function render_view($data)
 	{
-		if(file_exists(APPPATH.'views/customer/'.$data['content'].'.php')){
+		$this->_session_saldo_user();
+		if (file_exists(APPPATH . 'views/customer/' . $data['content'] . '.php')) {
 			$this->ci->load->view('customer/layouts/app', $data, FALSE);
-		}else{
+		} else {
 			show_404();
 		}
 	}
@@ -86,10 +87,25 @@ class TemplateCustomer
 
 	public function reset_session($id, $username)
 	{
-		$this->ci->session->set_userdata(SESS.'id', $id);
-		$this->ci->session->set_userdata(SESS.'username', $username);
+		$this->ci->session->set_userdata(SESS . 'id', $id);
+		$this->ci->session->set_userdata(SESS . 'username', $username);
 	}
 
+	public function _session_saldo_user()
+	{
+		$id = $this->ci->session->userdata(SESSUSER . 'id');
+		$arr = $this->ci->mcore->get('user', 'saldo', ['id' => $id]);
+		$saldo = 0;
+
+		if ($arr) {
+			if ($arr->num_rows() == 1) {
+				$saldo = $arr->row()->saldo;
+				$saldo = $saldo;
+			}
+		}
+
+		$this->ci->session->set_userdata(SESSUSER . 'saldo', $saldo);
+	}
 }
 
 /* End of file TemplateAdmin.php */

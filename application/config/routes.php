@@ -157,3 +157,6 @@ $route['datatables/user']     = 'UsersController/datatables';
 $route['transaksi']            = 'TransaksiController/index';
 $route['transaksi/show']       = 'TransaksiController/show';
 $route['datatables/transaksi'] = 'TransaksiController/datatables';
+
+#INIT
+$route['init'] = 'WelcomeController/index';

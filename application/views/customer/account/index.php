@@ -5,11 +5,13 @@
 			<!-- Sider Bar -->
 			<div class="col-md-3 relative top-padding-default top-margin-default" id="slide-bar-category">
 				<div class="col-md-12 col-sm-12 col-xs-12 sider-bar-category border bottom-margin-default">
-					<img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile/<?= $user->gambar ? $user->gambar : "user.png" ?>" alt="">
+					<h4 class="text-center"><?= $this->session->userdata(SESSUSER . 'nama'); ?></h4>
+					<img class="img img-responsive merchant-header" src="<?= base_url() ?>public/img/profile/<?= $user->gambar ? $user->gambar : "user.png" ?>" alt="PP">
 					<div class="text-center top-margin-15-default">
 						<button id="btn-profil-foto">Upload foto</button>
 						<input type="file" id="profil-foto" accept="image/*" class="hidden">
 					</div>
+					<h4 class="text-center" style="margin-top:30px !important;">Saldo Rp.<?= $this->session->userdata(SESSUSER . 'saldo'); ?></h4>
 					<ul class="clear-margin list-siderbar top-margin-15-default">
 						<li><a href="<?= base_url() ?>my_account">Akun saya</a></li>
 						<li><a href="<?= base_url() ?>my_order">Pesanan saya</a></li>

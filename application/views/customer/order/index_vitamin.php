@@ -38,8 +38,10 @@
                                     },
                                 })
                                 setTimeout(() => {
-                                    window.location.href = '<?=base_url('my_recent_order')?>'
+                                    window.location.href = '<?= base_url('my_recent_order') ?>'
                                 }, 1000)
+                            } else {
+                                console.log(res);
                             }
                         }
                     })
