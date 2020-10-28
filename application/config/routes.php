@@ -7,81 +7,83 @@ $route['404_override']         = 'My404';
 $route['translate_uri_dashes'] = FALSE;
 
 # AUTH
-$route['user/register']     = 'AuthController/register';
-$route['user/login']        = 'AuthController/index';
-$route['user/logout']       = 'AuthController/logout';
-$route['username_check_r']  = 'AuthController/unique_username';
-$route['merchant_register'] = 'AuthController/register';
-$route['register_merchant'] = 'AuthController/register_merchant';
-$route['get_kabupaten/(:any)'] = 'AuthController/get_kabupaten/$1';
-$route['get_kecamatan/(:any)'] = 'AuthController/get_kecamatan/$1';
-$route['get_kelurahan/(:any)'] = 'AuthController/get_kelurahan/$1';
-$route['save_basic_info'] = 'AuthController/save_basic_info';
-$route['save_address'] = 'AuthController/save_address';
-$route['change_password'] = 'AuthController/change_password';
+$route['user/register']         = 'AuthController/register';
+$route['user/login']            = 'AuthController/index';
+$route['user/logout']           = 'AuthController/logout';
+$route['username_check_r']      = 'AuthController/unique_username';
+$route['merchant_register']     = 'AuthController/register';
+$route['register_merchant']     = 'AuthController/register_merchant';
+$route['get_kabupaten/(:any)']  = 'AuthController/get_kabupaten/$1';
+$route['get_kecamatan/(:any)']  = 'AuthController/get_kecamatan/$1';
+$route['get_kelurahan/(:any)']  = 'AuthController/get_kelurahan/$1';
+$route['save_basic_info']       = 'AuthController/save_basic_info';
+$route['save_address']          = 'AuthController/save_address';
+$route['change_password']       = 'AuthController/change_password';
 $route['save_profile_merchant'] = 'AuthController/save_profile_merchant';
 $route['save_address_merchant'] = 'AuthController/save_address_merchant';
-$route['upload_image_profile'] = 'AuthController/upload_image_profile';
+$route['upload_image_profile']  = 'AuthController/upload_image_profile';
 
 # CUSTOMER
-$route['my_account'] = 'CustomerController/my_account';
-$route['my_account/checkout'] = 'CustomerController/my_account/checkout';
-$route['checkout'] = 'CustomerController/checkout';
-$route['my_order'] = 'CustomerController/my_order';
-$route['my_recent_order'] = 'CustomerController/my_recent_order';
+$route['my_account']             = 'CustomerController/my_account';
+$route['my_account/checkout']    = 'CustomerController/my_account/checkout';
+$route['checkout']               = 'CustomerController/checkout';
+$route['my_order']               = 'CustomerController/my_order';
+$route['my_recent_order']        = 'CustomerController/my_recent_order';
+$route['mutasi_dompet']          = 'CustomerController/mutasi_dompet';
+$route['get_data_mutasi_dompet'] = 'CustomerController/get_data_mutasi_dompet';
 
 // $route['category'] = 'CustomerController/category';
 $route['discount%26page=(:any)'] = 'CustomerController/discount/$1/';
-$route['latest%26page=(:any)'] = 'CustomerController/latest/$1/';
+$route['latest%26page=(:any)']   = 'CustomerController/latest/$1/';
 
 // $route['category'] = 'CustomerController/category';
 $route['category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/category/$1/$2/$3';
-$route['category=(:any)%26page=(:any)'] = 'CustomerController/category/$1//$2';
+$route['category=(:any)%26page=(:any)']                      = 'CustomerController/category/$1//$2';
 
 // $route['search'] = 'CustomerController/search';
 $route['search%26keyword=(:any)%26category=(:any)%26subcategory=(:any)%26page=(:any)'] = 'CustomerController/search/$1/$2/$3/$4';
-$route['search%26keyword=(:any)%26category=(:any)%26page=(:any)'] = 'CustomerController/search/$1/$2//$3';
-$route['search%26keyword=(:any)%26page=(:any)'] = 'CustomerController/search/$1///$2';
+$route['search%26keyword=(:any)%26category=(:any)%26page=(:any)']                      = 'CustomerController/search/$1/$2//$3';
+$route['search%26keyword=(:any)%26page=(:any)']                                        = 'CustomerController/search/$1///$2';
 
-$route['merchant_detail/(:any)'] = 'CustomerController/merchant_detail/$1';
-$route['merchant_product/(:any)'] = 'CustomerController/merchant_product/$1';
+$route['merchant_detail/(:any)']         = 'CustomerController/merchant_detail/$1';
+$route['merchant_product/(:any)']        = 'CustomerController/merchant_product/$1';
 $route['merchant_product/(:any)/(:any)'] = 'CustomerController/merchant_product/$1/$2';
-$route['product'] = 'CustomerController/product';
-$route['product/(:any)'] = 'CustomerController/product/$1';
+$route['product']                        = 'CustomerController/product';
+$route['product/(:any)']                 = 'CustomerController/product/$1';
 
-$route['insert_qna/(:any)'] = 'CustomerController/insert_qna/$1';
+$route['insert_qna/(:any)']       = 'CustomerController/insert_qna/$1';
 $route['reply_qna/(:any)/(:any)'] = 'CustomerController/reply_qna/$1/$2';
-$route['edit_qna/(:any)/(:any)'] = 'CustomerController/edit_qna/$1/$2';
+$route['edit_qna/(:any)/(:any)']  = 'CustomerController/edit_qna/$1/$2';
 
-$route['insert_review/(:any)'] = 'CustomerController/insert_review/$1';
+$route['insert_review/(:any)']      = 'CustomerController/insert_review/$1';
 $route['review_transaction/(:any)'] = 'CustomerController/review_transaction/$1';
 
 # MERCHANT
-$route['merchant'] = 'MerchantController/index';
-$route['my_profile'] = 'MerchantController/my_profile';
-$route['my_product'] = 'MerchantController/my_product';
-$route['order/(:any)'] = 'MerchantController/order/$1';
-$route['get_product_detail/(:any)'] = 'MerchantController/get_product_detail/$1';
-$route['on_change_category/(:any)'] = 'MerchantController/on_change_category/$1';
-$route['get_images_product/(:any)'] = 'MerchantController/get_images_product/$1';
-$route['insert_update_product'] = 'MerchantController/insert_update_product';
-$route['delete_product/(:any)'] = 'MerchantController/delete_product/$1';
-$route['upload_image_product'] = 'MerchantController/upload_image_product';
-$route['sort_image_product'] = 'MerchantController/sort_image_product';
-$route['delete_image_product'] = 'MerchantController/delete_image_product';
+$route['merchant']                      = 'MerchantController/index';
+$route['my_profile']                    = 'MerchantController/my_profile';
+$route['my_product']                    = 'MerchantController/my_product';
+$route['order/(:any)']                  = 'MerchantController/order/$1';
+$route['get_product_detail/(:any)']     = 'MerchantController/get_product_detail/$1';
+$route['on_change_category/(:any)']     = 'MerchantController/on_change_category/$1';
+$route['get_images_product/(:any)']     = 'MerchantController/get_images_product/$1';
+$route['insert_update_product']         = 'MerchantController/insert_update_product';
+$route['delete_product/(:any)']         = 'MerchantController/delete_product/$1';
+$route['upload_image_product']          = 'MerchantController/upload_image_product';
+$route['sort_image_product']            = 'MerchantController/sort_image_product';
+$route['delete_image_product']          = 'MerchantController/delete_image_product';
 $route['get_transaction_detail/(:any)'] = 'MerchantController/get_transaction_detail/$1';
 
 # TRANSAKSI
 $route['get_cart_detail']                   = 'TransactionController/get_cart_detail';
 $route['add_to_cart/(:any)/(:any)']         = 'TransactionController/add_to_cart/$1/$2';
 $route['update_product_cart/(:any)/(:any)'] = 'TransactionController/update_product_cart/$1/$2';
-$route['delete_cart/(:any)'] = 'TransactionController/delete_cart/$1';
-$route['checkout_transaction'] = 'TransactionController/checkout_transaction';
+$route['delete_cart/(:any)']                = 'TransactionController/delete_cart/$1';
+$route['checkout_transaction']              = 'TransactionController/checkout_transaction';
 
-$route['process_order/(:any)'] = 'TransactionController/process_order/$1';
-$route['send_order/(:any)'] = 'TransactionController/send_order/$1';
+$route['process_order/(:any)']   = 'TransactionController/process_order/$1';
+$route['send_order/(:any)']      = 'TransactionController/send_order/$1';
 $route['delivered_order/(:any)'] = 'TransactionController/delivered_order/$1';
-$route['cancel_order/(:any)'] = 'TransactionController/cancel_order/$1';
+$route['cancel_order/(:any)']    = 'TransactionController/cancel_order/$1';
 
 # NOTIFIKASI
 $route['read_notification/(:any)'] = 'TransactionController/read_notification/$1';
@@ -95,8 +97,8 @@ $route['read_notification/(:any)'] = 'TransactionController/read_notification/$1
 $route['dashboard'] = 'DashboardController/index';
 
 # AUTH
-$route['login']           = 'LoginController/index';
-$route['logout']          = 'LoginController/logout';
+$route['login']                 = 'LoginController/index';
+$route['logout']                = 'LoginController/logout';
 $route['admin/change_password'] = 'LoginController/change_password';
 
 # ADMINS
