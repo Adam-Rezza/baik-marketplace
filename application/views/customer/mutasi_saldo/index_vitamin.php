@@ -1,14 +1,15 @@
 <link rel="stylesheet" href="<?= base_url(); ?>vendor/components/jqueryui/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="<?= base_url(); ?>public/js/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="<?= base_url(); ?>public/js/html5-qrcode.min.js"></script>
 <style>
-    .form - input>.select2,
-    .form - input>select,
-    .form - input>label {
+    .form-input>.select2,
+    .form-input>select,
+    .form-input>label {
         display: block;
         width: 100 % !important;
     }
 
-    .form - input.select2 - selection {
+    .form-input.select2-selection {
         border: 1 px solid #444;
     }
 
@@ -45,6 +46,37 @@
         vTerimaTF = $('#vTerimaTF'),
         vKirimTF = $('#vKirimTF'),
         qrCodeIdAnggota = $('#qrcode_id_anggota');
+
+    function docReady(fn) {
+        // see if DOM is already available
+        if (document.readyState === "complete" ||
+            document.readyState === "interactive") {
+            // call on next available tick
+            setTimeout(fn, 1);
+        } else {
+            document.addEventListener("DOMContentLoaded", fn);
+        }
+    }
+
+    docReady(function() {
+        var resultContainer = document.getElementById('qr_result');
+        var lastResult, countResults = 0;
+
+        function onScanSuccess(qrCodeMessage) {
+            if (qrCodeMessage !== lastResult) {
+                ++countResults;
+                lastResult = qrCodeMessage;
+                resultContainer.innerHTML += `<div>[${countResults}] - ${qrCodeMessage}</div>`;
+            }
+        }
+
+        var html5QrcodeScanner = new Html5QrcodeScanner(
+            "qr_scan", {
+                fps: 10,
+                qrbox: 250
+            });
+        html5QrcodeScanner.render(onScanSuccess);
+    });
 
     $(document).ready(function() {
         qrCodeIdAnggota.qrcode({
