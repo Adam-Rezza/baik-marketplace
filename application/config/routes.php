@@ -31,6 +31,7 @@ $route['my_order']               = 'CustomerController/my_order';
 $route['my_recent_order']        = 'CustomerController/my_recent_order';
 $route['mutasi_dompet']          = 'CustomerController/mutasi_dompet';
 $route['get_data_mutasi_dompet'] = 'CustomerController/get_data_mutasi_dompet';
+$route['proses_transfer']        = 'CustomerController/proses_transfer';
 
 // $route['category'] = 'CustomerController/category';
 $route['discount%26page=(:any)'] = 'CustomerController/discount/$1/';

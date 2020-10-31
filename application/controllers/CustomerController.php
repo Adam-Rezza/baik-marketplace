@@ -646,6 +646,47 @@ class CustomerController extends CI_Controller
 
 		echo json_encode(['code' => 200, 'data' => $data]);
 	}
+
+	public function proses_transfer()
+	{
+		$id_pengirim = $this->session->userdata(SESSUSER . 'id');
+		$id_tujuan   = $this->input->post('id_tujuan');
+		$nominal_tf  = $this->input->post('nominal_tf');
+
+		$find = $this->mcore->get('user', 'saldo', ['id' => $id_pengirim]);
+		if (!$find) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+		if ($find->num_rows() == 0) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+		$saldo_pengirim = $find->row()->saldo;
+		if ($saldo_pengirim < $nominal_tf) {
+			echo json_encode(['code' => 401]);
+			exit;
+		}
+
+		$find = $this->mcore->get('user', 'saldo', ['id' => $id_tujuan]);
+		if (!$find) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+		if ($find->num_rows() == 0) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+
+		$exec = $this->customer->prosesTransfer($id_pengirim, $id_tujuan, $nominal_tf);
+
+		if ($exec == 500) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+
+		echo json_encode(['code' => 200]);
+	}
 }
 
 /* End of file DashboardController.php */

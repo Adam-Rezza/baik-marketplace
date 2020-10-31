@@ -50,7 +50,8 @@
         modalTransfer = $('#modal_transfer'),
         vTerimaTF = $('#vTerimaTF'),
         vKirimTF = $('#vKirimTF'),
-        qrCodeIdAnggota = $('#qrcode_id_anggota');
+        qrCodeIdAnggota = $('#qrcode_id_anggota'),
+        idTujuan = $('#id_tujuan');
 
     function docReady(fn) {
         // see if DOM is already available
@@ -71,7 +72,52 @@
             if (qrCodeMessage !== lastResult) {
                 ++countResults;
                 lastResult = qrCodeMessage;
-                resultContainer.innerHTML += `<div>[${countResults}] - ${qrCodeMessage}</div>`;
+                resultContainer.innerHTML += `
+                <div>
+                    <form class="form" id="form_transfer" action="#">
+                        <div class="form-group">
+                            <label for="nominal_tf">Nominal TF</label>
+                            <input type="number" class="form-control" id="nominal_tf" name="nominal_tf" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" id="id_tujuan" name="id_tujuan" value="${qrCodeMessage}">
+                            <button type="submit" class="btn btn-primary btn-block">Transfer</button>
+                        </div>
+                    </form>
+                </div>`;
+
+                $('#form_transfer').on('submit', function(e) {
+                    e.preventDefault();
+
+                    $.ajax({
+                        url: `<?= site_url(); ?>proses_transfer`,
+                        method: 'post',
+                        dataType: 'json',
+                        data: $('#form_transfer').serialize(),
+                        beforeSend: function() {
+                            $.blockUI();
+                        },
+                    }).always(function(res) {
+                        $.unblockUI();
+                    }).fail(function(res) {
+                        console.log(res);
+                    }).done(function(res) {
+                        console.log(res);
+
+                        if (res.code == 404) {
+                            alert('ID Tidak Ditemukan');
+                        } else if (res.code == 401) {
+                            alert('Saldo Tidak mencukupi');
+                        } else if (res.code == 500) {
+                            alert('Terjadi kesalahan dengan database, silahkan refresh halaman');
+                        } else if (res.code == 200) {
+                            alert('Proses Transfer Berhasil');
+                            window.location.reload();
+                        } else {
+                            alert('unknown response');
+                        }
+                    });
+                });
             }
         }
 

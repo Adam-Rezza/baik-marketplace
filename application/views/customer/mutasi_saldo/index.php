@@ -119,7 +119,7 @@
 						<button type="button" class="btn btn-warning btn-lg" onclick="kirimTF();">Kirim</button>
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" id="vTerimaTF" style="display:none;">
-						<div id="qrcode_id_anggota" class="img-thumbnail"></div>
+						<div id="qrcode_id_anggota" class="img-thumbnail" style="margin-top: 20px;"></div>
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" id="vKirimTF" style="display:none;">
 						Fitur Scan Barcode
