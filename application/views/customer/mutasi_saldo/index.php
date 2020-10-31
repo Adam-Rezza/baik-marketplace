@@ -123,7 +123,7 @@
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" id="vKirimTF" style="display:none;">
 						Fitur Scan Barcode
-						<div id="qr_scan" style="width: 500px; text-align: center;"></div>
+						<div id="qr_scan" style="width: 500px;" class="col-centered"></div>
 						<div id="qr_result" style="text-align: center;"></div>
 					</div>
 				</div>

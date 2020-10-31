@@ -31,6 +31,11 @@
             padding: 5px;
         }
     }
+
+    .col-centered {
+        float: none;
+        margin: 0 auto;
+    }
 </style>
 
 <script src="<?= base_url(); ?>vendor/components/jqueryui/jquery-ui.min.js">
