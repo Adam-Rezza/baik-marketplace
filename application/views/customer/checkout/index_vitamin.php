@@ -30,15 +30,23 @@
         })
         $('.btn-qty').change(function(e) {
             e.preventDefault()
-            produk_id = $(this).data('id')
+            cart_id = $(this).data('cart-id')
+            produk_id = $(this).data('product-id')
             harga = parseInt($(this).data('harga'))
             qty = parseInt($(this).data('value'))
+            variasi = $('.variasi-' + cart_id).val()
             $.ajax({
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    variasi: variasi
+                },
                 url: "<?= base_url() ?>update_product_cart/" + produk_id + "/" + qty,
                 success: function(res) {
                     // console.log(res)
-                    $('#p-price-' + produk_id).html('Rp ' + rupiahFormat((harga * qty).toString()))
-                    $('#cart-web-total-price-item-' + produk_id).html('Rp ' + rupiahFormat((harga * qty).toString()))
+                    $('#p-price-' + cart_id).html('Rp ' + rupiahFormat((harga * qty).toString()))
+                    stringqty = `<span class="total-product-cart-son" id="cart-web-total-qty-item-${cart_id}">(x${qty})</span>`
+                    $('#cart-web-total-price-item-' + cart_id).html('Rp ' + rupiahFormat((harga * qty).toString()) + stringqty)
                     update_cart_all()
                 }
             });
@@ -118,7 +126,7 @@
         })
 
         function update_cart_all() {
-            var totalPriceFinal = parseInt($('input[name="shipping"]:checked').val())
+            // var totalPriceFinal = parseInt($('input[name="shipping"]:checked').val())
             var totalPriceCart = 0
             var qtyTotal = 0
             $('.btn-qty').each(function(index, element) {
@@ -128,7 +136,8 @@
                 qtyTotal += qty
                 totalPriceCart += total
             })
-            totalPriceFinal += totalPriceCart
+            // totalPriceFinal += totalPriceCart
+            totalPriceFinal = totalPriceCart
             $('#total-price-cart').html('Rp ' + rupiahFormat(totalPriceCart.toString()))
             $('#cart-web-total-price').html('Rp ' + rupiahFormat(totalPriceCart.toString()))
             $('#total-price-final').html('Rp ' + rupiahFormat(totalPriceFinal.toString()))

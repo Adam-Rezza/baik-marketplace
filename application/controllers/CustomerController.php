@@ -31,6 +31,15 @@ class CustomerController extends CI_Controller
 		$data['search_sub_category'] = null;
 		if (($this->session->userdata(SESSUSER . 'id'))) {
 			$data['cart'] = $this->customer->findCartByUserIdAndNotTransactionId($this->session->userdata(SESSUSER . 'id'))->result();
+			foreach ($data['cart'] as $f) {
+				$data['varians_cart'][$f->id] = [];
+				if ($f->variasi_id) {
+					$variasi_id = json_decode($f->variasi_id);
+					for ($i = 0; $i < count($variasi_id); $i++) {
+						array_push($data['varians_cart'][$f->id], $this->customer->findListVarianByListVarianId($variasi_id[$i])->row()->nama);
+					}
+				}
+			}
 			$data['notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id')], 'datetime', 'desc', 100, 0)->result();
 			$data['unread_notification'] = $this->customer->get('notifikasi', '*', ['user_id' => $this->session->userdata(SESSUSER . 'id'), 'read' => 0], 'datetime', 'desc', 100, 0)->num_rows();
 		}
@@ -172,6 +181,14 @@ class CustomerController extends CI_Controller
 		$data['product'] = $this->customer->getProdukComplete($where_product)->row();
 		// var_dump($data['product']);
 
+		$where_varians = ['produk_id' => $id, 'del' => '0'];
+		$data['varians'] = $this->customer->get('variasi_produk', '*', $where_varians)->result();
+		foreach ($data['varians'] as $f) {
+			$where_list_varians = ['produk_id' => $id, 'parent' => $f->id, 'del' => '0'];
+			$data['list_varians'][$f->id] = $this->customer->get('list_variasi_produk', '*', $where_list_varians)->result();
+		}
+
+
 		$where_product_pictures = ['del' => 0, 'produk_id' => $id];
 		$data['product_pictures'] = $this->customer->get('gambar_produk', '*', $where_product_pictures, 'urutan', 'ASC')->result();
 
@@ -202,7 +219,7 @@ class CustomerController extends CI_Controller
 			$data['toko'] = $this->customer->getToko(['id' => $id])->row();
 
 			$data['url'] = base_url('merchant_product/' . $id);
-	
+
 			$data['page'] = 1;
 			$data['page_max'] = floor($this->customer->findMerchantProduct($id, null, 0)->num_rows() / 20) + 1;
 			$data['product'] = $this->customer->findMerchantProduct($id, 20, (1 - 1) * 20)->result();
@@ -220,7 +237,7 @@ class CustomerController extends CI_Controller
 
 		$data['toko'] = $this->customer->getToko(['id' => $id])->row();
 
-		if($data['toko']){
+		if ($data['toko']) {
 			$data['breadcrumb'] = "Produk dari toko <b>" . $data['toko']->nama . "</b>";
 		} else {
 			$data['breadcrumb'] = "Toko tidak ditemukan";
@@ -315,9 +332,19 @@ class CustomerController extends CI_Controller
 		$data['transaction'] = $this->customer->findTransactionByUserIdAndStatusGroupByTransaction($this->session->userdata(SESSUSER . 'id'))->result();
 		foreach ($data['transaction'] as $f) {
 			$data['order'][$f->id] = $this->customer->findTransactionByUserIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
+			foreach ($data['order'][$f->id] as $g) {
+				$data['varians_order'][$g->cart_id] = [];
+				if ($g->variasi_id) {
+					$variasi_id = json_decode($g->variasi_id);
+					for ($i = 0; $i < count($variasi_id); $i++) {
+						array_push($data['varians_order'][$g->cart_id], $this->customer->findListVarianByListVarianId($variasi_id[$i])->row()->nama);
+					}
+				}
+			}
 		}
 		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		// var_dump($data['transaction']);
+		// var_dump($data['varians_order']);
 		$this->template->template($data);
 	}
 
@@ -332,6 +359,15 @@ class CustomerController extends CI_Controller
 		foreach ($data['transaction'] as $f) {
 			$data['review_qualified'][$f->id] = strtotime($f->delivery_date) < strtotime('+7 days');
 			$data['order'][$f->id] = $this->customer->findCompleteTransactionByUserIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
+			foreach ($data['order'] as $f) {
+				$data['varians_order'][$f->id] = [];
+				if ($f->variasi_id) {
+					$variasi_id = json_decode($f->variasi_id);
+					for ($i = 0; $i < count($variasi_id); $i++) {
+						array_push($data['varians_order'][$f->id], $this->customer->findListVarianByListVarianId($variasi_id[$i])->row()->nama);
+					}
+				}
+			}
 		}
 		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		// var_dump($data['transaction']);

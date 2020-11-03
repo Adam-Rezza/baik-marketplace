@@ -2383,7 +2383,7 @@ body {
     }
     .product-category .image-product-merhcant {
         height: 100%;
-        max-width: 150px;
+        width: 100px !important;
     }
 }
 
@@ -2541,6 +2541,10 @@ body {
 @media(max-width:812px) {
     .hidden-ipx {
         display: none;
+    }
+    .product-category .image-product-merhcant {
+        height: 100%;
+        width: 150px;
     }
 }
 
