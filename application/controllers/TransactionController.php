@@ -404,20 +404,22 @@ class TransactionController extends CI_Controller
 	public function _jurnal($id_transaksi, $grand_total, $id_user)
 	{
 		$data = [
-			'id_user'      => $id_user,
-			'id_transaksi' => $id_transaksi,
-			'tipe'         => 'kredit',
-			'total'        => $grand_total,
-			'created_at'   => date('Y-m-d H:i:s'),
+			'id_user'        => $id_user,
+			'id_transaksi'   => $id_transaksi,
+			'tipe'           => 'kredit',
+			'total'          => $grand_total,
+			'kode_transaksi' => 'pembelian',
+			'created_at'     => date('Y-m-d H:i:s'),
 		];
 		$exec = $this->mcore->store_uuid('jurnal', $data);
 
 		$data = [
-			'id_user'      => '0',
-			'id_transaksi' => $id_transaksi,
-			'tipe'         => 'debit',
-			'total'        => $grand_total,
-			'created_at'   => date('Y-m-d H:i:s'),
+			'id_user'        => '0',
+			'id_transaksi'   => $id_transaksi,
+			'tipe'           => 'debit',
+			'total'          => $grand_total,
+			'kode_transaksi' => 'pembelian',
+			'created_at'     => date('Y-m-d H:i:s'),
 		];
 		$exec = $this->mcore->store_uuid('jurnal', $data);
 
