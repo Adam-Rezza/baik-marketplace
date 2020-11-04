@@ -61,18 +61,20 @@ $route['insert_review/(:any)']      = 'CustomerController/insert_review/$1';
 $route['review_transaction/(:any)'] = 'CustomerController/review_transaction/$1';
 
 # MERCHANT
-$route['merchant']                      = 'MerchantController/index';
-$route['my_profile']                    = 'MerchantController/my_profile';
-$route['my_product']                    = 'MerchantController/my_product';
-$route['order/(:any)']                  = 'MerchantController/order/$1';
-$route['get_product_detail/(:any)']     = 'MerchantController/get_product_detail/$1';
-$route['on_change_category/(:any)']     = 'MerchantController/on_change_category/$1';
-$route['get_images_product/(:any)']     = 'MerchantController/get_images_product/$1';
-$route['insert_update_product']         = 'MerchantController/insert_update_product';
-$route['delete_product/(:any)']         = 'MerchantController/delete_product/$1';
-$route['upload_image_product']          = 'MerchantController/upload_image_product';
-$route['sort_image_product']            = 'MerchantController/sort_image_product';
-$route['delete_image_product']          = 'MerchantController/delete_image_product';
+$route['merchant'] = 'MerchantController/index';
+$route['my_profile'] = 'MerchantController/my_profile';
+$route['my_product'] = 'MerchantController/my_product';
+$route['order/(:any)'] = 'MerchantController/order/$1';
+$route['get_product_detail/(:any)'] = 'MerchantController/get_product_detail/$1';
+$route['get_variasi_product/(:any)'] = 'MerchantController/get_variasi_product/$1';
+$route['on_change_category/(:any)'] = 'MerchantController/on_change_category/$1';
+$route['get_images_product/(:any)'] = 'MerchantController/get_images_product/$1';
+$route['insert_update_product'] = 'MerchantController/insert_update_product';
+$route['save_variasi_product/(:any)'] = 'MerchantController/save_variasi_product/$1';
+$route['delete_product/(:any)'] = 'MerchantController/delete_product/$1';
+$route['upload_image_product'] = 'MerchantController/upload_image_product';
+$route['sort_image_product'] = 'MerchantController/sort_image_product';
+$route['delete_image_product'] = 'MerchantController/delete_image_product';
 $route['get_transaction_detail/(:any)'] = 'MerchantController/get_transaction_detail/$1';
 
 # TRANSAKSI

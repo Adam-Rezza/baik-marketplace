@@ -98,13 +98,16 @@
 								$total_qty_cart += $f->qty;
 								$total_price_cart += $total_price_item;
 							?>
-								<div class="product-cart-son clearfix">
+								<div class="product-cart-son clearfix bottom-padding-15-default">
 									<div class="image-product-cart float-left center-vertical-image ">
 										<a href="#"><img src="<?= base_url() ?>public/img/produk/<?= $f->gambar ?>" alt="" /></a>
 									</div>
 									<div class="info-product-cart float-left">
 										<p class="title-product title-hover-black"><a class="animate-default" href="#"><?= $f->produk ?></a></p>
-										<p class="clearfix price-product" id="cart-web-total-price-item-<?= $f->produk_id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?> <span class="total-product-cart-son" id="cart-web-total-qty-item-<?= $f->produk_id ?>">(x<?= $f->qty ?>)</span></p>
+										<?php if ($varians_cart[$f->id]) { ?>
+											<p class="title-product title-hover-black" style="margin-top: 0px;">(<?= join(', ', $varians_cart[$f->id]) ?>)</p>
+										<?php } ?>
+										<p class="clearfix price-product" id="cart-web-total-price-item-<?= $f->id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?> <span class="total-product-cart-son" id="cart-web-total-qty-item-<?= $f->id ?>">(x<?= $f->qty ?>)</span></p>
 									</div>
 								</div>
 							<?php } ?>

@@ -1,3 +1,24 @@
+<style>
+    #add-to-cart {
+        background: #fe6600;
+        width: auto;
+        padding: 5px 25px;
+        border-radius: 7px;
+        color: #fff;
+        border: 1px solid #b3b3b3;
+    }
+
+    #add-to-cart:hover {
+        background: #ca5100;
+        outline: none;
+        border-radius: 7px !important;
+    }
+
+    #add-to-cart:active,
+    #add-to-cart:focus {
+        background: #fe6600;
+    }
+</style>
 <script>
     $(document).ready(function() {
         $('.qna-form').submit(function(e) {
@@ -129,51 +150,78 @@
                 })
             }
         })
-        $('#add-to-cart').click(function(e) {
+        $('#add-to-cart-form').submit(function(e) {
             e.preventDefault()
             if (<?= $this->session->userdata(SESSUSER . 'id') !== null ? 1 : 0 ?>) {
                 produk_id = $(this).data('id')
                 qty = $('#btn-qty').data('value')
-                $.ajax({
-                    url: "<?= base_url() ?>add_to_cart/" + produk_id + "/" + qty,
-                    success: function(res) {
-                        // console.log(res)
-                        if (res == "true") {
-                            Swal.fire({
-                                icon: 'success',
-                                text: 'Produk ditambahkan kedalam keranjang',
-                                showConfirmButton: false,
-                                timer: 0,
-                                onBeforeOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            })
-                            setTimeout(() => {
-                                window.location.href = '<?= base_url() ?>checkout'
-                            }, 1000);
-                        } else if (res == "merchant") {
-                            Swal.fire({
-                                icon: 'error',
-                                text: 'Produk ini milik toko anda',
-                                showConfirmButton: false,
-                                timer: 1000,
-                                onBeforeOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            })
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                text: 'Produk tidak valid',
-                                showConfirmButton: false,
-                                timer: 1000,
-                                onBeforeOpen: () => {
-                                    Swal.showLoading()
-                                },
-                            })
-                        }
+                checkall = true
+                variasi = []
+                $('.parent-variasi').each(function() {
+                    id = $(this).data('id')
+                    if ($('.variasi-' + id + ':checked').length != 1) {
+                        checkall = false
+                    } else {
+                        variasi.push($('.variasi-' + id + ':checked').val())
                     }
-                });
+                })
+                if (checkall) {
+                    $.ajax({
+                        method: 'post',
+                        dataType: 'json',
+                        url: "<?= base_url() ?>add_to_cart/" + produk_id + "/" + qty,
+                        data: {
+                            variasi: variasi
+                        },
+                        success: function(res) {
+                            console.log(res)
+                            if (res == "true") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    text: 'Produk ditambahkan kedalam keranjang',
+                                    showConfirmButton: false,
+                                    timer: 0,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                                setTimeout(() => {
+                                    window.location.href = '<?= base_url() ?>checkout'
+                                }, 1000);
+                            } else if (res == "merchant") {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: 'Produk ini milik toko anda',
+                                    showConfirmButton: false,
+                                    timer: 1000,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: 'Produk tidak valid',
+                                    showConfirmButton: false,
+                                    timer: 1000,
+                                    onBeforeOpen: () => {
+                                        Swal.showLoading()
+                                    },
+                                })
+                            }
+                        }
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        text: 'Silahkan pilih variasi terlebih dahulu',
+                        showConfirmButton: false,
+                        timer: 1000,
+                        onBeforeOpen: () => {
+                            Swal.showLoading()
+                        },
+                    })
+                }
             } else {
                 $('#modalAuth').modal('show');
             }

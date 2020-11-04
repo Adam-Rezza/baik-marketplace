@@ -29,10 +29,11 @@
                                 </div>
                                 <div class="relative product-in-cart-col-3" style="min-width: 110px;">
                                     <span class="ti-close relative remove-product"></span>
-                                    <p class="text-red price-shoping-cart" id="p-price-<?= $f->produk_id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?></p>
-                                    <button class="btn-sub-qty" data-id="<?= $f->produk_id ?>">-</button>
-                                    <button class="btn-qty" id="p-qty-<?= $f->produk_id ?>" data-value="<?= $f->qty ?>" data-harga="<?= $f->harga ?>" data-id="<?= $f->produk_id ?>" disabled><?= $f->qty ?></button>
-                                    <button class="btn-add-qty" data-id="<?= $f->produk_id ?>">+</button>
+                                    <input type="text" class="variasi-<?= $f->id ?> hidden" data-value='<?= $f->variasi_id ?>' value='<?= $f->variasi_id ?>'>
+                                    <p class="text-red price-shoping-cart" id="p-price-<?= $f->id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?></p>
+                                    <button class="btn-sub-qty" data-id="<?= $f->id ?>">-</button>
+                                    <button class="btn-qty" id="p-qty-<?= $f->id ?>" data-value="<?= $f->qty ?>" data-harga="<?= $f->harga ?>" data-product-id="<?= $f->produk_id ?>" data-cart-id="<?= $f->id ?>" disabled><?= $f->qty ?></button>
+                                    <button class="btn-add-qty" data-id="<?= $f->id ?>">+</button>
                                     <a class="btn bg-orange btn-delete-cart top-margin-15-default" href="<?= base_url('delete_cart/') . $f->id ?>"><b>Hapus</b></a>
                                 </div>
                             </div>
