@@ -20,6 +20,7 @@
 								<button id="btn-profil-merchant-foto">Upload foto</button>
 								<input type="file" id="profil-merchant-foto" class="hidden" accept="image/*">
 							</div>
+							<h4 class="text-center" style="margin-top:30px !important;">Saldo Rp.<?= $this->session->userdata(SESSUSER . 'saldo'); ?></h4>
 							<ul class="clear-margin list-siderbar top-margin-15-default relative">
 								<li><a href="<?= base_url() ?>my_profile">Informasi Toko </a></li>
 								<li><a href="<?= base_url() ?>my_product">Produk saya </a></li>

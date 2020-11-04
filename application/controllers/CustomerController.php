@@ -310,13 +310,15 @@ class CustomerController extends CI_Controller
 	{
 		$this->session_check();
 		$data = $this->init();
-		$data['title']   = 'Akun Saya';
-		$data['content'] = 'account/index';
-		$data['vitamin'] = 'account/index_vitamin';
-		$data['address'] = $this->customer->findAddressByUserId($this->session->userdata(SESSUSER . 'id'))->row();
-		$data['province'] = $this->customer->get('provinsi', '*')->result();
-		$data['user'] = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
+
+		$data['title']       = 'Akun Saya';
+		$data['content']     = 'account/index';
+		$data['vitamin']     = 'account/index_vitamin';
+		$data['address']     = $this->customer->findAddressByUserId($this->session->userdata(SESSUSER . 'id'))->row();
+		$data['province']    = $this->customer->get('provinsi', '*')->result();
+		$data['user']        = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
 		$data['on_shopping'] = $on_shopping != null ? true : false;
+
 		$this->session->set_flashdata('checkout', $on_shopping != null ? true : false);
 		// print_r($data['address']);
 		$this->template->template($data);
@@ -493,6 +495,233 @@ class CustomerController extends CI_Controller
 		];
 		$cart = $this->customer->getProductCart($where_cart)->result();
 		echo json_encode($cart);
+	}
+
+	public function mutasi_dompet($on_shopping = NULL)
+	{
+		$this->session_check();
+
+		$data = $this->init();
+		$id   = $this->session->userdata(SESSUSER . 'id');
+
+		$data['title']   = 'Mutasi Saldo';
+		$data['content'] = 'mutasi_saldo/index';
+		$data['vitamin'] = 'mutasi_saldo/index_vitamin';
+
+		$data['user']    = $this->customer->get('user', 'id, username, nama, telp, gambar', ['id' => $this->session->userdata(SESSUSER . 'id')])->row();
+
+		$data['on_shopping'] = $on_shopping != null ? true : false;
+		$this->session->set_flashdata('checkout', $on_shopping != null ? true : false);
+
+		$this->template->template($data);
+	}
+
+	public function get_data_mutasi_dompet()
+	{
+		$tgl_obj_from    = new DateTime();
+		$tgl_obj_to      = new DateTime();
+		$tgl_obj_created = new DateTime();
+		$id_user         = $this->session->userdata(SESSUSER . 'id');
+		$from            = $this->input->get('from');
+		$to              = $this->input->get('to');
+
+		$from = $tgl_obj_from->createFromFormat('d/m/Y', $from)->format('Y-m-d');
+		$to   = $tgl_obj_to->createFromFormat('d/m/Y', $to)->format('Y-m-d');
+
+		$arr = $this->mcore->get('jurnal', '*', ['id_user' => $id_user, 'created_at >=' => $from, 'created_at <=' => $to], 'created_at', 'ASC');
+
+		if (!$arr) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+
+		if ($arr->num_rows() == 0) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+
+		$arr_genesis = $this->mcore->get('jurnal', 'created_at', ['id_user' => $id_user, 'created_at <' => $from], 'created_at', 'ASC', '1');
+
+
+		if (!$arr_genesis) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+
+		$init_saldo = 0;
+		if ($arr_genesis->num_rows() == 1) {
+			$where_init_saldo = [
+				'id_user'       => $id_user,
+				'created_at >=' => $arr_genesis->row()->created_at,
+				'created_at <'  => $from
+			];
+			$arr_init_saldo = $this->mcore->get('jurnal', 'tipe, total', $where_init_saldo, 'created_at', 'ASC');
+
+			if (!$arr_init_saldo) {
+				echo json_encode(['code' => 500]);
+				exit;
+			}
+
+			if ($arr_init_saldo->num_rows() > 0) {
+				foreach ($arr_init_saldo->result() as $key) {
+					$tipe  = $key->tipe;
+					$total = $key->total;
+
+					if ($tipe == 'kredit') {
+						$init_saldo -= $total;
+					} else {
+						$init_saldo += $total;
+					}
+				}
+			}
+		}
+
+		$data   = array();
+		$debit  = 0;
+		$kredit = 0;
+
+		$saldo  = 0;
+		if ($init_saldo > 0) {
+			$saldo  = $init_saldo;
+		}
+
+		$tgl_obj_awal = new DateTime();
+
+		$nested = [
+			'tanggal'    => $tgl_obj_awal->createFromFormat('Y-m-d', $from)->format('d/m/Y'),
+			'keterangan' => 'Saldo Awal',
+			'debit'      => number_format($init_saldo, 0, ',', '.'),
+			'kredit'     => number_format(0, 0, ',', '.'),
+			'saldo'      => number_format($init_saldo, 0, ',', '.'),
+		];
+
+		array_push($data, $nested);
+
+		foreach ($arr->result() as $key) {
+			$id             = $key->id;
+			$id_transaksi   = $key->id_transaksi;
+			$tipe           = $key->tipe;
+			$total          = $key->total;
+			$kode_transaksi = $key->kode_transaksi;
+			$created_at     = $key->created_at;
+
+			$tanggal = $tgl_obj_created->createFromFormat('Y-m-d H:i:s', $created_at)->format('d/m/Y H:i');
+
+			$arr_anggota = $this->mcore->get('user', 'nama', ['id' => $id_user]);
+			$nama_anggota = $arr_anggota->row()->nama;
+
+			$keterangan = '';
+
+			if ($kode_transaksi == 'topup dari sukarela') {
+				$keterangan = ucfirst($kode_transaksi);
+			} elseif ($kode_transaksi == 'topup via petugas') {
+				$arr_jurnal_petugas = $this->mcore->get('jurnal', 'id_user', ['id' => $id, 'created_at >' => $created_at, 'tipe' => 'debit', 'kode_transaksi' => $kode_transaksi], 'created_at', 'asc', '1');
+				$arr_petugas = $this->mcore->get('user', 'nama', ['id' => $arr_jurnal_petugas->row()->id_user], 'id', 'asc', '1');
+				$nama_petugas = $arr_petugas->row()->nama;
+
+				if ($tipe == 'kredit') {
+					$keterangan = ucfirst($kode_transaksi) . " ke $nama_anggota (" . $id_user . ")";
+				} else {
+					$keterangan = ucfirst($kode_transaksi) . " $nama_petugas (" . $arr_jurnal_petugas->row()->id_user . ")";
+				}
+			} elseif ($kode_transaksi == 'transfer') {
+				$arr_jurnal_anggota_tujuan = $this->mcore->get('jurnal', 'id_user', ['id' => $id, 'created_at >' => $created_at, 'tipe' => 'debit', 'kode_transaksi' => $kode_transaksi], 'created_at', 'asc', '1');
+				$arr_anggota_tujuan = $this->mcore->get('user', 'nama', ['id' => $arr_jurnal_anggota_tujuan->row()->id_user], 'id', 'asc', '1');
+				$nama_anggota_tujuan = $arr_anggota_tujuan->row()->nama;
+
+				if ($tipe == 'kredit') {
+					$keterangan = ucfirst($kode_transaksi) . " ke " . $nama_anggota_tujuan . " (" . $arr_jurnal_anggota_tujuan->row()->id_user . ")";
+				} else {
+					$keterangan = ucfirst($kode_transaksi) . " dari " . $nama_anggota . " (" . $id_user . ")";
+				}
+			} elseif (in_array($kode_transaksi, ['penjualan', 'pembelian', 'batal'])) {
+				$arr_transaksi = $this->mcore->get('transaksi', 'invoice', ['id' => $id_transaksi]);
+
+				if (!$arr_transaksi) {
+					echo json_encode(['code' => 500]);
+					exit;
+				}
+
+				if ($arr_transaksi->num_rows() == 0) {
+					echo json_encode(['code' => 404]);
+					exit;
+				}
+
+				$invoice = $arr_transaksi->row()->invoice;
+
+				$keterangan = ucfirst($kode_transaksi) . " invoice " . $invoice;
+			} elseif ($kode_transaksi == 'tarik tunai via petugas') {
+				$arr_jurnal_petugas = $this->mcore->get('jurnal', 'id_user', ['id' => $id, 'created_at >' => $created_at, 'tipe' => 'debit', 'kode_transaksi' => $kode_transaksi], 'created_at', 'asc', '1');
+				$arr_petugas = $this->mcore->get('user', 'nama', ['id' => $arr_jurnal_petugas->row()->id_user], 'id', 'asc', '1');
+				$nama_petugas = $arr_petugas->row()->nama;
+				$keterangan = ucfirst($kode_transaksi) . " " . $nama_petugas;
+			} else {
+				$keterangan = '';
+			}
+
+			if ($tipe == 'kredit') {
+				$debit  = 0;
+				$kredit = $total;
+			} else {
+				$debit  = $total;
+				$kredit = 0;
+			}
+
+			$saldo = $saldo + $debit - $kredit;
+
+			$nested = [
+				'tanggal'    => $tanggal,
+				'keterangan' => $keterangan,
+				'debit'      => number_format($debit, 0, ',', '.'),
+				'kredit'     => number_format($kredit, 0, ',', '.'),
+				'saldo'      => number_format($saldo, 0, ',', '.'),
+			];
+
+			array_push($data, $nested);
+		}
+
+		echo json_encode(['code' => 200, 'data' => $data]);
+	}
+
+	public function proses_transfer()
+	{
+		$id_pengirim = $this->session->userdata(SESSUSER . 'id');
+		$id_tujuan   = $this->input->post('id_tujuan');
+		$nominal_tf  = $this->input->post('nominal_tf');
+
+		$find = $this->mcore->get('user', 'saldo', ['id' => $id_pengirim]);
+		if (!$find) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+		if ($find->num_rows() == 0) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+		$saldo_pengirim = $find->row()->saldo;
+		if ($saldo_pengirim < $nominal_tf) {
+			echo json_encode(['code' => 401]);
+			exit;
+		}
+
+		$find = $this->mcore->get('user', 'saldo', ['id' => $id_tujuan]);
+		if (!$find) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+		if ($find->num_rows() == 0) {
+			echo json_encode(['code' => 404]);
+			exit;
+		}
+
+		$exec = $this->customer->prosesTransfer($id_pengirim, $id_tujuan, $nominal_tf);
+
+		if ($exec == 500) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+
+		echo json_encode(['code' => 200]);
 	}
 }
 

@@ -346,6 +346,44 @@ class M_customer extends CI_Model
         $this->db->group_by('toko.id');
         return $this->db->get('keranjang');
     }
+
+    public function prosesTransfer($id_pengirim, $id_tujuan, $nominal_tf)
+    {
+        $this->db->trans_begin();
+        $sql = "UPDATE user SET saldo = saldo - $nominal_tf WHERE id = $id_pengirim";
+        $this->db->query($sql);
+
+        $this->db->set('id', 'UUID()', FALSE);
+        $this->db->insert('jurnal', [
+            'id_user'        => $id_pengirim,
+            'id_transaksi'   => NULL,
+            'tipe'           => 'kredit',
+            'total'          => $nominal_tf,
+            'kode_transaksi' => 'transfer',
+            'created_at'     => date('Y-m-d H:i:s'),
+        ]);
+
+        $sql = "UPDATE user SET saldo = saldo + $nominal_tf WHERE id = $id_tujuan";
+        $this->db->query($sql);
+
+        $this->db->set('id', 'UUID()', FALSE);
+        $this->db->insert('jurnal', [
+            'id_user'        => $id_tujuan,
+            'id_transaksi'   => NULL,
+            'tipe'           => 'debit',
+            'total'          => $nominal_tf,
+            'kode_transaksi' => 'transfer',
+            'created_at'     => date('Y-m-d H:i:s'),
+        ]);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return 500;
+        } else {
+            $this->db->trans_commit();
+            return 200;
+        }
+    }
 }
 
 /* End of file M_core.php */

@@ -10,7 +10,9 @@
 	"require": {
 		"php": ">=5.3.7",
 		"chriskacerguis/codeigniter-restserver": "^3.1",
-		"almasaeed2010/adminlte": "~2.4"
+		"almasaeed2010/adminlte": "~2.4",
+		"components/jquery": "^3.5",
+		"components/jqueryui": "^1.12"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

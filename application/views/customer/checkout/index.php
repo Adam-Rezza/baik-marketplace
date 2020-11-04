@@ -86,6 +86,24 @@
                                 <p class="bold">Total</p>
                                 <p class="text-red price-shoping-cart" id="total-price-final">Rp <?= number_format($total_price_cart, 0, ",", ".") ?></p>
                             </div>
+                            <div class="relative justify-content top-margin-15-default">
+                                <p class="bold">Saldo</p>
+                                <p class="text-red price-shoping-cart" id="total-price-final">
+                                    Rp <?= number_format($this->session->userdata(SESSUSER . 'saldo'), 0, ',', '.'); ?>
+                                </p>
+                            </div>
+                            <div class="relative justify-content top-margin-15-default">
+                                <p class="bold">Sisa Saldo</p>
+                                <p class="text-red price-shoping-cart" id="total-price-final">
+                                    Rp
+                                    <?php
+                                    $total = $total_price_cart;
+                                    $saldo = $this->session->userdata(SESSUSER . 'saldo');
+                                    $gt = $saldo - $total;
+                                    echo number_format($gt, 0, ',', '.');
+                                    ?>
+                                </p>
+                            </div>
                         </div>
                         <button type="submit" class="btn-proceed-checkout button-hover-red full-width top-margin-15-default" id="checkout">Checkout</button>
                     </div>

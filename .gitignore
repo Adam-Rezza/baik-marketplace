@@ -33,6 +33,7 @@ vendor/*
 /tests/tests/
 /tests/results/
 
-# CODEIGNITER Config & Database
+# CODEIGNITER Config & Database & .htaccess
 application/config/config.php
 application/config/database.php
+.htaccess

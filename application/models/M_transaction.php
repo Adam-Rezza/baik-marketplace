@@ -148,6 +148,30 @@ class M_transaction extends CI_Model
         $this->db->order_by('a.created_date', 'DESC');
         return $this->db->get();
     }
+
+    public function getSumHargaByUserIdAndTokoId($id_user, $id_toko)
+    {
+        $this->db->select('SUM(keranjang.harga) AS sum_harga');
+        $this->db->join('produk', 'produk.id = keranjang.produk_id', 'left');
+        $this->db->where('keranjang.transaksi_id IS NULL');
+        $this->db->where('user_id', $id_user);
+        $this->db->where('produk.toko_id', $id_toko);
+        return $this->db->get('keranjang');
+    }
+
+    public function penguranganSaldo($id_user, $saldo)
+    {
+        $this->db->set('saldo', 'saldo - ' . $saldo, FALSE);
+        $this->db->where('id', $id_user);
+        return $this->db->update('user');
+    }
+
+    public function penambahanSaldo($id_user, $saldo)
+    {
+        $this->db->set('saldo', 'saldo + ' . $saldo, FALSE);
+        $this->db->where('id', $id_user);
+        return $this->db->update('user');
+    }
 }
 
 /* End of file M_core.php */
