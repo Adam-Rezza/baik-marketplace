@@ -37,10 +37,10 @@
 							<p class="title-category-page clear-margin">Mutasi Dompet</p>
 							<div class="pull-right">
 								<div class="btn-group">
-									<button type="button" class="btn btn-info">
+									<button type="button" class="btn btn-info" onclick="topupSukarela();">
 										<i class="fa fa-money fa-fw"></i> Dari Sukarela
 									</button>
-									<button type="button" class="btn btn-info">
+									<button type="button" class="btn btn-info" onclick="comingSoon();">
 										<i class="fa fa-money fa-fw"></i> Topup Dari Petugas
 									</button>
 									<button type="button" class="btn btn-info" onclick="transfer();">
@@ -53,7 +53,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h3 class="panel-title">Pencarian Data</h3>
@@ -81,20 +81,22 @@
 								<h3 class="panel-title">Data Mutasi Dompet</h3>
 							</div>
 							<div class="panel-body" id="vresult">
-								<table class="table table-bordered">
-									<thead>
-										<tr>
-											<th>Tanggal</th>
-											<th>Keterangan</th>
-											<th>Debit</th>
-											<th>Kredit</th>
-											<th>Saldo</th>
-										</tr>
-									</thead>
-									<tbody id="vbody">
+								<div class="table-responsive" style="min-height: 200px;">
+									<table class="table table-bordered">
+										<thead>
+											<tr>
+												<th>Tanggal</th>
+												<th>Keterangan</th>
+												<th>Debit</th>
+												<th>Kredit</th>
+												<th>Saldo</th>
+											</tr>
+										</thead>
+										<tbody id="vbody">
 
-									</tbody>
-								</table>
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -123,7 +125,7 @@
 					</div>
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center" id="vKirimTF" style="display:none;">
 						Fitur Scan Barcode
-						<div id="qr_scan" style="width: 500px;" class="col-centered"></div>
+						<div id="qr_scan" class="col-centered"></div>
 						<div id="qr_result" style="text-align: center;"></div>
 					</div>
 				</div>
@@ -134,3 +136,28 @@
 		</div>
 	</div>
 </div>
+
+
+<form id="form_topup_dari_sukarela">
+	<div class="modal fade" id="modal_topup_dari_sukarela">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Topup dari Sukarela</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="nominal_topup_sukarela">Nominal</label>
+						<input type="number" class="form-control" id="nominal_topup_sukarela" name="nominal_topup_sukarela" value="0" required />
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" id="id_user_topup" name="id_user_topup" value="<?= $this->session->userdata(SESSUSER . 'id'); ?>">
+					<button type="submit" class="btn btn-primary">Topup</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

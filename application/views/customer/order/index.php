@@ -10,6 +10,11 @@
 						<button id="btn-profil-foto">Upload foto</button>
 						<input type="file" id="profil-foto" accept="image/*" class="hidden">
 					</div>
+					<h4 class="text-center" style="margin-top:30px !important;">
+						<a href="mutasi_dompet" class="btn btn-info">
+							Saldo Rp.<?= number_format($this->session->userdata(SESSUSER . 'saldo'), 0, ',', '.'); ?>
+						</a>
+					</h4>
 					<ul class="clear-margin list-siderbar top-margin-15-default">
 						<li><a href="<?= base_url() ?>my_account">Akun saya</a></li>
 						<li><a href="<?= base_url() ?>my_order">Pesanan saya</a></li>
@@ -56,7 +61,7 @@
 													<p class="float-left"><b><a href="<?= base_url() ?>product/<?= $f->produk_id ?>"><?= $g->produk ?></a></b> (x<?= $g->qty ?>)</p>
 													<p class="float-right">Rp <?= number_format(($g->harga * $g->qty), 0, ",", ".") ?></p>
 												</div>
-												<?php if($varians_order[$g->cart_id]){ ?>
+												<?php if ($varians_order[$g->cart_id]) { ?>
 													<div class="left-padding-15-default" style="clear: both">
 														<p class="float-left">(<?= join(', ', $varians_order[$g->cart_id]) ?>)</p>
 													</div>

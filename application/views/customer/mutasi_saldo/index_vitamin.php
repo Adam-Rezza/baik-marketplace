@@ -51,7 +51,11 @@
         vTerimaTF = $('#vTerimaTF'),
         vKirimTF = $('#vKirimTF'),
         qrCodeIdAnggota = $('#qrcode_id_anggota'),
-        idTujuan = $('#id_tujuan');
+        idTujuan = $('#id_tujuan'),
+        formTopupDariSukarela = $('#form_topup_dari_sukarela'),
+        modalTopupDariSukarela = $('#modal_topup_dari_sukarela'),
+        idUserTopup = $('#id_user_topup'),
+        nominalTopupSukarela = $('#nominal_topup_sukarela');
 
     function docReady(fn) {
         // see if DOM is already available
@@ -72,51 +76,141 @@
             if (qrCodeMessage !== lastResult) {
                 ++countResults;
                 lastResult = qrCodeMessage;
-                resultContainer.innerHTML += `
-                <div>
-                    <form class="form" id="form_transfer" action="#">
-                        <div class="form-group">
-                            <label for="nominal_tf">Nominal TF</label>
-                            <input type="number" class="form-control" id="nominal_tf" name="nominal_tf" value="0" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" id="id_tujuan" name="id_tujuan" value="${qrCodeMessage}">
-                            <button type="submit" class="btn btn-primary btn-block">Transfer</button>
-                        </div>
-                    </form>
-                </div>`;
 
-                $('#form_transfer').on('submit', function(e) {
-                    e.preventDefault();
+                $.ajax({
+                    url: `<?= site_url(); ?>get_target_info`,
+                    method: 'get',
+                    dataType: 'json',
+                    data: {
+                        id_target: qrCodeMessage
+                    },
+                    beforeSend: function() {
+                        $.blockUI();
+                    },
+                }).always(function(res) {
+                    $.unblockUI();
+                }).fail(function(res) {
+                    console.log(res);
+                }).done(function(res) {
+                    console.log(res);
 
-                    $.ajax({
-                        url: `<?= site_url(); ?>proses_transfer`,
-                        method: 'post',
-                        dataType: 'json',
-                        data: $('#form_transfer').serialize(),
-                        beforeSend: function() {
-                            $.blockUI();
-                        },
-                    }).always(function(res) {
-                        $.unblockUI();
-                    }).fail(function(res) {
-                        console.log(res);
-                    }).done(function(res) {
-                        console.log(res);
+                    if (res.code == 404) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'warning',
+                            title: 'ID Tidak Ditemukan',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    } else if (res.code == 401) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'warning',
+                            title: 'Saldo Tidak mencukupi',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    } else if (res.code == 500) {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Terjadi kesalahan dengan database, silahkan refresh halaman',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    } else if (res.code == 200) {
+                        resultContainer.innerHTML += `
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <form class="form" id="form_transfer" action="#">
+                                    <div class="form-group">
+                                        <label for="nama_tujuan">Nama Tujuan</label>
+                                        <input type="text" class="form-control" id="nama_tujuan" name="nama_tujuan" value="${res.nama}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nominal_tf">Nominal TF</label>
+                                        <input type="number" class="form-control" id="nominal_tf" name="nominal_tf" value="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" id="id_tujuan" name="id_tujuan" value="${qrCodeMessage}">
+                                        <button type="submit" class="btn btn-primary btn-block">Transfer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>`;
 
-                        if (res.code == 404) {
-                            alert('ID Tidak Ditemukan');
-                        } else if (res.code == 401) {
-                            alert('Saldo Tidak mencukupi');
-                        } else if (res.code == 500) {
-                            alert('Terjadi kesalahan dengan database, silahkan refresh halaman');
-                        } else if (res.code == 200) {
-                            alert('Proses Transfer Berhasil');
-                            window.location.reload();
-                        } else {
-                            alert('unknown response');
-                        }
-                    });
+                        $('#form_transfer').on('submit', function(e) {
+                            e.preventDefault();
+
+                            $.ajax({
+                                url: `<?= site_url(); ?>proses_transfer`,
+                                method: 'post',
+                                dataType: 'json',
+                                data: $('#form_transfer').serialize(),
+                                beforeSend: function() {
+                                    $.blockUI();
+                                },
+                            }).always(function(res) {
+                                $.unblockUI();
+                            }).fail(function(res) {
+                                console.log(res);
+                            }).done(function(res) {
+                                console.log(res);
+
+                                if (res.code == 404) {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: 'ID Tidak Ditemukan',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                } else if (res.code == 401) {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: 'Saldo Tidak mencukupi',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                } else if (res.code == 500) {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'error',
+                                        title: 'Terjadi kesalahan dengan database, silahkan refresh halaman',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                } else if (res.code == 200) {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Proses Transfer Berhasil',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(function(r) {
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'error',
+                                        title: 'unknown response',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                }
+                            });
+                        });
+                    } else {
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'unknown response',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    }
                 });
             }
         }
@@ -165,7 +259,13 @@
                     </tr>
                     `;
                 } else if (res.code == 500) {
-                    alert("Terjadi masalah dengan database, silahkan coba kembali");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Terjadi masalah dengan database, silahkan coba kembali',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 } else {
                     $.each(res.data, function(i, k) {
                         html += `
@@ -197,5 +297,67 @@
     function kirimTF() {
         vTerimaTF.hide('slow');
         vKirimTF.show('slow');
+    }
+
+    function comingSoon() {
+        Swal.fire(
+            'Segera Hadir',
+            'Sedang dalam tahap pengerjaan',
+            'info'
+        )
+    }
+
+    function topupSukarela() {
+        modalTopupDariSukarela.modal('show');
+
+        formTopupDariSukarela.on('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'question',
+                title: 'Topup dari Sukarela ?',
+                showConfirmButton: true,
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `<?= site_url(); ?>topup_sukarela`,
+                        method: 'post',
+                        dataType: 'json',
+                        data: {
+                            id: idUserTopup.val(),
+                            nominal: nominalTopupSukarela.val()
+                        },
+                        beforeSend: function(res) {
+                            $.blockUI();
+                        }
+                    }).always(function(res) {
+                        $.unblockUI();
+                    }).fail(function(res) {
+                        console.log(res);
+                    }).done(function(res) {
+                        console.log(res);
+
+                        if (res.code == 200) {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Proses Topup dari Sukarela Berhasil',
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then(function(result) {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: 'Terjadi kesalahan dengan database, silahkan refesh halaman',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
+                    });
+                }
+            });
+        });
     }
 </script>
