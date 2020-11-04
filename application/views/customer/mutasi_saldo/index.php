@@ -37,10 +37,10 @@
 							<p class="title-category-page clear-margin">Mutasi Dompet</p>
 							<div class="pull-right">
 								<div class="btn-group">
-									<button type="button" class="btn btn-info">
+									<button type="button" class="btn btn-info" onclick="comingSoon();">
 										<i class="fa fa-money fa-fw"></i> Dari Sukarela
 									</button>
-									<button type="button" class="btn btn-info">
+									<button type="button" class="btn btn-info" onclick="comingSoon();">
 										<i class="fa fa-money fa-fw"></i> Topup Dari Petugas
 									</button>
 									<button type="button" class="btn btn-info" onclick="transfer();">
@@ -53,7 +53,7 @@
 				</div>
 
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h3 class="panel-title">Pencarian Data</h3>

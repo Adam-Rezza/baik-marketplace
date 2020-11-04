@@ -37,7 +37,7 @@ class TransactionController extends CI_Controller
 	public function add_to_cart($product_id, $qty)
 	{
 		$user_id = $this->session->userdata(SESSUSER . 'id');
-		if($this->input->post('variasi')){
+		if ($this->input->post('variasi')) {
 			$variasi = count($this->input->post('variasi')) > 0 ? json_encode($this->input->post('variasi')) : null;
 		} else {
 			$variasi = null;
@@ -48,22 +48,22 @@ class TransactionController extends CI_Controller
 		if (!($product->toko_id == $this->session->userdata(SESSUSER . 'merchant_id'))) {
 			if ($user_id && $cart && $product) {
 				$data = [
-					'user_id' => $user_id,
-					'produk_id' => $product->id,
-					'variasi_id' => $variasi,
-					'harga' => $product->harga_disc,
-					'qty' => $cart->qty + intval($qty),
+					'user_id'      => $user_id,
+					'produk_id'    => $product->id,
+					'variasi_id'   => $variasi,
+					'harga'        => $product->harga_disc,
+					'qty'          => $cart->qty + intval($qty),
 					'created_date' => date('Y-m-d H:i:s')
 				];
 				$result = $this->ci->transaction->update('keranjang', $data, $cart->id);
 				echo json_encode($result ? 'true' : 'false');
 			} else if ($user_id && $product) {
 				$data = [
-					'user_id' => $user_id,
-					'produk_id' => $product->id,
-					'variasi_id' => $variasi,
-					'harga' => $product->harga_disc,
-					'qty' => $qty,
+					'user_id'      => $user_id,
+					'produk_id'    => $product->id,
+					'variasi_id'   => $variasi,
+					'harga'        => $product->harga_disc,
+					'qty'          => $qty,
 					'created_date' => date('Y-m-d H:i:s')
 				];
 				$result = $this->ci->transaction->insert('keranjang', $data);
@@ -79,7 +79,7 @@ class TransactionController extends CI_Controller
 	public function update_product_cart($product_id, $qty)
 	{
 		$user_id = $this->session->userdata(SESSUSER . 'id');
-		if($this->input->post('variasi')){
+		if ($this->input->post('variasi')) {
 			$variasi = $this->input->post('variasi');
 		} else {
 			$variasi = null;

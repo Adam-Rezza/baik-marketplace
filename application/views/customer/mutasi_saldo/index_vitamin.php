@@ -91,11 +91,29 @@
                     console.log(res);
 
                     if (res.code == 404) {
-                        alert('ID Tidak Ditemukan');
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'warning',
+                            title: 'ID Tidak Ditemukan',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                     } else if (res.code == 401) {
-                        alert('Saldo Tidak mencukupi');
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'warning',
+                            title: 'Saldo Tidak mencukupi',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                     } else if (res.code == 500) {
-                        alert('Terjadi kesalahan dengan database, silahkan refresh halaman');
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'Terjadi kesalahan dengan database, silahkan refresh halaman',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                     } else if (res.code == 200) {
                         resultContainer.innerHTML += `
                         <div class="row" style="margin-top: 10px;">
@@ -136,21 +154,58 @@
                                 console.log(res);
 
                                 if (res.code == 404) {
-                                    alert('ID Tidak Ditemukan');
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: 'ID Tidak Ditemukan',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
                                 } else if (res.code == 401) {
-                                    alert('Saldo Tidak mencukupi');
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: 'Saldo Tidak mencukupi',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
                                 } else if (res.code == 500) {
-                                    alert('Terjadi kesalahan dengan database, silahkan refresh halaman');
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'error',
+                                        title: 'Terjadi kesalahan dengan database, silahkan refresh halaman',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
                                 } else if (res.code == 200) {
-                                    alert('Proses Transfer Berhasil');
-                                    window.location.reload();
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'Proses Transfer Berhasil',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(function(r) {
+                                        window.location.reload();
+                                    });
                                 } else {
-                                    alert('unknown response');
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'error',
+                                        title: 'unknown response',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
                                 }
                             });
                         });
                     } else {
-                        alert('unknown response');
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'error',
+                            title: 'unknown response',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                     }
                 });
             }
@@ -200,7 +255,13 @@
                     </tr>
                     `;
                 } else if (res.code == 500) {
-                    alert("Terjadi masalah dengan database, silahkan coba kembali");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Terjadi masalah dengan database, silahkan coba kembali',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 } else {
                     $.each(res.data, function(i, k) {
                         html += `
@@ -232,5 +293,13 @@
     function kirimTF() {
         vTerimaTF.hide('slow');
         vKirimTF.show('slow');
+    }
+
+    function comingSoon() {
+        Swal.fire(
+            'Segera Hadir',
+            'Sedang dalam tahap pengerjaan',
+            'info'
+        )
     }
 </script>
