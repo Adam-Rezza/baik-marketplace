@@ -72,51 +72,86 @@
             if (qrCodeMessage !== lastResult) {
                 ++countResults;
                 lastResult = qrCodeMessage;
-                resultContainer.innerHTML += `
-                <div>
-                    <form class="form" id="form_transfer" action="#">
-                        <div class="form-group">
-                            <label for="nominal_tf">Nominal TF</label>
-                            <input type="number" class="form-control" id="nominal_tf" name="nominal_tf" value="0" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="hidden" id="id_tujuan" name="id_tujuan" value="${qrCodeMessage}">
-                            <button type="submit" class="btn btn-primary btn-block">Transfer</button>
-                        </div>
-                    </form>
-                </div>`;
 
-                $('#form_transfer').on('submit', function(e) {
-                    e.preventDefault();
+                $.ajax({
+                    url: `<?= site_url(); ?>get_target_info`,
+                    method: 'get',
+                    dataType: 'json',
+                    data: {
+                        id_target: qrCodeMessage
+                    },
+                    beforeSend: function() {
+                        $.blockUI();
+                    },
+                }).always(function(res) {
+                    $.unblockUI();
+                }).fail(function(res) {
+                    console.log(res);
+                }).done(function(res) {
+                    console.log(res);
 
-                    $.ajax({
-                        url: `<?= site_url(); ?>proses_transfer`,
-                        method: 'post',
-                        dataType: 'json',
-                        data: $('#form_transfer').serialize(),
-                        beforeSend: function() {
-                            $.blockUI();
-                        },
-                    }).always(function(res) {
-                        $.unblockUI();
-                    }).fail(function(res) {
-                        console.log(res);
-                    }).done(function(res) {
-                        console.log(res);
+                    if (res.code == 404) {
+                        alert('ID Tidak Ditemukan');
+                    } else if (res.code == 401) {
+                        alert('Saldo Tidak mencukupi');
+                    } else if (res.code == 500) {
+                        alert('Terjadi kesalahan dengan database, silahkan refresh halaman');
+                    } else if (res.code == 200) {
+                        resultContainer.innerHTML += `
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <form class="form" id="form_transfer" action="#">
+                                    <div class="form-group">
+                                        <label for="nama_tujuan">Nama Tujuan</label>
+                                        <input type="text" class="form-control" id="nama_tujuan" name="nama_tujuan" value="${res.nama}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nominal_tf">Nominal TF</label>
+                                        <input type="number" class="form-control" id="nominal_tf" name="nominal_tf" value="0" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" id="id_tujuan" name="id_tujuan" value="${qrCodeMessage}">
+                                        <button type="submit" class="btn btn-primary btn-block">Transfer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>`;
 
-                        if (res.code == 404) {
-                            alert('ID Tidak Ditemukan');
-                        } else if (res.code == 401) {
-                            alert('Saldo Tidak mencukupi');
-                        } else if (res.code == 500) {
-                            alert('Terjadi kesalahan dengan database, silahkan refresh halaman');
-                        } else if (res.code == 200) {
-                            alert('Proses Transfer Berhasil');
-                            window.location.reload();
-                        } else {
-                            alert('unknown response');
-                        }
-                    });
+                        $('#form_transfer').on('submit', function(e) {
+                            e.preventDefault();
+
+                            $.ajax({
+                                url: `<?= site_url(); ?>proses_transfer`,
+                                method: 'post',
+                                dataType: 'json',
+                                data: $('#form_transfer').serialize(),
+                                beforeSend: function() {
+                                    $.blockUI();
+                                },
+                            }).always(function(res) {
+                                $.unblockUI();
+                            }).fail(function(res) {
+                                console.log(res);
+                            }).done(function(res) {
+                                console.log(res);
+
+                                if (res.code == 404) {
+                                    alert('ID Tidak Ditemukan');
+                                } else if (res.code == 401) {
+                                    alert('Saldo Tidak mencukupi');
+                                } else if (res.code == 500) {
+                                    alert('Terjadi kesalahan dengan database, silahkan refresh halaman');
+                                } else if (res.code == 200) {
+                                    alert('Proses Transfer Berhasil');
+                                    window.location.reload();
+                                } else {
+                                    alert('unknown response');
+                                }
+                            });
+                        });
+                    } else {
+                        alert('unknown response');
+                    }
                 });
             }
         }

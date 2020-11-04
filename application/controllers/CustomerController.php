@@ -647,6 +647,27 @@ class CustomerController extends CI_Controller
 		echo json_encode(['code' => 200, 'data' => $data]);
 	}
 
+	public function get_target_info()
+	{
+		$id_target = $this->input->get('id_target');
+
+		$arr = $this->mcore->get('user', '*', ['id' => $id_target]);
+
+		if (!$arr) {
+			echo json_encode(['code' => 500]);
+			exit;
+		}
+		if ($arr->num_rows() == 0) {
+			echo json_encode(['code' => 404, 'id_target' => $id_target]);
+			exit;
+		}
+
+		echo json_encode([
+			'code' => 200,
+			'nama' => $arr->row()->nama
+		]);
+	}
+
 	public function proses_transfer()
 	{
 		$id_pengirim = $this->session->userdata(SESSUSER . 'id');
