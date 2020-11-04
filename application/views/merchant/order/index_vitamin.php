@@ -49,52 +49,57 @@
                 url: "<?= base_url() ?>get_transaction_detail/" + transaksi_id,
                 dataType: "json",
                 success: function(res) {
-                    // console.log(res)
+                    console.log(res)
                     totalPrice = 0
                     listProduct = "Pesanan :"
-                    $.each(res, function(i, v) {
+                    transaction = res.transaction
+                    $.each(transaction, function(i, v) {
                         totalPrice += (v.harga * v.qty)
                         listProduct += `
-                                        <div style="clear: both">
-                                            <p class="float-left"><b><a href="<?= base_url() ?>product/${v.produk_id}">${v.produk}</a></b> (x${v.qty})</p>
-                                            <p class="float-right">Rp. ${rupiahFormat((v.harga * v.qty).toString())}</p>
-                                        </div>`
+                            <div style="clear: both">
+                                <p class="float-left"><b><a href="<?= base_url() ?>product/${v.produk_id}">${v.produk}</a></b> (x${v.qty})</p>
+                                <p class="float-right">Rp. ${rupiahFormat((v.harga * v.qty).toString())}</p>
+                            </div>` +
+                            (res.varians_order[v.cart_id].length > 0 ? `
+                            <div style="clear: both">
+                                <p class="float-left">(${res.varians_order[v.cart_id].join(', ')})</p>
+                            </div>` : ``)
                     })
                     customerDetail = `<table class="table no-padding">
                                             <tr>
                                                 <td >Pengirim</td>
-                                                <td>${res[0].pengirim}</td>
+                                                <td>${transaction[0].pengirim}</td>
                                             </tr>
                                             <tr>
                                                 <td >Telp Pengirim</td>
-                                                <td>${res[0].telp_pengirim}</td>
+                                                <td>${transaction[0].telp_pengirim}</td>
                                             </tr>
                                             <tr>
                                                 <td >Penerima</td>
-                                                <td>${res[0].penerima}</td>
+                                                <td>${transaction[0].penerima}</td>
                                             </tr>
                                             <tr>
                                                 <td>Telp Penerima</td>
-                                                <td>${res[0].telp_penerima}</td>
+                                                <td>${transaction[0].telp_penerima}</td>
                                             </tr>
                                             <tr>
                                                 <td>Alamat</td>
-                                                <td>${res[0].alamat}</td>
+                                                <td>${transaction[0].alamat}</td>
                                             </tr>
                                     </table>`
-                    $('#order-invoice').html(res[0].invoice)
+                    $('#order-invoice').html(transaction[0].invoice)
                     $('.btn-order-update').data('id', transaksi_id)
                     $('#list-product').html(listProduct)
                     $('#customer-detail').html(customerDetail)
                     $('#total-price').html('Rp. ' + rupiahFormat(totalPrice.toString()))
-                    if (res[0].status == 10) {
-                        $('#failed-reason').html('"' + res[0].failed_reason + '"');
+                    if (transaction[0].status == 10) {
+                        $('#failed-reason').html('"' + transaction[0].failed_reason + '"');
                     }
-                    $('.send-order').data('kurir', res[0].id_ekspedisi)
-                    $('.kurir').html(res[0].id_ekspedisi.toUpperCase())
-                    if (res[0].resi) {
+                    $('.send-order').data('kurir', transaction[0].id_ekspedisi)
+                    $('.kurir').html(transaction[0].id_ekspedisi.toUpperCase())
+                    if (transaction[0].resi) {
                         $('.resi-container').show()
-                        $('.resi').html(res[0].resi.toUpperCase())
+                        $('.resi').html(transaction[0].resi.toUpperCase())
                     } else {
                         $('.resi-container').hide()
                     }

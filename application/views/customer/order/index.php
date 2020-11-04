@@ -56,6 +56,11 @@
 													<p class="float-left"><b><a href="<?= base_url() ?>product/<?= $f->produk_id ?>"><?= $g->produk ?></a></b> (x<?= $g->qty ?>)</p>
 													<p class="float-right">Rp <?= number_format(($g->harga * $g->qty), 0, ",", ".") ?></p>
 												</div>
+												<?php if($varians_order[$g->cart_id]){ ?>
+													<div class="left-padding-15-default" style="clear: both">
+														<p class="float-left">(<?= join(', ', $varians_order[$g->cart_id]) ?>)</p>
+													</div>
+												<?php } ?>
 											<?php
 												$total_price += $g->harga * $g->qty;
 											}

@@ -83,6 +83,94 @@
         top: 0;
     }
 
+    .text-gray {
+        color: #b3b3b3;
+    }
+
+    #addVariasi {
+        font-size: 12px;
+        color: #fff;
+        margin-top: 5px;
+        padding: 2px 5px;
+        float: left;
+        clear: both;
+        display: block;
+        cursor: pointer;
+        background-color: #ff6600;
+        border: none;
+        border-radius: 8px;
+    }
+
+    .add-variasi {
+        font-size: 12px;
+        color: #fff;
+        margin-top: 5px;
+        padding: 2px 5px;
+        float: right;
+        clear: both;
+        display: block;
+        cursor: pointer;
+        background-color: #ff6600;
+        border: 1px solid #555;
+        border-radius: 4px;
+    }
+
+    .add-variasi:active {
+        border: 1px solid #555;
+        color: #555;
+        box-shadow: -1px -1px #333;
+    }
+
+    .parent-remove-variasi {
+        padding-left: 0;
+    }
+
+    .label-input-variasi,
+    .label-input-list-variasi {
+        display: block;
+    }
+
+    input.input-variasi {
+        width: calc(100% - 50px);
+    }
+
+    .input-list-variasi {
+        width: calc(100% - 50px);
+    }
+
+    div.parent-list-variasi {
+        margin-top: 5px;
+    }
+
+    div.parent-list-variasi:nth-of-type(1) {
+        margin-top: 0px !important;
+    }
+
+    .remove-variasi,
+    .add-list-variasi,
+    .remove-list-variasi {
+        font-size: 12px;
+        text-align: left;
+        color: #fff;
+        margin-top: 5px;
+        padding: 2px 5px;
+        /* float: right; */
+        clear: both;
+        display: inline-block;
+        cursor: pointer;
+        background-color: #ff6600;
+        border: 1px solid #555;
+        border-radius: 4px;
+    }
+
+    .remove-variasi:active,
+    .add-list-variasi:active,
+    .remove-list-variasi:active {
+        border: 1px solid #555;
+        color: #555;
+        box-shadow: -1px -1px #333;
+    }
+
     @media(max-width:679px) {
         .button-product-list ul li a {
             font-size: 14px;
@@ -94,21 +182,139 @@
     $(document).ready(function() {
         var grid
         var gridLength
+        var rowVariasi = 0
         $('#modalAddProduct').on('shown.bs.modal', () => {
             $("#productForm").find('input.error').removeClass('error')
             tempImageContainer = []
             $('#image-add-product-sortable').html('')
             if ($('#produk_id').val() != '') {
                 $('.image-add-container').hide()
+                rowVariasi = 0
             } else {
                 $('.image-add-container').show()
+            }
+        })
+        $('body').find('.add-variasi').click(function(e) {
+            e.preventDefault()
+            row = $('body').find('.input-variasi:visible').length
+            if (row < 2) {
+                rowVariasi++
+                field = `
+                    <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <label class="label-input-variasi">Variasi</label>
+                        <input class="input-variasi" type="text" name="variasi[]">
+                        <input type="input" name="delete_variasi[]" value="false" class="delete_variasi hidden">
+                        <input class="hidden" type="text" name="variasi_id[]" data-id="${rowVariasi}" value="${rowVariasi}">
+                        <span class="remove-variasi" data-id=""><i class="fa fa-times" aria-hidden="true"></i></span>
+                        <span class="add-list-variasi" data-id="${rowVariasi}"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 list-variasi list-variasi-${rowVariasi}">
+                        <label class="label-input-list-variasi">List Variasi</label>
+                        <div class="parent-list-variasi parent-list-variasi-${rowVariasi}">
+                            <input class="hidden" type="text" name="list_variasi_id[]" data-id="0" value="0">
+                            <input class="hidden" type="text" name="list_variasi_parent[]" data-id="${rowVariasi}" value="${rowVariasi}">
+                            <input type="input" name="delete_list_variasi[]" value="false" class="delete_list_variasi hidden">
+                            <input type="input" name="active_list_variasi[]" value="true" class="input_active_list_variasi hidden">
+                            <input type="checkbox" class="active_list_variasi" checked title="Aktif">
+                            <input class="input-list-variasi" type="text" name="list_variasi[]">
+                            <span class="remove-list-variasi" data-id=""><i class="fa fa-times" aria-hidden="true"></i></span>
+                        </div>
+                        <div class="parent-list-variasi parent-list-variasi-${rowVariasi}">
+                            <input class="hidden" type="text" name="list_variasi_id[]" data-id="0" value="0">
+                            <input class="hidden" type="text" name="list_variasi_parent[]" data-id="${rowVariasi}" value="${rowVariasi}">
+                            <input type="input" name="delete_list_variasi[]" value="false" class="delete_list_variasi hidden">
+                            <input type="input" name="active_list_variasi[]" value="true" class="input_active_list_variasi hidden">
+                            <input type="checkbox" class="active_list_variasi" checked title="Aktif">
+                            <input class="input-list-variasi" type="text" name="list_variasi[]">
+                            <span class="remove-list-variasi" data-id=""><i class="fa fa-times" aria-hidden="true"></i></span>
+                        </div>
+                    </div>
+                    </div>`
+                $('.variasi').append(field)
+            } else {
+                Swal.fire({
+                    text: "Maksimal 2 variasi",
+                    icon: 'error',
+                    timer: 1000
+                })
+            }
+            $('.variasi-null').hide()
+        })
+        $(".variasi").on("click", ".remove-variasi", function(e) {
+            e.preventDefault()
+            id = $(this).data('id')
+            if (id) {
+                $(this).parent().find('.delete_variasi').val(true)
+                console.log()
+                $(this).parent().parent().hide()
+            } else {
+                $(this).parent().parent().remove()
+            }
+            //
+            row = $('.input-variasi:visible').length
+            if (row > 0) {
+                $('.variasi-null').hide()
+            } else {
+                $('.variasi-null').show()
+            }
+        })
+        $(".variasi").on("click", ".active_list_variasi", function(e) {
+            val = $(this).prop("checked")
+            $(this).parent().find('.input_active_list_variasi').val(val)
+        })
+        $(".variasi").on("click", ".add-list-variasi", function(e) {
+            e.preventDefault()
+            id = $(this).data('id')
+            row = $('.parent-list-variasi-' + id + ':visible').length
+            // rowListVariasi = $('body').find('.list-variasi-' + id).children('.input-list-variasi:last-child').data('id')
+            if (row < 10) {
+                field = `
+                    <div class="parent-list-variasi parent-list-variasi-${id}">
+                        <input class="hidden" type="text" name="list_variasi_id[]" data-id="0" value="0">
+                        <input class="hidden" type="text" name="list_variasi_parent[]" data-id="${id}" value="${id}">
+                        <input type="input" name="delete_list_variasi[]" value="false" class="delete_list_variasi hidden">
+                        <input type="input" name="active_list_variasi[]" value="true" class="input_active_list_variasi hidden">
+                        <input type="checkbox" class="active_list_variasi" checked title="Aktif">
+                        <input class="input-list-variasi" type="text" name="list_variasi[]" data-id="0">
+                        <span class="remove-list-variasi" data-id=""><i class="fa fa-times" aria-hidden="true"></i></span>
+                    </div>
+            `
+                $('.list-variasi-' + id).append(field)
+            } else {
+                Swal.fire({
+                    text: "Maksimal 10 list variasi",
+                    icon: 'error',
+                    timer: 1000
+                })
+            }
+        })
+        $(".variasi").on("click", ".remove-list-variasi", function(e) {
+            e.preventDefault()
+            id = $(this).data('id')
+            row = $(this).parent().parent().find('.input-list-variasi:visible').length
+            if (row > 1) {
+                if (id) {
+                    $(this).parent().find('.delete_list_variasi').val(true)
+                    $(this).parent().hide()
+                } else {
+                    $(this).parent().remove()
+                }
+            } else {
+                Swal.fire({
+                    text: "Minimal 1 variasi",
+                    icon: 'error',
+                    timer: 1000
+                })
             }
         })
         $('.add-product').click(function() {
             $('.title-modal-product').html('Tambah Produk');
             validator.resetForm()
             validator.reset()
+            $('.add-variasi').show()
             $('.image-add-container').show()
+            $('.variasi').html('')
             $("#productForm").find('input, textarea, select').val('')
             $("#productForm").find('input.error').removeClass('error')
             $('#modalAddProduct').modal('show')
@@ -116,6 +322,7 @@
         $('.edit-product').click(function(e) {
             e.preventDefault()
             id = $(this).data('id')
+            $('.variasi').html('')
             $.ajax({
                 type: "post",
                 url: "<?= base_url() ?>get_product_detail/" + id,
@@ -138,6 +345,7 @@
                     $('.title-modal-product').html('Edit Produk')
                     $('#modalAddProduct').modal('show')
 
+                    $('.add-variasi').hide()
                     $('.image-add-container').hide()
                 },
                 error: function(res) {
@@ -148,6 +356,71 @@
                 if (res.kategori_id) {
                     $('#sub-kategori-parent').show();
                 }
+            })
+        })
+        $('.edit-variasi').click(function(e) {
+            e.preventDefault()
+            id = $(this).data('id')
+            $('.variasi').html('')
+            $.ajax({
+                type: "post",
+                url: "<?= base_url() ?>get_variasi_product/" + id,
+                dataType: "json",
+                success: function(res) {
+                    validator.resetForm()
+                    validator.reset()
+                    console.log(res)
+                    if (Object.keys(res.variasi).length > 0) {
+                        var field = ''
+                        $.each(res.variasi, function(i, v) {
+                            field += `
+                                <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <label class="label-input-variasi">Variasi</label>
+                                    <input class="input-variasi" type="text" name="variasi[]" value="${v.nama}">
+                                    <input type="input" name="delete_variasi[]" value="false" class="delete_variasi hidden">
+                                    <input class="hidden" type="text" name="variasi_id[]" data-id="${v.id}" value="${v.id}">
+                                    <span class="remove-variasi" data-id="${v.id}"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                    <span class="add-list-variasi" data-id="${v.id}"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                </div>
+                                <div class="col-xs-12 col-sm-6 list-variasi list-variasi-${v.id}">
+                                    <label class="label-input-list-variasi">List Variasi</label>`
+                            $.each(res.list_variasi[v.id], function(j, w) {
+                                console.log(w)
+                                field += `
+                                    <div class="parent-list-variasi parent-list-variasi-${v.id}">
+                                        <input class="hidden" type="text" name="list_variasi_id[]" data-id="${w.id}" value="${w.id}">
+                                        <input class="hidden" type="text" name="list_variasi_parent[]" data-id="${w.parent}" value="${w.parent}">
+                                        <input type="input" name="delete_list_variasi[]" value="${w.del == '1'? 'true' : 'false'}" class="delete_list_variasi hidden">
+                                        <input type="input" name="active_list_variasi[]" value="${w.active == '1' ? 'true' : 'false'}" class="input_active_list_variasi hidden">
+                                        <input type="checkbox" class="active_list_variasi" ${w.active == '1' ? 'checked' : ''} title="Aktif">
+                                        <input class="input-list-variasi" type="text" name="list_variasi[]" value="${w.nama}">
+                                        <span class="remove-list-variasi" data-id="${w.id}"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                    </div>`
+                            })
+                            field += `
+                                </div>
+                                </div>`
+                            $('.list-variasi-' + id).append(field)
+                            $('.variasi-null').hide()
+                        })
+                    } else {
+                        $('.variasi-null').show()
+                    }
+                    $('#variasi_produk_id').val(id)
+                    $('.variasi').append(field)
+
+                    $('.title-modal-variasi').html('Edit Variasi Produk')
+                    $('#modalVariasi').modal('show')
+                },
+                error: function(res) {
+                    console.log(res)
+                }
+            }).then((res) => {
+                // $('#sub_kategori').val(res.sub_kategori_id)
+                // if (res.kategori_id) {
+                //     $('#sub-kategori-parent').show();
+                // }
             })
         })
         $('.delete-product').click(function(e) {
@@ -170,14 +443,22 @@
                         dataType: "json",
                         success: function(res) {
                             $.unblockUI()
-                            Swal.fire({
-                                title: 'Berhasil',
-                                text: "Produk berhasil di hapus",
-                                icon: 'success'
-                            })
-                            setTimeout(() => {
-                                window.location.href = '<?= base_url('my_product') ?>'
-                            }, 1000)
+                            if (res == 'true') {
+                                Swal.fire({
+                                    title: 'Berhasil',
+                                    text: "Produk berhasil di hapus",
+                                    icon: 'success'
+                                })
+                                setTimeout(() => {
+                                    window.location.href = '<?= base_url('my_product') ?>'
+                                }, 1000)
+                            } else {
+                                Swal.fire({
+                                    title: 'Gagal',
+                                    text: "Terjadi kesalahan pada server, \n silahkan coba beberapa saat lagi",
+                                    icon: 'success'
+                                })
+                            }
                         },
                         error: function(res) {
                             console.log(res)
@@ -400,7 +681,8 @@
         })
 
         $modal.on('shown.bs.modal', function() {
-            widthContainer = $(this).width()
+            widthContainer = ($(this).width() - 60) > 480 ? 480 : ($(this).width() - 60)
+            console.log(widthContainer)
             $('#image').height(widthContainer)
             cropper = new Cropper(image, {
                 aspectRatio: 1,
@@ -506,7 +788,8 @@
         })
 
         $modalCropNewProduct.on('shown.bs.modal', function() {
-            widthContainer = $(this).width()
+            widthContainer = ($(this).width() - 60) > 480 ? 480 : ($(this).width() - 60)
+            console.log(widthContainer)
             $('#imageNewProduct').height(widthContainer)
             cropperNewProduct = new Cropper(imageNewProduct, {
                 aspectRatio: 1,
@@ -560,7 +843,20 @@
         })
 
         ///add new product////////////////////////////////
-
+        $.validator.prototype.checkForm = function() {
+            //overriden in a specific page
+            this.prepareForm();
+            for (var i = 0, elements = (this.currentElements = this.elements()); elements[i]; i++) {
+                if (this.findByName(elements[i].name).length !== undefined && this.findByName(elements[i].name).length > 1) {
+                    for (var cnt = 0; cnt < this.findByName(elements[i].name).length; cnt++) {
+                        this.check(this.findByName(elements[i].name)[cnt]);
+                    }
+                } else {
+                    this.check(elements[i]);
+                }
+            }
+            return this.valid();
+        };
         validator = $("#productForm").validate({
             rules: {
                 nama: {
@@ -574,9 +870,15 @@
                     min: 0,
                     max: 100
                 },
-                harga_disc: {
+                // harga_disc: {
+                //     required: true
+                // },
+                variasi: {
                     required: true
-                }
+                },
+                list_variasi: {
+                    required: true
+                },
             },
             messages: {
                 nama: {
@@ -588,9 +890,15 @@
                 disc: {
                     required: 'Masukkan disc produk'
                 },
-                harga_disc: {
-                    required: 'Masukkan harga produk'
-                }
+                // harga_disc: {
+                //     required: 'Masukkan harga produk'
+                // },
+                variasi: {
+                    required: 'Masukkan judul variasi'
+                },
+                list_variasi: {
+                    required: 'Masukkan nama variasi'
+                },
             },
             submitHandler: function(form, e) {
                 e.preventDefault()
@@ -620,6 +928,63 @@
                         setTimeout(() => {
                             window.location.href = '<?= base_url('my_product') ?>'
                         }, 1000)
+                    },
+                    error: function(res) {
+                        console.log(res)
+                    }
+                })
+            }
+        })
+
+        validator = $("#variasiForm").validate({
+            rules: {
+                variasi: {
+                    required: true
+                },
+                list_variasi: {
+                    required: true
+                },
+            },
+            messages: {
+                variasi: {
+                    required: 'Masukkan judul variasi'
+                },
+                list_variasi: {
+                    required: 'Masukkan nama variasi'
+                },
+            },
+            submitHandler: function(form, e) {
+                e.preventDefault()
+                data = $(form).serializeArray()
+                id = $('#variasi_produk_id').val()
+                console.log(data)
+                $.ajax({
+                    type: "post",
+                    url: "<?= base_url('save_variasi_product') ?>/" + id,
+                    data: data,
+                    success: function(res) {
+                        if (res = 'true') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil disimpan',
+                                showConfirmButton: false,
+                                timer: 1000,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            })
+                            $('#modalVariasi').modal('hide')
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Terjadi kesalahan pada server',
+                                showConfirmButton: false,
+                                timer: 1000,
+                                onBeforeOpen: () => {
+                                    Swal.showLoading()
+                                },
+                            })
+                        }
                     },
                     error: function(res) {
                         console.log(res)

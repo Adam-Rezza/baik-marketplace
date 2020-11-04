@@ -69,6 +69,18 @@ class M_transaction extends CI_Model
         return $this->db->get();
     }
 
+    function findCartByUserIdAndProductIdAndVariasiIdAndNotTransactionId($user_id, $produk_id, $variasi)
+    {
+        $this->db->select('*');
+        $this->db->from('keranjang a');
+        $this->db->where('a.user_id', $user_id);
+        $this->db->where('a.produk_id', $produk_id);
+        $this->db->where('a.variasi_id', $variasi);
+        $this->db->where('a.transaksi_id is null');
+        $this->db->order_by('a.created_date', 'asc');
+        return $this->db->get();
+    }
+
     function findCartByUserIdAndCartIdAndNotTransactionId($user_id, $id)
     {
         $this->db->select('*');

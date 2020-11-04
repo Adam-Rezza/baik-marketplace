@@ -124,16 +124,113 @@ class MerchantController extends CI_Controller
 
 	public function get_transaction_detail($transaction_id)
 	{
-		$result = $this->merchant->findTransactionByMerchantIdAndTransactionId($this->session->userdata(SESSUSER . 'merchant_id'), $transaction_id)->result();
-		echo json_encode($result);
+		$data['transaction'] = $this->merchant->findTransactionByMerchantIdAndTransactionId($this->session->userdata(SESSUSER . 'merchant_id'), $transaction_id)->result();
+		foreach ($data['transaction'] as $g) {
+			$data['varians_order'][$g->cart_id] = [];
+			if ($g->variasi_id) {
+				$variasi_id = json_decode($g->variasi_id);
+				for ($i = 0; $i < count($variasi_id); $i++) {
+					array_push($data['varians_order'][$g->cart_id], $this->customer->findListVarianByListVarianId($variasi_id[$i])->row()->nama);
+				}
+			}
+		}
+		echo json_encode($data);
 	}
 
 	public function get_product_detail($id)
 	{
-		$where_product = ['del' => 0, 'id' => $id];
-		$product = $this->merchant->get('produk', '*', $where_product)->row();
+		$where_product = ['del' => 0, 'id' => $id, 'toko_id' => $this->session->userdata(SESSUSER . 'merchant_id')];
+		$product = $this->merchant->get('produk', '*', $where_product);
+		if ($product->num_rows() > 0) {
+			echo json_encode($product->row());
+		} else {
+			echo json_encode('false');
+		}
+	}
 
-		echo json_encode($product);
+	public function get_variasi_product($id)
+	{
+		$where_product = ['del' => 0, 'id' => $id, 'toko_id' => $this->session->userdata(SESSUSER . 'merchant_id')];
+		$check = $this->merchant->get('produk', '*', $where_product)->num_rows();
+		if ($check > 0) {
+			$where_variasi = ['del' => 0, 'produk_id' => $id];
+			$data['variasi'] = $this->merchant->get('variasi_produk', '*', $where_variasi)->result();
+			foreach ($data['variasi'] as $f) {
+				$where_list_variasi = ['del' => 0, 'parent' => $f->id, 'produk_id' => $id];
+				$data['list_variasi'][$f->id] = $this->merchant->get('list_variasi_produk', '*', $where_list_variasi)->result();
+			}
+			echo json_encode($data);
+		} else {
+			echo json_encode('false');
+		}
+	}
+
+	public function save_variasi_product($id)
+	{
+		$where_product = ['del' => 0, 'id' => $id, 'toko_id' => $this->session->userdata(SESSUSER . 'merchant_id')];
+		$check = $this->merchant->get('produk', '*', $where_product)->num_rows();
+		if ($check > 0) {
+			$insert_variasi = true;
+			$insert_list_variasi = true;
+			$variasi_id = $this->input->post('variasi_id');
+			$variasi = $this->input->post('variasi');
+			$delete_variasi = $this->input->post('delete_variasi');
+			$list_variasi_id = $this->input->post('list_variasi_id');
+			$list_variasi_parent = $this->input->post('list_variasi_parent');
+			$list_variasi = $this->input->post('list_variasi');
+			$active_list_variasi = $this->input->post('active_list_variasi');
+			$delete_list_variasi = $this->input->post('delete_list_variasi');
+			if ($variasi && $list_variasi) {
+				for ($i = 0; $i < count($variasi); $i++) {
+					$data_variasi = [
+						'produk_id' => $id,
+						'nama' => $variasi[$i],
+						'del' => $delete_variasi[$i] == 'true' ? 1 : 0
+					];
+					if ($variasi_id[$i] > 1000) {
+						$this->merchant->update('variasi_produk', $data_variasi, $variasi_id[$i]);
+						$result_variasi = $variasi_id[$i];
+					} else {
+						$result_variasi = $this->merchant->insert('variasi_produk', $data_variasi);
+						$insert_variasi = $insert_variasi && $result_variasi ? true : false;
+					}
+					for ($j = 0; $j < count($list_variasi); $j++) {
+						if ($list_variasi_parent[$j] == $variasi_id[$i]) {
+							$data_list_variasi = [
+								'produk_id' => $id,
+								'parent' => $result_variasi,
+								'nama' => $list_variasi[$j],
+								'del' => $delete_list_variasi[$j] == 'true' ? 1 : 0,
+								'active' => $active_list_variasi[$j] == 'true' ? 1 : 0
+							];
+							if ($list_variasi_id[$j] > 0) {
+								$result_list_variasi = $this->merchant->update('list_variasi_produk', $data_list_variasi, $list_variasi_id[$j]);
+							} else {
+								$result_list_variasi = $this->merchant->insert('list_variasi_produk', $data_list_variasi);
+								$insert_list_variasi = $insert_list_variasi && $result_list_variasi ? true : false;
+							}
+						}
+					}
+				}
+				if ($insert_variasi && $insert_list_variasi) {
+					$data_product['modified_date'] = date('Y-m-d h:i:s');
+					$result = $this->merchant->update_product('produk', $data_product, $id, $this->session->userdata(SESSUSER . 'merchant_id'));
+					if ($result) {
+						echo json_encode('true');
+					} else {
+						//rollback here if needed
+						echo json_encode('false');
+					}
+				} else {
+					//rollback here if needed
+					echo json_encode('false');
+				}
+			} else {
+				echo json_encode('true');
+			}
+		} else {
+			echo json_encode('false');
+		}
 	}
 
 	public function on_change_category($category_id)
@@ -165,6 +262,7 @@ class MerchantController extends CI_Controller
 		$data['sub_kategori_id'] = $this->input->post('sub_kategori') ? $this->input->post('sub_kategori') : null;
 		$data['desc'] = $this->input->post('desc');
 		if ($this->session->userdata(SESSUSER . 'merchant_id')) {
+			// if insert or update
 			if ($id) {
 				$data['modified_date'] = date('Y-m-d h:i:s');
 				$result = $this->merchant->update_product('produk', $data, $id, $this->session->userdata(SESSUSER . 'merchant_id'));
@@ -178,15 +276,58 @@ class MerchantController extends CI_Controller
 				$result = $this->merchant->insert('produk', $data);
 				if ($result > 0) {
 					$data['id'] = $result;
-					$this->upload_gambar_new_product($gambar, $result);
-					echo json_encode('true');
+					$insert_variasi = true;
+					$insert_list_variasi = true;
+					$insert_gambar = $this->upload_gambar_new_product($gambar, $result);
+					$variasi_id = $this->input->post('variasi_id');
+					$variasi = $this->input->post('variasi');
+					$delete_variasi = $this->input->post('delete_variasi');
+					$list_variasi_id = $this->input->post('list_variasi_id');
+					$list_variasi_parent = $this->input->post('list_variasi_parent');
+					$list_variasi = $this->input->post('list_variasi');
+					$active_list_variasi = $this->input->post('active_list_variasi');
+					$delete_list_variasi = $this->input->post('delete_list_variasi');
+					if ($variasi && $list_variasi) {
+						for ($i = 0; $i < count($variasi); $i++) {
+							$data_variasi = [
+								'produk_id' => $result,
+								'nama' => $variasi[$i],
+								'del' => $delete_variasi[$i] == 'true' ? 1 : 0
+							];
+							$result_variasi = $this->merchant->insert('variasi_produk', $data_variasi);
+							$insert_variasi = $insert_variasi && $result_variasi ? true : false;
+							for ($j = 0; $j < count($list_variasi); $j++) {
+								if ($list_variasi_parent[$j] == $variasi_id[$i]) {
+									$data_list_variasi = [
+										'produk_id' => $result,
+										'parent' => $result_variasi,
+										'nama' => $list_variasi[$j],
+										'del' => $delete_list_variasi[$j] == 'true' ? 1 : 0,
+										'active' => $active_list_variasi[$j] == 'true' ? 1 : 0
+									];
+									$result_list_variasi = $this->merchant->insert('list_variasi_produk', $data_list_variasi);
+									$insert_list_variasi = $insert_list_variasi && $result_list_variasi ? true : false;
+								}
+							}
+						}
+						if ($insert_variasi && $insert_gambar && $insert_list_variasi) {
+							echo json_encode('true');
+						} else {
+							//rollback here if needed
+							echo json_encode('false');
+						}
+					} else {
+						echo json_encode('true');
+					}
 				} else {
 					echo json_encode('false');
 				}
 			}
+			// end if insert or update
 		} else {
 			echo json_encode('false');
 		}
+		// echo json_encode($this->input->post());
 	}
 
 	public function delete_product($product_id)
@@ -204,44 +345,48 @@ class MerchantController extends CI_Controller
 	public function upload_gambar_new_product($gambar, $product_id)
 	{
 		$i = 0;
-		foreach ($gambar as $image) {
-			$i++;
-			$product = $this->merchant->findProductByMerhanctIdAndProductId($this->session->userdata(SESSUSER . 'merchant_id'), $product_id, 1);
-			if ($product->row()) {
-				$filename = $product_id . uniqid() . '.png';
-				$folderPath = 'public/img/produk/';
-				$image_parts = explode(";base64,", $image);
-				$image_type_aux = explode("image/", $image_parts[0]);
-				$image_type = $image_type_aux[1];
+		if ($gambar) {
+			foreach ($gambar as $image) {
+				$i++;
+				$product = $this->merchant->findProductByMerhanctIdAndProductId($this->session->userdata(SESSUSER . 'merchant_id'), $product_id, 1);
+				if ($product->row()) {
+					$filename = $product_id . uniqid() . '.png';
+					$folderPath = 'public/img/produk/';
+					$image_parts = explode(";base64,", $image);
+					$image_type_aux = explode("image/", $image_parts[0]);
+					$image_type = $image_type_aux[1];
 
-				$image_base64 = base64_decode($image_parts[1]);
-				$file = $folderPath . $filename;
+					$image_base64 = base64_decode($image_parts[1]);
+					$file = $folderPath . $filename;
 
-				if (file_put_contents($file, $image_base64)) {
-					$data = [
-						'produk_id' => $product_id,
-						'gambar' => $filename,
-						'urutan' => $i,
-					];
-					$urutan = $product->row()->urutan ? $product->row()->urutan + 1 : 1;
-					if ($urutan < 5) {
-						$data['urutan'] = $urutan;
-						$result = $this->merchant->insert('gambar_produk', $data);
-						if ($result) {
-							$data['id'] = $result;
-							echo json_encode($data);
+					if (file_put_contents($file, $image_base64)) {
+						$data = [
+							'produk_id' => $product_id,
+							'gambar' => $filename,
+							'urutan' => $i,
+						];
+						$urutan = $product->row()->urutan ? $product->row()->urutan + 1 : 1;
+						if ($urutan < 5) {
+							$data['urutan'] = $urutan;
+							$result = $this->merchant->insert('gambar_produk', $data);
+							if ($result) {
+								$data['id'] = $result;
+								return true;
+							} else {
+								return false;
+							}
 						} else {
-							echo json_encode('false');
+							return false;
 						}
 					} else {
-						echo json_encode('false');
+						return false;
 					}
 				} else {
-					echo json_encode('false');
+					return false;
 				}
-			} else {
-				echo json_encode('false');
 			}
+		} else {
+			return true;
 		}
 	}
 

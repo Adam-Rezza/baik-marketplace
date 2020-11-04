@@ -65,6 +65,7 @@
                         <p class="intro-product-category"><?= $f->desc ?></p>
                         <div class="relative button-product-list clearfix">
                             <ul class="clear-margin">
+                                <li class=""><a href="#" class="animate-default edit-variasi bg-orange" data-id="<?= $f->id ?>">Variasi</a></li>
                                 <li class=""><a href="#" class="animate-default edit-product bg-orange" data-id="<?= $f->id ?>">Edit</a></li>
                                 <li class=""><a href="#" class="animate-default delete-product bg-orange" data-id="<?= $f->id ?>">Hapus</a></li>
                             </ul>
@@ -112,56 +113,107 @@
                         <form method="post" action="" id="productForm" enctype="multipart/form-data">
                             <input class="full-width hidden" type="text" name="produk_id" id="produk_id">
                             <div class="form-input full-width clearfix relative">
-                                <label>Nama Produk *</label>
-                                <input class="full-width" type="text" name="nama" id="nama">
+                                <div class="row">
+                                    <label>Nama Produk *</label>
+                                    <input class="full-width" type="text" name="nama" id="nama">
+                                </div>
                             </div>
                             <div class="form-input full-width clearfix relative">
-                                <label>Harga *</label>
-                                <input class="full-width" type="text" name="harga_asli" id="harga_asli">
+                                <div class="row">
+                                    <label>Harga *</label>
+                                    <input class="full-width" type="text" name="harga_asli" id="harga_asli">
+                                </div>
                             </div>
                             <div class="form-input full-width clearfix relative">
-                                <label>Diskon (%)</label>
-                                <input class="full-width" type="number" name="disc" id="disc" value="0">
+                                <div class="row">
+                                    <label>Diskon (%)</label>
+                                    <input class="full-width" type="number" name="disc" id="disc" value="0">
+                                </div>
                             </div>
                             <div class="form-input full-width clearfix relative">
-                                <label>Harga setelah diskon</label>
-                                <input class="full-width" type="text" name="harga_disc" id="harga_disc" readonly>
+                                <div class="row">
+                                    <label>Harga setelah diskon</label>
+                                    <input class="full-width" type="text" name="harga_disc" id="harga_disc" readonly>
+                                    <label id="harga_disc-error" class="error" for="harga_disc" style="display: none"></label>
+                                    <span class="add-variasi"><i class="fa fa-plus" aria-hidden="true"></i> variasi</span>
+                                </div>
+                            </div>
+                            <div class="form-input full-width variasi" id="variasi">
                             </div>
                             <div class="form-input full-width clearfix relative">
-                                <label>Kategori</label>
-                                <select class="full-width" name="kategori" id="kategori">
-                                    <option value="">Semua Kategori</option>
-                                    <?php foreach ($category as $f) { ?>
-                                        <option value="<?= $f->id ?>"><?= $f->nama ?></option>
-                                    <?php } ?>
-                                </select>
+                                <div class="row">
+                                    <label>Kategori</label>
+                                    <select class="full-width" name="kategori" id="kategori">
+                                        <option value="">Semua Kategori</option>
+                                        <?php foreach ($category as $f) { ?>
+                                            <option value="<?= $f->id ?>"><?= $f->nama ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-input full-width clearfix relative" id="sub-kategori-parent" style="display: none">
-                                <label>Sub Kategori</label>
-                                <select class="full-width" name="sub_kategori" id="sub_kategori">
-                                    <option value="">Semua Sub Kategori</option>
-                                </select>
+                                <div class="row">
+                                    <label>Sub Kategori</label>
+                                    <select class="full-width" name="sub_kategori" id="sub_kategori">
+                                        <option value="">Semua Sub Kategori</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="form-input full-width clearfix relative">
-                                <label>Deskripsi</label>
-                                <textarea class="full-width" name="desc" id="desc" style="resize: none; line-height: 22px; padding: 7px" rows='5'></textarea>
+                                <div class="row">
+                                    <label>Deskripsi</label>
+                                    <textarea class="full-width" name="desc" id="desc" style="resize: none; line-height: 22px; padding: 7px" rows='5'></textarea>
+                                </div>
                             </div>
                             <div class="form-input full-width clearfix relative image-add-container">
-                                <label style="display: block;">Upload Gambar</label>
-                                <div class="image-add-product-container" id="image-add-product-sortable">
+                                <div class="row">
+                                    <label style="display: block;">Upload Gambar</label>
+                                    <div class="image-add-product-container" id="image-add-product-sortable">
 
-                                </div>
-                                <div class="image-add-product-container" id="image-add-product-container" style="display: inline">
-                                    <div class="image-product-add-item" id="image-product-item-example-4">
-                                        <div class="image-product-item-content">
-                                            <img src="<?= base_url(); ?>public/megastore/img/add-image.png" class="btn-image-product" data-target="add-image-new-product">
-                                            <input type="file" class="input-new-image-product hidden" id="add-image-new-product" accept="image/*">
+                                    </div>
+                                    <div class="image-add-product-container" id="image-add-product-container" style="display: inline">
+                                        <div class="image-product-add-item" id="image-product-item-example-4">
+                                            <div class="image-product-item-content">
+                                                <img src="<?= base_url(); ?>public/megastore/img/add-image.png" class="btn-image-product" data-target="add-image-new-product">
+                                                <input type="file" class="input-new-image-product hidden" id="add-image-new-product" accept="image/*">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-input full-width clearfix relative text-center">
                                 <button class="btn-daftar-toko full-width top-margin-15-default bg-orange" id="register">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg out" id="modalVariasi" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="relative">
+                    <button type="button" class="close-modal animate-default" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="ti-close"></span>
+                    </button>
+                    <div class="col-md-12 relative overfollow-hidden bottom-margin-15-default">
+                        <h3 class="title-modal-variasi">Edit Variasi Produk</h3>
+                        <form method="post" action="" id="variasiForm" enctype="multipart/form-data">
+                            <input class="full-width hidden" type="text" name="produk_id" id="variasi_produk_id">
+                            <div class="form-input full-width clearfix relative text-center">
+                                <button class="btn-daftar-toko full-width top-margin-15-default bg-orange add-variasi pull-left" id="addVariasi">Tambah</button>
+                            </div>
+                            <div class="form-input full-width variasi-null">
+                                <h3 class="text-gray">Tidak ada variasi</h3>
+                            </div>
+                            <div class="form-input full-width variasi">
+                            </div>
+                            <div class="form-input full-width clearfix relative text-center">
+                                <button class="btn-daftar-toko full-width top-margin-15-default bg-orange" id="editVariasi">Simpan</button>
                             </div>
                         </form>
                     </div>
@@ -236,7 +288,7 @@
 </div>
 
 <div class="modal fade bs-example-modal-lg out" id="modalCropImage" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-cropper" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-cropper" role="document" style="max-width: 540px">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="relative">
