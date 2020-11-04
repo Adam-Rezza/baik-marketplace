@@ -414,7 +414,7 @@ class TransactionController extends CI_Controller
 		$exec = $this->mcore->store_uuid('jurnal', $data);
 
 		$data = [
-			'id_user'        => '0',
+			'id_user'        => '1',
 			'id_transaksi'   => $id_transaksi,
 			'tipe'           => 'debit',
 			'total'          => $grand_total,
@@ -428,7 +428,7 @@ class TransactionController extends CI_Controller
 		}
 
 		$pengurangan_saldo = $this->ci->transaction->penguranganSaldo($id_user, $grand_total);
-		$penambahan_saldo = $this->ci->transaction->penambahanSaldo('0', $grand_total);
+		$penambahan_saldo = $this->ci->transaction->penambahanSaldo('1', $grand_total);
 
 		return TRUE;
 	}
@@ -436,20 +436,22 @@ class TransactionController extends CI_Controller
 	public function _jurnal_selesai($id_transaksi, $grand_total, $id_user)
 	{
 		$data = [
-			'id_user'      => '0',
-			'id_transaksi' => $id_transaksi,
-			'tipe'         => 'kredit',
-			'total'        => $grand_total,
-			'created_at'   => date('Y-m-d H:i:s'),
+			'id_user'        => '1',
+			'id_transaksi'   => $id_transaksi,
+			'tipe'           => 'kredit',
+			'total'          => $grand_total,
+			'kode_transaksi' => 'penjualan',
+			'created_at'     => date('Y-m-d H:i:s'),
 		];
 		$exec = $this->mcore->store_uuid('jurnal', $data);
 
 		$data = [
-			'id_user'      => $id_user,
-			'id_transaksi' => $id_transaksi,
-			'tipe'         => 'debit',
-			'total'        => $grand_total,
-			'created_at'   => date('Y-m-d H:i:s'),
+			'id_user'        => $id_user,
+			'id_transaksi'   => $id_transaksi,
+			'tipe'           => 'debit',
+			'total'          => $grand_total,
+			'kode_transaksi' => 'penjualan',
+			'created_at'     => date('Y-m-d H:i:s'),
 		];
 		$exec = $this->mcore->store_uuid('jurnal', $data);
 
@@ -457,7 +459,7 @@ class TransactionController extends CI_Controller
 			return FALSE;
 		}
 
-		$pengurangan_saldo = $this->ci->transaction->penguranganSaldo('0', $grand_total);
+		$pengurangan_saldo = $this->ci->transaction->penguranganSaldo('1', $grand_total);
 		$penambahan_saldo = $this->ci->transaction->penambahanSaldo($id_user, $grand_total);
 
 		return TRUE;

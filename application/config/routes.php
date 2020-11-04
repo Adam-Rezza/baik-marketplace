@@ -33,6 +33,7 @@ $route['mutasi_dompet']          = 'CustomerController/mutasi_dompet';
 $route['get_data_mutasi_dompet'] = 'CustomerController/get_data_mutasi_dompet';
 $route['get_target_info']        = 'CustomerController/get_target_info';
 $route['proses_transfer']        = 'CustomerController/proses_transfer';
+$route['topup_sukarela']         = 'CustomerController/topup_sukarela';
 
 // $route['category'] = 'CustomerController/category';
 $route['discount%26page=(:any)'] = 'CustomerController/discount/$1/';

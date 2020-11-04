@@ -8,6 +8,9 @@ class CustomerController extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->ci = &get_instance();
+		$this->load->helper(['cookie', 'string']);
+		$this->ci->load->model('m_transaction', 'transaction');
 		$this->load->library('TemplateCustomer', NULL, 'template');
 	}
 
@@ -528,7 +531,8 @@ class CustomerController extends CI_Controller
 		$from = $tgl_obj_from->createFromFormat('d/m/Y', $from)->format('Y-m-d');
 		$to   = $tgl_obj_to->createFromFormat('d/m/Y', $to)->format('Y-m-d');
 
-		$arr = $this->mcore->get('jurnal', '*', ['id_user' => $id_user, 'created_at >=' => $from, 'created_at <=' => $to], 'created_at', 'ASC');
+		$arr = $this->mcore->get('jurnal', '*', ['id_user' => $id_user, 'DATE(created_at) >=' => $from, 'DATE(created_at) <=' => $to], 'created_at', 'ASC');
+
 
 		if (!$arr) {
 			echo json_encode(['code' => 500]);
@@ -540,7 +544,7 @@ class CustomerController extends CI_Controller
 			exit;
 		}
 
-		$arr_genesis = $this->mcore->get('jurnal', 'created_at', ['id_user' => $id_user, 'created_at <' => $from], 'created_at', 'ASC', '1');
+		$arr_genesis = $this->mcore->get('jurnal', 'created_at', ['id_user' => $id_user, 'DATE(created_at) <' => $from], 'created_at', 'ASC', '1');
 
 
 		if (!$arr_genesis) {
@@ -552,8 +556,8 @@ class CustomerController extends CI_Controller
 		if ($arr_genesis->num_rows() == 1) {
 			$where_init_saldo = [
 				'id_user'       => $id_user,
-				'created_at >=' => $arr_genesis->row()->created_at,
-				'created_at <'  => $from
+				'DATE(created_at) >=' => $arr_genesis->row()->created_at,
+				'DATE(created_at) <'  => $from
 			];
 			$arr_init_saldo = $this->mcore->get('jurnal', 'tipe, total', $where_init_saldo, 'created_at', 'ASC');
 
@@ -615,7 +619,12 @@ class CustomerController extends CI_Controller
 			if ($kode_transaksi == 'topup dari sukarela') {
 				$keterangan = ucfirst($kode_transaksi);
 			} elseif ($kode_transaksi == 'topup via petugas') {
-				$arr_jurnal_petugas = $this->mcore->get('jurnal', 'id_user', ['id' => $id, 'created_at >' => $created_at, 'tipe' => 'debit', 'kode_transaksi' => $kode_transaksi], 'created_at', 'asc', '1');
+				$arr_jurnal_petugas = $this->mcore->get('jurnal', 'id_user', [
+					'id'                 => $id,
+					'DATE(created_at) >' => $created_at,
+					'tipe'               => 'debit',
+					'kode_transaksi'     => $kode_transaksi
+				], 'created_at', 'asc', '1');
 				$arr_petugas = $this->mcore->get('user', 'nama', ['id' => $arr_jurnal_petugas->row()->id_user], 'id', 'asc', '1');
 				$nama_petugas = $arr_petugas->row()->nama;
 
@@ -625,7 +634,12 @@ class CustomerController extends CI_Controller
 					$keterangan = ucfirst($kode_transaksi) . " $nama_petugas (" . $arr_jurnal_petugas->row()->id_user . ")";
 				}
 			} elseif ($kode_transaksi == 'transfer') {
-				$arr_jurnal_anggota_tujuan = $this->mcore->get('jurnal', 'id_user', ['id' => $id, 'created_at >' => $created_at, 'tipe' => 'debit', 'kode_transaksi' => $kode_transaksi], 'created_at', 'asc', '1');
+				$arr_jurnal_anggota_tujuan = $this->mcore->get('jurnal', 'id_user', [
+					'id'                 => $id,
+					'DATE(created_at) >' => $created_at,
+					'tipe'               => 'debit',
+					'kode_transaksi'     => $kode_transaksi
+				], 'created_at', 'asc', '1');
 				$arr_anggota_tujuan = $this->mcore->get('user', 'nama', ['id' => $arr_jurnal_anggota_tujuan->row()->id_user], 'id', 'asc', '1');
 				$nama_anggota_tujuan = $arr_anggota_tujuan->row()->nama;
 
@@ -651,7 +665,12 @@ class CustomerController extends CI_Controller
 
 				$keterangan = ucfirst($kode_transaksi) . " invoice " . $invoice;
 			} elseif ($kode_transaksi == 'tarik tunai via petugas') {
-				$arr_jurnal_petugas = $this->mcore->get('jurnal', 'id_user', ['id' => $id, 'created_at >' => $created_at, 'tipe' => 'debit', 'kode_transaksi' => $kode_transaksi], 'created_at', 'asc', '1');
+				$arr_jurnal_petugas = $this->mcore->get('jurnal', 'id_user', [
+					'id'                 => $id,
+					'DATE(created_at) >' => $created_at,
+					'tipe'               => 'debit',
+					'kode_transaksi'     => $kode_transaksi
+				], 'created_at', 'asc', '1');
 				$arr_petugas = $this->mcore->get('user', 'nama', ['id' => $arr_jurnal_petugas->row()->id_user], 'id', 'asc', '1');
 				$nama_petugas = $arr_petugas->row()->nama;
 				$keterangan = ucfirst($kode_transaksi) . " " . $nama_petugas;
@@ -740,6 +759,31 @@ class CustomerController extends CI_Controller
 		if ($exec == 500) {
 			echo json_encode(['code' => 500]);
 			exit;
+		}
+
+		echo json_encode(['code' => 200]);
+	}
+
+	public function topup_sukarela()
+	{
+		$id_user = $this->session->userdata(SESSUSER . 'id');
+		$nominal = $this->input->post('nominal');
+
+		$data = [
+			'id_user'        => $id_user,
+			'id_transaksi'   => NULL,
+			'tipe'           => 'debit',
+			'total'          => $nominal,
+			'kode_transaksi' => 'topup dari sukarela',
+			'created_at'     => date('Y-m-d H:i:s'),
+		];
+		$exec = $this->mcore->store_uuid('jurnal', $data);
+
+		$this->ci->transaction->penambahanSaldo($id_user, $nominal);
+
+		if (!$exec) {
+			echo json_encode(['code' => 500]);
+			exit();
 		}
 
 		echo json_encode(['code' => 200]);

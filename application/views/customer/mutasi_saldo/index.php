@@ -37,7 +37,7 @@
 							<p class="title-category-page clear-margin">Mutasi Dompet</p>
 							<div class="pull-right">
 								<div class="btn-group">
-									<button type="button" class="btn btn-info" onclick="comingSoon();">
+									<button type="button" class="btn btn-info" onclick="topupSukarela();">
 										<i class="fa fa-money fa-fw"></i> Dari Sukarela
 									</button>
 									<button type="button" class="btn btn-info" onclick="comingSoon();">
@@ -136,3 +136,28 @@
 		</div>
 	</div>
 </div>
+
+
+<form id="form_topup_dari_sukarela">
+	<div class="modal fade" id="modal_topup_dari_sukarela">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Topup dari Sukarela</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="nominal_topup_sukarela">Nominal</label>
+						<input type="number" class="form-control" id="nominal_topup_sukarela" name="nominal_topup_sukarela" value="0" required />
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" id="id_user_topup" name="id_user_topup" value="<?= $this->session->userdata(SESSUSER . 'id'); ?>">
+					<button type="submit" class="btn btn-primary">Topup</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

@@ -51,7 +51,11 @@
         vTerimaTF = $('#vTerimaTF'),
         vKirimTF = $('#vKirimTF'),
         qrCodeIdAnggota = $('#qrcode_id_anggota'),
-        idTujuan = $('#id_tujuan');
+        idTujuan = $('#id_tujuan'),
+        formTopupDariSukarela = $('#form_topup_dari_sukarela'),
+        modalTopupDariSukarela = $('#modal_topup_dari_sukarela'),
+        idUserTopup = $('#id_user_topup'),
+        nominalTopupSukarela = $('#nominal_topup_sukarela');
 
     function docReady(fn) {
         // see if DOM is already available
@@ -301,5 +305,52 @@
             'Sedang dalam tahap pengerjaan',
             'info'
         )
+    }
+
+    function topupSukarela() {
+        modalTopupDariSukarela.modal('show');
+
+        formTopupDariSukarela.on('submit', function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: `<?= site_url(); ?>topup_sukarela`,
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    id: idUserTopup.val(),
+                    nominal: nominalTopupSukarela.val()
+                },
+                beforeSend: function(res) {
+                    $.blockUI();
+                }
+            }).always(function(res) {
+                $.unblockUI();
+            }).fail(function(res) {
+                console.log(res);
+            }).done(function(res) {
+                console.log(res);
+
+                if (res.code == 200) {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Proses Topup dari Sukarela Berhasil',
+                        showConfirmButton: false,
+                        timer: 2000
+                    }).then(function(result) {
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Terjadi kesalahan dengan database, silahkan refesh halaman',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                }
+            });
+        });
     }
 </script>
