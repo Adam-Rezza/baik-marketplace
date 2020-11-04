@@ -312,42 +312,49 @@
 
         formTopupDariSukarela.on('submit', function(e) {
             e.preventDefault();
+            Swal.fire({
+                icon: 'question',
+                title: 'Topup dari Sukarela ?',
+                showConfirmButton: true,
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `<?= site_url(); ?>topup_sukarela`,
+                        method: 'post',
+                        dataType: 'json',
+                        data: {
+                            id: idUserTopup.val(),
+                            nominal: nominalTopupSukarela.val()
+                        },
+                        beforeSend: function(res) {
+                            $.blockUI();
+                        }
+                    }).always(function(res) {
+                        $.unblockUI();
+                    }).fail(function(res) {
+                        console.log(res);
+                    }).done(function(res) {
+                        console.log(res);
 
-            $.ajax({
-                url: `<?= site_url(); ?>topup_sukarela`,
-                method: 'post',
-                dataType: 'json',
-                data: {
-                    id: idUserTopup.val(),
-                    nominal: nominalTopupSukarela.val()
-                },
-                beforeSend: function(res) {
-                    $.blockUI();
-                }
-            }).always(function(res) {
-                $.unblockUI();
-            }).fail(function(res) {
-                console.log(res);
-            }).done(function(res) {
-                console.log(res);
-
-                if (res.code == 200) {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Proses Topup dari Sukarela Berhasil',
-                        showConfirmButton: false,
-                        timer: 2000
-                    }).then(function(result) {
-                        window.location.reload();
-                    });
-                } else {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: 'Terjadi kesalahan dengan database, silahkan refesh halaman',
-                        showConfirmButton: false,
-                        timer: 3000
+                        if (res.code == 200) {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Proses Topup dari Sukarela Berhasil',
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then(function(result) {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'error',
+                                title: 'Terjadi kesalahan dengan database, silahkan refesh halaman',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
                     });
                 }
             });
