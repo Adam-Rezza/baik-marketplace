@@ -635,12 +635,14 @@ class CustomerController extends CI_Controller
 				}
 			} elseif ($kode_transaksi == 'transfer') {
 				$arr_jurnal_anggota_tujuan = $this->mcore->get('jurnal', 'id_user', [
-					'id'                 => $id,
-					'DATE(created_at) >' => $created_at,
-					'tipe'               => 'debit',
-					'kode_transaksi'     => $kode_transaksi
+					// 'id'                 => $id,
+					// 'DATE(created_at) >' => $created_at,
+					'tipe'           => 'debit',
+					'kode_transaksi' => $kode_transaksi,
+					'id_transaksi'   => $id_transaksi
 				], 'created_at', 'asc', '1');
 				$arr_anggota_tujuan = $this->mcore->get('user', 'nama', ['id' => $arr_jurnal_anggota_tujuan->row()->id_user], 'id', 'asc', '1');
+
 				$nama_anggota_tujuan = $arr_anggota_tujuan->row()->nama;
 
 				if ($tipe == 'kredit') {
