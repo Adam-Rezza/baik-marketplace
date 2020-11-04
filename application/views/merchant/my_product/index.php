@@ -288,7 +288,7 @@
 </div>
 
 <div class="modal fade bs-example-modal-lg out" id="modalCropImage" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-cropper" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-cropper" role="document" style="max-width: 540px">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="relative">

@@ -56,13 +56,14 @@
                     $.each(transaction, function(i, v) {
                         totalPrice += (v.harga * v.qty)
                         listProduct += `
-                                        <div style="clear: both">
-                                            <p class="float-left"><b><a href="<?= base_url() ?>product/${v.produk_id}">${v.produk}</a></b> (x${v.qty})</p>
-                                            <p class="float-right">Rp. ${rupiahFormat((v.harga * v.qty).toString())}</p>
-                                        </div>
-                                        <div style="clear: both">
-                                            <p class="float-left">(${res.varians_order[v.cart_id].join(', ')})</p>
-                                        </div>`
+                            <div style="clear: both">
+                                <p class="float-left"><b><a href="<?= base_url() ?>product/${v.produk_id}">${v.produk}</a></b> (x${v.qty})</p>
+                                <p class="float-right">Rp. ${rupiahFormat((v.harga * v.qty).toString())}</p>
+                            </div>` +
+                            (res.varians_order[v.cart_id].length > 0 ? `
+                            <div style="clear: both">
+                                <p class="float-left">(${res.varians_order[v.cart_id].join(', ')})</p>
+                            </div>` : ``)
                     })
                     customerDetail = `<table class="table no-padding">
                                             <tr>
@@ -96,7 +97,7 @@
                     }
                     $('.send-order').data('kurir', transaction[0].id_ekspedisi)
                     $('.kurir').html(transaction[0].id_ekspedisi.toUpperCase())
-                    if(transaction[0].resi){
+                    if (transaction[0].resi) {
                         $('.resi-container').show()
                         $('.resi').html(transaction[0].resi.toUpperCase())
                     } else {
