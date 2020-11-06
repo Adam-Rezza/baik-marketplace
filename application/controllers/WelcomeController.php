@@ -4,60 +4,62 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class WelcomeController extends CI_Controller
 {
 
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->helper('directory');
+		$this->load->helper('file');
+	}
+
+
 	public function index()
 	{
 		$truncate = $this->_truncate();
-		if ($truncate) {
-			echo "Truncate Berhasil <br />";
-		} else {
-			echo "Truncate Berhasil <br />";
-		}
+		($truncate) ? $text = "Truncate Berhasil <br />" : $text = "Truncate Berhasil <br />";
+		echo $text;
 
 		$init_admin = $this->_init_admin();
-		if ($init_admin) {
-			echo "Init Admin Berhasil <br />";
-		} else {
-			echo "Init Admin Berhasil <br />";
-		}
+		($init_admin) ? $text = "Init Admin Berhasil <br />" : $text = "Init Admin gagal <br />";
+		echo $text;
 
 		$init_user = $this->_init_user();
-		if ($init_user) {
-			echo "Init User Berhasil <br />";
-		} else {
-			echo "Init User Berhasil <br />";
-		}
+		($init_user) ? $text = "Init User Berhasil <br />" : $text = "Init User gagal <br />";
+		echo $text;
 
 		$init_banner = $this->_init_banner();
-		if ($init_banner) {
-			echo "Init Banner Berhasil <br />";
-		} else {
-			echo "Init Banner Berhasil <br />";
-		}
+		($init_banner) ? $text = "Init Banner Berhasil <br />" : $text = "Init Banner gagal <br />";
+		echo $text;
 
 		$init_ekspedisi = $this->_init_ekspedisi();
-		if ($init_ekspedisi) {
-			echo "Init Ekspedisi Berhasil <br />";
-		} else {
-			echo "Init Ekspedisi Berhasil <br />";
-		}
+		($init_ekspedisi) ? $text = "Init Ekspedisi Berhasil <br />" : $text = "Init Ekspedisi gagal <br />";
+		echo $text;
 
 		$init_kategori = $this->_init_kategori();
-		if ($init_kategori) {
-			echo "Init Kategori Berhasil <br />";
-		} else {
-			echo "Init Kategori Berhasil <br />";
-		}
+		($init_kategori) ? $text = "Init Kategori Berhasil <br />" : $text = "Init Kategori gagal <br />";
+		echo $text;
 
 		$init_sub_kategori = $this->_init_sub_kategori();
-		if ($init_sub_kategori) {
-			echo "Init Sub Kategori Berhasil <br />";
-		} else {
-			echo "Init Sub Kategori Berhasil <br />";
-		}
+		($init_sub_kategori) ? $text = "Init Sub Kategori Berhasil <br />" : $text = "Init Sub Kategori gagal <br />";
+		echo $text;
+
+		$init_toko = $this->_init_toko();
+		($init_toko) ? $text = "Init toko Berhasil <br />" : $text = "Init toko gagal <br />";
+		echo $text;
+
+		$init_produk = $this->_init_produk();
+		($init_produk) ? $text = "Init produk Berhasil <br />" : $text = "Init produk gagal <br />";
+		echo $text;
+
+		$init_review = $this->_init_review();
+		($init_review) ? $text = "Init review Berhasil <br />" : $text = "Init review gagal <br />";
+		echo $text;
+		$this->output->enable_profiler(TRUE);
 	}
 
 	public function _truncate()
 	{
+		$this->db->trans_begin();
 		$this->db->truncate('admins');
 		$this->db->truncate('alamat');
 		$this->db->truncate('banner');
@@ -76,12 +78,21 @@ class WelcomeController extends CI_Controller
 		$this->db->truncate('transaksi');
 		$this->db->truncate('user');
 		$this->db->truncate('variasi_produk');
+		$this->db->query('ALTER TABLE variasi_produk AUTO_INCREMENT = 1000');
+
+		if ($this->db->trans_status() === FALSE) {
+			$this->db->trans_rollback();
+			return FALSE;
+		} else {
+			$this->db->trans_commit();
+			return TRUE;
+		}
 	}
 
 	public function _init_admin()
 	{
 		$now      = new DateTime();
-		$password = password_hash('admin123)' . UYAH, PASSWORD_DEFAULT);
+		$password = password_hash('admin123)' . UYAH, PASSWORD_BCRYPT);
 
 		# INIT ADMIN
 		##################################################################
@@ -105,14 +116,26 @@ class WelcomeController extends CI_Controller
 
 	public function _init_user()
 	{
+		$path = './public/img/profile/';
+		$map = directory_map($path);
+
+		foreach ($map as $m => $v) {
+			// print_r($v) . '<br>';
+			if (in_array($v, ['user.png']) === FALSE) {
+				$file = $path . $v;
+				unlink($file);
+			}
+		}
+
 		$now      = new DateTime();
-		$password = password_hash('user123)' . UYAH, PASSWORD_DEFAULT);
+		$password = password_hash('test123)' . UYAH, PASSWORD_BCRYPT);
+		$checker  = [];
 
 		# INIT USER
 		##################################################################
 		$object = [
-			'id'       => '0',
-			'nama'     => 'BAIK',
+			'id'       => '1',
+			'nama'     => 'BAIK MIDDLEMAN',
 			'email'    => 'koperasi.baik@gmail.com',
 			'telp'     => '02518311342',
 			'gambar'   => 'baik_logo.png',
@@ -122,123 +145,134 @@ class WelcomeController extends CI_Controller
 			'ban'      => FALSE,
 			'saldo'    => '0',
 		];
-
-		$exec = $this->mcore->store('user', $object);
+		$last_id = $this->mcore->store('user', $object, TRUE);
 
 		$object = [
-			'id'        => '0',
-			'user_id'   => '0',
+			'user_id'   => $last_id,
 			'alamat'    => 'Komplek Pertanian, Jl. Siaga Kecamatan No.25, RT.02/RW.10, Loji, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16117',
 			'kelurahan' => '3271041016',
 			'kecamatan' => '327104',
 			'kota'      => '3271',
 			'provinsi'  => '32',
-			'kodepos'   => '16117',
 			'def'       => TRUE,
 			'del'       => FALSE,
 		];
-
 		$exec = $this->mcore->store('alamat', $object);
-		##################################################################
+
+		($exec) ? array_push($checker, TRUE) : array_push($checker, FALSE);
+
 		##################################################################
 		$object = [
-			'nama'     => 'TEST 1',
-			'email'    => 'test1@example.com',
+			'nama'     => 'Dummy 1',
+			'email'    => 'dummy1@example.com',
 			'telp'     => '081234567890',
 			'gambar'   => 'user-o.png',
-			'username' => 'test1',
+			'username' => 'dummy1',
 			'password' => $password,
 			'active'   => TRUE,
 			'ban'      => FALSE,
-			'saldo'    => '1000000',
+			'saldo'    => '0',
 		];
 
-		$exec = $this->mcore->store('user', $object);
+		$last_id = $this->mcore->store('user', $object, TRUE);
 
 		$object = [
-			'user_id'   => $exec->id,
+			'user_id'   => $last_id,
 			'alamat'    => 'Komplek Pertanian, Jl. Siaga Kecamatan No.25, RT.02/RW.10, Loji, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16117',
 			'kelurahan' => '3271041016',
 			'kecamatan' => '327104',
 			'kota'      => '3271',
 			'provinsi'  => '32',
-			'kodepos'   => '16117',
 			'def'       => TRUE,
 			'del'       => FALSE,
 		];
 
 		$exec = $this->mcore->store('alamat', $object);
+
+		($exec) ? array_push($checker, TRUE) : array_push($checker, FALSE);
 		##################################################################
 		##################################################################
 		$object = [
-			'nama'     => 'TEST 2',
-			'email'    => 'test2@example.com',
+			'nama'     => 'DUMMY 2',
+			'email'    => 'dummy2@example.com',
 			'telp'     => '081234567890',
 			'gambar'   => 'user-o.png',
 			'username' => 'test2',
 			'password' => $password,
 			'active'   => TRUE,
 			'ban'      => FALSE,
-			'saldo'    => '1000000',
+			'saldo'    => '0',
 		];
 
 		$exec = $this->mcore->store('user', $object);
 
 		$object = [
-			'user_id'   => $exec->id,
+			'user_id'   => $last_id,
 			'alamat'    => 'Komplek Pertanian, Jl. Siaga Kecamatan No.25, RT.02/RW.10, Loji, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16117',
 			'kelurahan' => '3271041016',
 			'kecamatan' => '327104',
 			'kota'      => '3271',
 			'provinsi'  => '32',
-			'kodepos'   => '16117',
 			'def'       => TRUE,
 			'del'       => FALSE,
 		];
 
 		$exec = $this->mcore->store('alamat', $object);
+
+		($exec) ? array_push($checker, TRUE) : array_push($checker, FALSE);
 		##################################################################
 		##################################################################
 		$object = [
-			'nama'     => 'TEST 3',
-			'email'    => 'test3@example.com',
+			'nama'     => 'DUMMY3',
+			'email'    => 'dummy3@example.com',
 			'telp'     => '081234567890',
 			'gambar'   => 'user-o.png',
 			'username' => 'test3',
 			'password' => $password,
 			'active'   => TRUE,
 			'ban'      => FALSE,
-			'saldo'    => '1000000',
+			'saldo'    => '0',
 		];
 
-		$exec = $this->mcore->store('user', $object);
+		$last_id = $this->mcore->store('user', $object, TRUE);
 		$object = [
-			'user_id'   => $exec->id,
+			'user_id'   => $last_id,
 			'alamat'    => 'Komplek Pertanian, Jl. Siaga Kecamatan No.25, RT.02/RW.10, Loji, Kec. Bogor Bar., Kota Bogor, Jawa Barat 16117',
 			'kelurahan' => '3271041016',
 			'kecamatan' => '327104',
 			'kota'      => '3271',
 			'provinsi'  => '32',
-			'kodepos'   => '16117',
 			'def'       => TRUE,
 			'del'       => FALSE,
 		];
 
 		$exec = $this->mcore->store('alamat', $object);
+
+		($exec) ? array_push($checker, TRUE) : array_push($checker, FALSE);
 		##################################################################
 
-		if ($exec === TRUE) {
-			return TRUE;
-		} else {
+		if (in_array(FALSE, $checker) === TRUE) {
 			return FALSE;
+		} else {
+			return TRUE;
 		}
 	}
 
 	public function _init_banner()
 	{
+		$path = './public/img/banner/';
+		$map = directory_map($path);
+
+		foreach ($map as $m => $v) {
+			// print_r($v) . '<br>';
+			if (in_array($v, ['banner_1.jpg', 'banner_2.jpg', 'banner_3.jpg']) === FALSE) {
+				$file = $path . $v;
+				unlink($file);
+			}
+		}
 		# INIT
 		##################################################################
-		$object = [
+		$object[1] = [
 			'gambar' => 'banner_1.jpg',
 			'url'    => '#',
 			'urutan' => '1',
@@ -246,10 +280,7 @@ class WelcomeController extends CI_Controller
 			'del'    => FALSE
 		];
 
-		$exec = $this->mcore->store('banner', $object);
-		##################################################################
-		##################################################################
-		$object = [
+		$object[2] = [
 			'gambar' => 'banner_2.jpg',
 			'url'    => '#',
 			'urutan' => '2',
@@ -257,10 +288,7 @@ class WelcomeController extends CI_Controller
 			'del'    => FALSE
 		];
 
-		$exec = $this->mcore->store('banner', $object);
-		##################################################################
-		##################################################################
-		$object = [
+		$object[3] = [
 			'gambar' => 'banner_3.jpg',
 			'url'    => '#',
 			'urutan' => '3',
@@ -268,93 +296,93 @@ class WelcomeController extends CI_Controller
 			'del'    => FALSE
 		];
 
-		$exec = $this->mcore->store('banner', $object);
-		##################################################################
+		$exec = $this->mcore->store_batch('banner', $object);
 
-		if ($exec === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $exec;
 	}
 
 	public function _init_ekspedisi()
 	{
-		$object = [];
 		# INIT
 		##################################################################
-		$nested = [
+		$nested[1] = [
 			'id'   => 'pos',
-			'nama' => 'POS Indonesia (POS)',
+			'nama' => 'POS - POS Indonesia',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[2] = [
 			'id'   => 'lion',
-			'nama' => 'Lion Parcel (LION)',
+			'nama' => 'LION - Lion Parcel',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[3] = [
 			'id'   => 'ninja',
-			'nama' => 'Ninja Xpress (NINJA)',
+			'nama' => 'NINJA - Ninja Xpress',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[4] = [
 			'id'   => 'sicepat',
-			'nama' => 'SiCepat Express (SICEPAT)',
+			'nama' => 'SICEPAT - SiCepat Express',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[5] = [
 			'id'   => 'jne',
-			'nama' => 'Jalur Nugraha Ekakurir (JNE)',
+			'nama' => 'JNE - Jalur Nugraha Ekakurir',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[6] = [
 			'id'   => 'tiki',
-			'nama' => 'Citra Van Titipan Kilat (TIKI)',
+			'nama' => 'TIKI - Citra Van Titipan Kilat',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[7] = [
 			'id'   => 'pandu',
-			'nama' => 'Pandu Logistics (PANDU)',
+			'nama' => 'PANDU - Pandu Logistics',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[8] = [
 			'id'   => 'wahana',
-			'nama' => 'Wahana Prestasi Logistik (WAHANA)',
+			'nama' => 'WAHANA - Wahana Prestasi Logistik',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[9] = [
 			'id'   => 'j&t',
-			'nama' => 'J&T Express (J&T)',
+			'nama' => 'J&T - J&T Express',
 		];
-		array_push($object, $nested);
 
-		$nested = [
+		$nested[10] = [
 			'id'   => 'pahala',
-			'nama' => 'Pahala Kencana Express (PAHALA)',
+			'nama' => 'PAHALA - Pahala Kencana Express',
 		];
-		array_push($object, $nested);
 
-		$exec = $this->mcore->store_batch('ekspedisi', $object);
-		##################################################################
+		$exec = $this->mcore->store_batch('ekspedisi', $nested);
 
-		if ($exec === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $exec;
 	}
 
 	public function _init_kategori()
 	{
+		$path = './public/img/kategori/';
+		$map = directory_map($path);
+
+		foreach ($map as $m => $v) {
+			// print_r($v) . '<br>';
+			$arrnya = [
+				'atk.jpg',
+				'handymade.jpg',
+				'makanan_dan_kue.jpg',
+				'pakaian_busana.jpg',
+				'peralatan_rumah_tangga.jpg',
+				'pob.jpg',
+				'sayur_dan_buah.jpg',
+				'sembako.jpg',
+			];
+			if (in_array($v, $arrnya) === FALSE) {
+				$file = $path . $v;
+				unlink($file);
+			}
+		}
+
 		$object = [];
 		# INIT
 		##################################################################
@@ -364,7 +392,7 @@ class WelcomeController extends CI_Controller
 			'created_date' => date('Y-m-d H:i:s'),
 			'active'       => TRUE,
 			'del'          => FALSE,
-			'gambar'       => 'sembako1.jpg',
+			'gambar'       => 'sembako.jpg',
 		];
 		array_push($object, $nested);
 
@@ -374,7 +402,7 @@ class WelcomeController extends CI_Controller
 			'created_date' => date('Y-m-d H:i:s'),
 			'active'       => TRUE,
 			'del'          => FALSE,
-			'gambar'       => 'buah_dan_sayur1.jpg',
+			'gambar'       => 'sayur_dan_buah.jpg',
 		];
 		array_push($object, $nested);
 
@@ -384,7 +412,7 @@ class WelcomeController extends CI_Controller
 			'created_date' => date('Y-m-d H:i:s'),
 			'active'       => TRUE,
 			'del'          => FALSE,
-			'gambar'       => 'makanan_dan_kue1.jpg',
+			'gambar'       => 'makanan_dan_kue.jpg',
 		];
 		array_push($object, $nested);
 
@@ -394,7 +422,7 @@ class WelcomeController extends CI_Controller
 			'created_date' => date('Y-m-d H:i:s'),
 			'active'       => TRUE,
 			'del'          => FALSE,
-			'gambar'       => 'peralatan_rumah_tangga1.jpg',
+			'gambar'       => 'peralatan_rumah_tangga.jpg',
 		];
 		array_push($object, $nested);
 
@@ -404,7 +432,7 @@ class WelcomeController extends CI_Controller
 			'created_date' => date('Y-m-d H:i:s'),
 			'active'       => TRUE,
 			'del'          => FALSE,
-			'gambar'       => 'pakaian_dan_busana1.jpg',
+			'gambar'       => 'pakaian_busana.jpg',
 		];
 		array_push($object, $nested);
 
@@ -414,13 +442,23 @@ class WelcomeController extends CI_Controller
 			'created_date' => date('Y-m-d H:i:s'),
 			'active'       => TRUE,
 			'del'          => FALSE,
-			'gambar'       => 'alat_tulis_kantor1.jpg',
+			'gambar'       => 'atk.jpg',
+		];
+		array_push($object, $nested);
+
+		$nested = [
+			'nama'         => 'Handymade',
+			'urutan'       => '7',
+			'created_date' => date('Y-m-d H:i:s'),
+			'active'       => TRUE,
+			'del'          => FALSE,
+			'gambar'       => 'handymade.jpg',
 		];
 		array_push($object, $nested);
 
 		$nested = [
 			'nama'         => 'Top Up Dan Tagihan',
-			'urutan'       => '7',
+			'urutan'       => '8',
 			'created_date' => date('Y-m-d H:i:s'),
 			'active'       => TRUE,
 			'del'          => FALSE,
@@ -429,21 +467,14 @@ class WelcomeController extends CI_Controller
 		array_push($object, $nested);
 
 		$exec = $this->mcore->store_batch('kategori', $object);
-		##################################################################
-
-		if ($exec === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+		return $exec;
 	}
 
 	public function _init_sub_kategori()
 	{
-		$object = [];
 		# INIT
 		##################################################################
-		$object[] = [
+		$object[1] = [
 			'parent'       => '3',
 			'nama'         => 'Olahan',
 			'urutan'       => '1',
@@ -452,7 +483,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[2] = [
 			'parent'       => '3',
 			'nama'         => 'Kue Kering',
 			'urutan'       => '2',
@@ -461,7 +492,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[3] = [
 			'parent'       => '4',
 			'nama'         => 'Mebel',
 			'urutan'       => '1',
@@ -470,7 +501,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[4] = [
 			'parent'       => '4',
 			'nama'         => 'Peralatan',
 			'urutan'       => '2',
@@ -479,7 +510,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[5] = [
 			'parent'       => '4',
 			'nama'         => 'Elektronik',
 			'urutan'       => '3',
@@ -488,7 +519,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[6] = [
 			'parent'       => '5',
 			'nama'         => 'Busana Pria',
 			'urutan'       => '1',
@@ -497,7 +528,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[7] = [
 			'parent'       => '5',
 			'nama'         => 'Busana Wanita',
 			'urutan'       => '2',
@@ -506,7 +537,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[8] = [
 			'parent'       => '5',
 			'nama'         => 'Busana Anak-anak',
 			'urutan'       => '3',
@@ -515,7 +546,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[9] = [
 			'parent'       => '7',
 			'nama'         => 'Token dan Tagihan Listrik',
 			'urutan'       => '1',
@@ -524,7 +555,7 @@ class WelcomeController extends CI_Controller
 			'del'          => FALSE,
 		];
 
-		$object[] = [
+		$object[10] = [
 			'parent'       => '7',
 			'nama'         => 'Tagihan Air',
 			'urutan'       => '2',
@@ -534,13 +565,64 @@ class WelcomeController extends CI_Controller
 		];
 
 		$exec = $this->mcore->store_batch('sub_kategori', $object);
-		##################################################################
+		return $exec;
+	}
 
-		if ($exec === TRUE) {
-			return TRUE;
-		} else {
-			return FALSE;
+	public function _init_toko()
+	{
+		$path = './public/img/profile_toko/';
+		$map = directory_map($path);
+
+		foreach ($map as $m => $v) {
+			// print_r($v) . '<br>';
+			if (in_array($v, ['merchant.png']) === FALSE) {
+				$file = $path . $v;
+				unlink($file);
+			}
 		}
+
+		$ekspedisi = json_encode(['jne', 'tiki']);
+
+		# INIT TOKO
+		##################################################################
+		$x = 1;
+
+		for ($i = 0; $i < 3; $i++) {
+			$object[$i] = [
+				'user_id'   => $x,
+				'nama'      => 'Toko Dummy ' . $x,
+				'telp'      => '081234567890',
+				'alamat'    => 'Jl. Dummy No. ' . $x . ' Rt.' . $x . ' Rw.' . $x,
+				'kelurahan' => '3201291003',
+				'kecamatan' => '320129',
+				'kota'      => '3201',
+				'provinsi'  => '32',
+				'ekspedisi' => $ekspedisi,
+				'kode_pos'  => NULL,
+				'desc'      => 'Ini Deskripsi Untuk Toko Dummy ' . $x,
+				'gambar'    => 'merchant.png',
+				'active'    => TRUE,
+				'ban'       => FALSE,
+			];
+			$x++;
+		}
+
+		$exec = $this->mcore->store_batch('toko', $object);
+		return $exec;
+	}
+
+	public function _init_produk()
+	{
+		$path = './public/img/produk/';
+		$exec = delete_files($path);
+		return $exec;
+	}
+
+	public function _init_review()
+	{
+		$path = './public/img/review/';
+		$exec = delete_files($path);
+		return $exec;
 	}
 }
 

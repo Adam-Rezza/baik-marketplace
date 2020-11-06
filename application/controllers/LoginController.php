@@ -139,7 +139,7 @@ class LoginController extends CI_Controller
 			exit;
 		}
 
-		$new_password = password_hash($new_password . UYAH, PASSWORD_DEFAULT);
+		$new_password = password_hash($new_password . UYAH, PASSWORD_BCRYPT);
 
 		$exec = $this->mcore->update('admins', ['password' => $new_password], ['id' => $id]);
 

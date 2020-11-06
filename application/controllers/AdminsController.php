@@ -39,7 +39,7 @@ class AdminsController extends CI_Controller
 		} else {
 			$cur_date = new DateTime('now');
 			$username = strtolower($this->input->post('username'));
-			$password = password_hash($this->input->post('password') . UYAH, PASSWORD_DEFAULT);
+			$password = password_hash($this->input->post('password') . UYAH, PASSWORD_BCRYPT);
 
 			$object = [
 				'username'   => $username,
@@ -80,7 +80,7 @@ class AdminsController extends CI_Controller
 	public function reset()
 	{
 		$id = $this->input->post('id');
-		$password = password_hash($this->input->post('password') . UYAH, PASSWORD_DEFAULT);
+		$password = password_hash($this->input->post('password') . UYAH, PASSWORD_BCRYPT);
 
 		$object = ['password' => $password];
 		$where  = ['id' => $id];

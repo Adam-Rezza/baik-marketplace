@@ -32,9 +32,14 @@ class M_core extends CI_Model
 		return $this->db->count_all_results();
 	}
 
-	public function store($table, $object)
+	public function store($table, $object, $return_id = FALSE)
 	{
-		return $this->db->insert($table, $object);
+		$exec = $this->db->insert($table, $object);
+		if ($return_id == TRUE) {
+			$exec = $this->db->insert_id();
+		}
+
+		return $exec;
 	}
 
 	public function store_uuid($table, $object)

@@ -6,7 +6,7 @@
     .form-input>select,
     .form-input>label {
         display: block;
-        width: 100 % !important;
+        width: 100% !important;
     }
 
     .form-input.select2-selection {
