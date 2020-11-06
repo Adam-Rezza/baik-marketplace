@@ -93,14 +93,13 @@ class TemplateCustomer
 
 	public function _session_saldo_user()
 	{
-		$id = $this->ci->session->userdata(SESSUSER . 'id');
-		$arr = $this->ci->mcore->get('user', 'saldo', ['id' => $id]);
+		$id    = $this->ci->session->userdata(SESSUSER . 'id');
+		$arr   = $this->ci->mcore->get('user', 'saldo', ['id' => $id]);
 		$saldo = 0;
 
 		if ($arr) {
 			if ($arr->num_rows() == 1) {
-				$saldo = $arr->row()->saldo;
-				$saldo = $saldo;
+				$saldo = ($arr->row()->saldo == NULL) ? 0 : $arr->row()->saldo;
 			}
 		}
 

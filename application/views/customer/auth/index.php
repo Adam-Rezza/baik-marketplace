@@ -59,20 +59,20 @@
                                     <option value="">--Pilih Kelurahan--</option>
                                 </select>
                             </div>
-                            <div class="form-input full-width clearfix relative">
-                                <label for="ekspedisi">Ekspedisi *</label>
-                                <select class="full-width" name="ekspedisi[]" id="ekspedisi" style="height: 180px; padding-top: 5px;" multiple>
-                                    <option value="pos">POS Indonesia (POS)</option>
-                                    <option value="lion">Lion Parcel (LION)</option>
-                                    <option value="ninja">Ninja Xpress (NINJA)</option>
-                                    <option value="sicepat">SiCepat Express (SICEPAT)</option>
-                                    <option value="jne">Jalur Nugraha Ekakurir (JNE)</option>
-                                    <option value="tiki">Citra Van Titipan Kilat (TIKI)</option>
-                                    <option value="pandu">Pandu Logistics (PANDU)</option>
-                                    <option value="wahana">Wahana Prestasi Logistik (WAHANA)</option>
-                                    <option value="j&t">J&T Express (J&T)</option>
-                                    <option value="pahala">Pahala Kencana Express (PAHALA)</option>
-                                </select>
+                            <div class="form-input full-width clearfix relative" style="margin-top: 20px;">
+                                <fieldset>
+                                    <legend>Ekspedisi *</legend>
+                                    <?php
+                                    foreach ($ekspedisis->result() as $ekspedisi) {
+                                    ?>
+                                        <div>
+                                            <input type="checkbox" id="<?= $ekspedisi->id; ?>" name="ekspedisi[]" value="<?= $ekspedisi->id; ?>">
+                                            <label for="<?= $ekspedisi->id; ?>"><?= $ekspedisi->nama; ?></label>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+                                </fieldset>
                             </div>
                             <div class="form-input full-width clearfix relative text-center">
                                 <button class="btn-daftar-toko full-width top-margin-15-default">Daftarkan Toko</button>

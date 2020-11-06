@@ -30,18 +30,25 @@
                     <textarea class="full-width" name="desc_t" id="desc_t" value="" rows="4" style="resize:none; line-height: 18px; "><?= $toko->desc ?></textarea>
                 </div>
                 <div class="form-input full-width clearfix relative">
-                    <label for="ekspedisi">Ekspedisi *</label>
-                    <select class="full-width" id="ekspedisi" name="ekspedisi[]" style="height: 180px; padding-top: 5px;" multiple>
+                    <fieldset>
+                        <legend>Ekspedisi *</legend>
                         <?php
                         foreach ($list_ekspedisi->result() as $k) {
-                            $selected = NULL;
-                            if (in_array($k->id, $ekspedisi)) {
-                                $selected = "selected";
-                            }
-                            echo '<option value="' . $k->id . '" ' . $selected . '>' . $k->nama . '</option>';
+                        ?>
+                            <div>
+                                <?php
+                                $selected = NULL;
+                                if (in_array($k->id, $ekspedisi)) {
+                                    $selected = "checked";
+                                }
+                                ?>
+                                <input type="checkbox" id="<?= $k->id; ?>" name="ekspedisi[]" value="<?= $k->id; ?>" <?= $selected; ?> />
+                                <label for="<?= $k->id; ?>"><?= $k->nama; ?></label>
+                            </div>
+                        <?php
                         }
                         ?>
-                    </select>
+                    </fieldset>
                 </div>
                 <div class="form-input full-width clearfix relative text-center top-padding-15-default">
                     <button class="btn-daftar-toko full-width" id="saveBasicInfo">Simpan</button>

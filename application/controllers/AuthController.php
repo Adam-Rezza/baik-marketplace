@@ -28,7 +28,7 @@ class AuthController extends CI_Controller
 				'username' => $username,
 				'active' => 1
 			];
-			$arr 	  = $this->authorized->get('user', '*', $where);
+			$arr = $this->authorized->get('user', '*', $where);
 			if ($arr->row()->ban == 0) {
 				$this->_set_session($arr->row());
 				$this->login_merchant($arr->row()->id);
@@ -113,12 +113,13 @@ class AuthController extends CI_Controller
 
 	public function register()
 	{
-		$data['nama'] = $this->input->post('name_r');
+		$data['nama']     = $this->input->post('name_r');
 		$data['username'] = $this->input->post('username_r');
-		$data['telp'] = $this->input->post('phone_r');
-		$data['active'] = 1;
-		$data['ban'] = 0;
+		$data['telp']     = $this->input->post('phone_r');
+		$data['active']   = 1;
+		$data['ban']      = 0;
 		$data['password'] = password_hash($this->input->post('password_r'), PASSWORD_BCRYPT);
+		$data['saldo']    = 0;
 		$result = $this->authorized->insert('user', $data);
 		if ($result > 0) {
 			$data['id'] = $result;

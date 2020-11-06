@@ -68,6 +68,8 @@ class MerchantController extends CI_Controller
 					$data['sub_category'][$f->id] = $this->customer->get('sub_kategori', '*', $where_sub_category, 'urutan', 'ASC')->result();
 				}
 
+				$data['ekspedisis'] = $this->mcore->get('ekspedisi', '*');
+
 				// var_dump($this->session->userdata());
 				$this->customer_template->template($data);
 			} else {

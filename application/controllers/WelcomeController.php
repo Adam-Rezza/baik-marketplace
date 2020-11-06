@@ -58,22 +58,24 @@ class WelcomeController extends CI_Controller
 
 	public function _truncate()
 	{
-		$exec = $this->db->truncate('admins');
-		$exec = $this->db->truncate('user');
-		$exec = $this->db->truncate('alamat');
-		$exec = $this->db->truncate('banner');
-		$exec = $this->db->truncate('ekspedisi');
-		$exec = $this->db->truncate('gambar_produk');
-		$exec = $this->db->truncate('kategori');
-		$exec = $this->db->truncate('keranjang');
-		$exec = $this->db->truncate('notifikasi');
-		$exec = $this->db->truncate('notifikasi');
-		$exec = $this->db->truncate('produk');
-		$exec = $this->db->truncate('qna');
-		$exec = $this->db->truncate('review');
-		$exec = $this->db->truncate('sub_kategori');
-		$exec = $this->db->truncate('toko');
-		$exec = $this->db->truncate('transaksi');
+		$this->db->truncate('admins');
+		$this->db->truncate('alamat');
+		$this->db->truncate('banner');
+		$this->db->truncate('ekspedisi');
+		$this->db->truncate('gambar_produk');
+		$this->db->truncate('jurnal');
+		$this->db->truncate('kategori');
+		$this->db->truncate('keranjang');
+		$this->db->truncate('list_variasi_produk');
+		$this->db->truncate('notifikasi');
+		$this->db->truncate('produk');
+		$this->db->truncate('qna');
+		$this->db->truncate('review');
+		$this->db->truncate('sub_kategori');
+		$this->db->truncate('toko');
+		$this->db->truncate('transaksi');
+		$this->db->truncate('user');
+		$this->db->truncate('variasi_produk');
 	}
 
 	public function _init_admin()
