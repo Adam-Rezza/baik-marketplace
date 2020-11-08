@@ -335,7 +335,8 @@ class MerchantController extends CI_Controller
 		$product = $this->merchant->findProductByMerhanctIdAndProductId($this->session->userdata(SESSUSER . 'merchant_id'), $product_id, 1);
 		if ($product) {
 			$data = [
-				"del" => 1
+				"del" => 1,
+				"modified_date" => date('Y-m-d h:i:s')
 			];
 			$result = $this->merchant->update('produk', $data, $product_id);
 			echo json_encode($result ? 'true' : 'false');

@@ -11,29 +11,40 @@
                     $total_price_cart = 0;
                     if (count($cart) > 0) {
                         foreach ($cart as $f) {
-                            $total_price_item = $f->harga * $f->qty;
-                            $total_qty_cart += $f->qty;
-                            $total_price_cart += $total_price_item;
+                            if($f->validity){
+                                $total_price_item = $f->harga * $f->qty;
+                                $total_qty_cart += $f->qty;
+                                $total_price_cart +=  $total_price_item;
+                            }
                     ?>
                             <div class="relative full-width product-in-cart border no-border-l no-border-r overfollow-hidden">
                                 <div class="relative product-in-cart-col-1 center-vertical-image">
                                     <img src="<?= base_url(); ?>public/img/produk/<?= $f->gambar ?>" alt="">
                                 </div>
                                 <div class="relative product-in-cart-col-2">
-                                    <p class="title-hover-black"><a href="#" class="animate-default"><?= $f->produk ?></a></p>
-
-                                    <h3 class="title-merchant clearfix full-width title-hover-black">
+                                    <p class="title-hover-black">
+                                        <a href="#" class="animate-default <?= $f->validity ? '' : 'text-grey' ?>">
+                                            <?= $f->produk ?>
+                                            <span style="color:red"><?= $f->validity ? '' : '(Product tidak valid)' ?></span>
+                                        </a>
+                                    </p>
+                                    <?php if ($varians_cart[$f->id]) { ?>
+                                        <p class="title-hover-black <?= $f->validity ? '' : 'text-grey' ?>" style="margin-top: 0px;">(<?= join(', ', $varians_cart[$f->id]) ?>)</p>
+                                    <?php } ?>
+                                    <h3 class="title-merchant clearfix full-width title-hover-black <?= $f->validity ? '' : 'text-grey' ?>">
                                         <i class="fa fa-user icon-merchant"></i>
-                                        <a href="#"><?= $f->toko ?></a>
+                                        <a href="#" class=" <?= $f->validity ? '' : 'text-grey' ?>"><?= $f->toko ?></a>
                                     </h3>
                                 </div>
                                 <div class="relative product-in-cart-col-3" style="min-width: 110px;">
                                     <span class="ti-close relative remove-product"></span>
                                     <input type="text" class="variasi-<?= $f->id ?> hidden" data-value='<?= $f->variasi_id ?>' value='<?= $f->variasi_id ?>'>
-                                    <p class="text-red price-shoping-cart" id="p-price-<?= $f->id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?></p>
-                                    <button class="btn-sub-qty" data-id="<?= $f->id ?>">-</button>
-                                    <button class="btn-qty" id="p-qty-<?= $f->id ?>" data-value="<?= $f->qty ?>" data-harga="<?= $f->harga ?>" data-product-id="<?= $f->produk_id ?>" data-cart-id="<?= $f->id ?>" disabled><?= $f->qty ?></button>
-                                    <button class="btn-add-qty" data-id="<?= $f->id ?>">+</button>
+                                    <?php if ($f->validity) { ?>
+                                        <p class="text-red price-shoping-cart" id="p-price-<?= $f->id ?>">Rp <?= number_format($total_price_item, 0, ",", ".") ?></p>
+                                        <button class="btn-sub-qty" data-id="<?= $f->id ?>">-</button>
+                                        <button class="btn-qty" id="p-qty-<?= $f->id ?>" data-value="<?= $f->qty ?>" data-harga="<?= $f->harga ?>" data-product-id="<?= $f->produk_id ?>" data-cart-id="<?= $f->id ?>" disabled><?= $f->qty ?></button>
+                                        <button class="btn-add-qty" data-id="<?= $f->id ?>">+</button>
+                                    <?php } ?>
                                     <a class="btn bg-orange btn-delete-cart top-margin-15-default" href="<?= base_url('delete_cart/') . $f->id ?>"><b>Hapus</b></a>
                                 </div>
                             </div>

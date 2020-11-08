@@ -5,6 +5,12 @@
         display: block;
         width: 100% !important;
     }
+    .title-hover-black a.text-grey{
+        color: #b3b3b3 !important
+    }
+    .text-grey{
+        color: #b3b3b3 !important
+    }
 </style>
 
 <script>

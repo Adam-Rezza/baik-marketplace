@@ -116,6 +116,7 @@ class M_transaction extends CI_Model
             'SET `transaksi_id` = ' . $transaksi_id . ' ' .
             'WHERE `b`.`toko_id` = ' . $toko_id . ' ' .
             'AND `a`.`user_id` = ' . $user_id . ' ' .
+            'AND `a`.`created_date` > `b`.`modified_date` ' .
             'AND `a`.`transaksi_id` is null ' .
             'AND `b`.`del` = 0 ' .
             'AND `b`.`ban` = 0 ' .
@@ -151,11 +152,22 @@ class M_transaction extends CI_Model
 
     public function getSumHargaByUserIdAndTokoId($id_user, $id_toko)
     {
-        $this->db->select('SUM(keranjang.harga) AS sum_harga');
+        $this->db->select('SUM(keranjang.harga * keranjang.qty) AS sum_harga');
         $this->db->join('produk', 'produk.id = keranjang.produk_id', 'left');
         $this->db->where('keranjang.transaksi_id IS NULL');
         $this->db->where('user_id', $id_user);
         $this->db->where('produk.toko_id', $id_toko);
+        $this->db->where('keranjang.created_date >', 'produk.modified_date', false);
+        return $this->db->get('keranjang');
+    }
+
+    public function getSumHargaTotal($id_user)
+    {
+        $this->db->select('SUM(keranjang.harga * keranjang.qty) AS sum_harga');
+        $this->db->join('produk', 'produk.id = keranjang.produk_id', 'left');
+        $this->db->where('keranjang.transaksi_id IS NULL');
+        $this->db->where('user_id', $id_user);
+        $this->db->where('keranjang.created_date >', 'produk.modified_date', false);
         return $this->db->get('keranjang');
     }
 
