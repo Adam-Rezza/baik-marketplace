@@ -231,8 +231,15 @@ class TransactionController extends CI_Controller
 				}
 				$i++;
 			}
-			$this->db->trans_commit();
-			echo json_encode($status ? 'true' : '1'); // 1 => transaksi gagal 
+			if($status){
+				$this->db->trans_commit();
+				echo json_encode('true'); // 1 => transaksi gagal 
+			} else {
+				$this->db->trans_rollback();
+				$status = false;
+				echo json_encode('1'); // 1 => transaksi gagal 
+				exit;
+			}
 		} else {
 			echo json_encode('2'); // 1 => blm ada alamat 
 		}
@@ -259,20 +266,21 @@ class TransactionController extends CI_Controller
 
 	public function _get_total_keranjang($id_user)
 	{
-		$arr_keranjang = $this->mcore->get('keranjang', 'harga', ['user_id' => $id_user, 'transaksi_id' => NULL]);
+		// $arr_keranjang = $this->mcore->get('keranjang', 'harga', ['user_id' => $id_user, 'transaksi_id' => NULL]);
+		$total = $this->ci->transaction->getSumHargaTotal($id_user)->row()->sum_harga;
 
-		if (!$arr_keranjang) {
-			return ['code' => 500];
-		}
+		// if (!$arr_keranjang) {
+		// 	return ['code' => 500];
+		// }
 
-		if ($arr_keranjang->num_rows() == 0) {
-			return ['code' => 404];
-		}
+		// if ($arr_keranjang->num_rows() == 0) {
+		// 	return ['code' => 404];
+		// }
 
-		$total = 0;
-		foreach ($arr_keranjang->result() as $key) {
-			$total += $key->harga;
-		}
+		// $total = 0;
+		// foreach ($arr_keranjang->result() as $key) {
+		// 	$total += $key->harga;
+		// }
 
 		if ($total == 0) {
 			return ['code' => 404];

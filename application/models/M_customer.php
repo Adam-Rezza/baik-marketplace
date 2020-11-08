@@ -179,7 +179,8 @@ class M_customer extends CI_Model
 
     function findCartByUserIdAndNotTransactionId($user_id)
     {
-        $this->db->select('a.*, b.nama as produk, b.harga_disc as harga, b.rating, c.gambar, d.nama as toko, d.id as toko_id');
+        $this->db->select('a.*, b.nama as produk, b.harga_disc as harga, b.rating, b.modified_date, c.gambar, d.nama as toko, d.id as toko_id');
+        $this->db->select('case when b.modified_date > a.created_date then 0 else 1 end as validity', false);
         $this->db->from('keranjang a');
         $this->db->join('produk b', 'a.produk_id = b.id');
         $this->db->join('gambar_produk c', 'b.id = c.produk_id');
@@ -189,6 +190,8 @@ class M_customer extends CI_Model
         $this->db->where('b.del', 0);
         $this->db->where('b.ban', 0);
         $this->db->where('c.urutan', 1);
+        $this->db->order_by('case when b.modified_date > a.created_date then 0 else 1 end', 'desc', false);
+        $this->db->order_by('a.created_date', 'desc');
         return $this->db->get();
     }
 

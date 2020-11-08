@@ -81,32 +81,32 @@
                                     </div>
 
                                     <form action="<?= base_url() ?>add_to_cart/<?= $product->id ?>" method="post" id="add-to-cart-form" data-id="<?= $product->id ?>">
-                                    <div class="relative button-product-list clearfix full-width clear-margin text-left no-padding">
-                                        <?php foreach ($varians as $f) { ?>
-                                            <div class="col-md-6">
-                                                <label style="margin: 0">
-                                                    <h4 style="margin: 0" data-id="<?= $f->id ?>" class="parent-variasi"><?= $f->nama ?></h4>
-                                                </label>
-                                                <?php foreach ($list_varians[$f->id] as $g) { ?>
-                                                    <div class="radio">
-                                                        <label><input type="radio" class="variasi variasi-<?= $f->id ?>" name="variasi-<?= $f->id ?>" data-id="<?= $f->id ?>" value="<?= $g->id ?>"><?= $g->nama ?></label>
-                                                    </div>
-                                                <?php } ?>
-                                            </div>
-                                        <?php } ?>
-                                    </div>
+                                        <div class="relative button-product-list clearfix full-width clear-margin text-left no-padding">
+                                            <?php foreach ($varians as $f) { ?>
+                                                <div class="col-md-6">
+                                                    <label style="margin: 0">
+                                                        <h4 style="margin: 0" data-id="<?= $f->id ?>" class="parent-variasi"><?= $f->nama ?></h4>
+                                                    </label>
+                                                    <?php foreach ($list_varians[$f->id] as $g) { ?>
+                                                        <div class="radio">
+                                                            <label><input type="radio" class="variasi variasi-<?= $f->id ?>" name="variasi-<?= $f->id ?>" data-id="<?= $f->id ?>" value="<?= $g->id ?>" <?= $g->active ? '' : 'disabled' ?>><?= $g->nama ?></label>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
 
-                                    <div class="relative button-product-list clearfix full-width clear-margin text-center no-padding">
-                                        <button class="btn-sub-qty" id="btn-sub-qty">-</button>
-                                        <button class="btn-qty" id="btn-qty" disabled="" data-value="1" style="text-align:center;">1</button>
-                                        <button class="btn-add-qty" id="btn-add-qty">+</button>
-                                    </div>
-                                    <div class="relative button-product-list clearfix top-margin-15-default full-width clear-margin text-center no-padding">
-                                        <h5 class="text-danger variasi-required" style="display: none; color: red">Pilih variasi produk terlebih dahulu</h5>
-                                        <ul class="clear-margin clearfix bottom-margin-default">
-                                            <li class="button-hover-red"><button class="animate-default" id="add-to-cart" data-id="<?= $product->id ?>">Masukkan keranjang</button></li>
-                                        </ul>
-                                    </div>
+                                        <div class="relative button-product-list clearfix full-width clear-margin text-center no-padding">
+                                            <button class="btn-sub-qty" id="btn-sub-qty">-</button>
+                                            <button class="btn-qty" id="btn-qty" disabled="" data-value="1" style="text-align:center;">1</button>
+                                            <button class="btn-add-qty" id="btn-add-qty">+</button>
+                                        </div>
+                                        <div class="relative button-product-list clearfix top-margin-15-default full-width clear-margin text-center no-padding">
+                                            <h5 class="text-danger variasi-required" style="display: none; color: red">Pilih variasi produk terlebih dahulu</h5>
+                                            <ul class="clear-margin clearfix bottom-margin-default">
+                                                <li class="button-hover-red"><button class="animate-default" id="add-to-cart" data-id="<?= $product->id ?>">Masukkan keranjang</button></li>
+                                            </ul>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
