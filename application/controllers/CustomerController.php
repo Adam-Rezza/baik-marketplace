@@ -364,12 +364,12 @@ class CustomerController extends CI_Controller
 		foreach ($data['transaction'] as $f) {
 			$data['review_qualified'][$f->id] = strtotime($f->delivery_date) < strtotime('+7 days');
 			$data['order'][$f->id] = $this->customer->findCompleteTransactionByUserIdAndStatusAndTransactionId($this->session->userdata(SESSUSER . 'id'), $f->id)->result();
-			foreach ($data['order'] as $f) {
-				$data['varians_order'][$f->id] = [];
-				if ($f->variasi_id) {
-					$variasi_id = json_decode($f->variasi_id);
+			foreach ($data['order'][$f->id] as $g) {
+				$data['varians_order'][$g->cart_id] = [];
+				if ($g->variasi_id) {
+					$variasi_id = json_decode($g->variasi_id);
 					for ($i = 0; $i < count($variasi_id); $i++) {
-						array_push($data['varians_order'][$f->id], $this->customer->findListVarianByListVarianId($variasi_id[$i])->row()->nama);
+						array_push($data['varians_order'][$g->cart_id], $this->customer->findListVarianByListVarianId($variasi_id[$i])->row()->nama);
 					}
 				}
 			}

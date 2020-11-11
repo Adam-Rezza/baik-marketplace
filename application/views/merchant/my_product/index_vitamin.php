@@ -789,7 +789,7 @@
 
         $modalCropNewProduct.on('shown.bs.modal', function() {
             widthContainer = ($(this).width() - 60) > 480 ? 480 : ($(this).width() - 60)
-            console.log(widthContainer)
+            // console.log(widthContainer)
             $('#imageNewProduct').height(widthContainer)
             cropperNewProduct = new Cropper(imageNewProduct, {
                 aspectRatio: 1,

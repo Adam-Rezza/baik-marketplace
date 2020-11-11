@@ -65,7 +65,7 @@
 	</div>
 
 	<div class="modal fade bs-example-modal-lg out" id="modalCropImageProfile" tabindex="-1" role="dialog" aria-hidden="true" style="display: none" data-backdrop="static">
-		<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 540px">
 			<div class="modal-content">
 				<div class="modal-body">
 					<div class="relative">
@@ -162,7 +162,7 @@
 		})
 
 		$modal.on('shown.bs.modal', function() {
-			widthContainer = $(this).width()
+            widthContainer = ($(this).width() - 60) > 480 ? 480 : ($(this).width() - 60)
 			$('#imageProfileCrop').height(widthContainer)
 			cropper = new Cropper(image, {
 				aspectRatio: 1,

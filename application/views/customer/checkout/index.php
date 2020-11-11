@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="relative product-in-cart-col-2">
                                     <p class="title-hover-black">
-                                        <a href="#" class="animate-default <?= $f->validity ? '' : 'text-grey' ?>">
+                                        <a href="<?= base_url(); ?>product/<?= $f->produk_id ?>" class="animate-default <?= $f->validity ? '' : 'text-grey' ?>">
                                             <?= $f->produk ?>
                                             <span style="color:red"><?= $f->validity ? '' : '(Product tidak valid)' ?></span>
                                         </a>
@@ -33,7 +33,7 @@
                                     <?php } ?>
                                     <h3 class="title-merchant clearfix full-width title-hover-black <?= $f->validity ? '' : 'text-grey' ?>">
                                         <i class="fa fa-user icon-merchant"></i>
-                                        <a href="#" class=" <?= $f->validity ? '' : 'text-grey' ?>"><?= $f->toko ?></a>
+                                        <a href="<?= base_url(); ?>merchant_detail/<?= $f->toko_id ?>" class=" <?= $f->validity ? '' : 'text-grey' ?>"><?= $f->toko ?></a>
                                     </h3>
                                 </div>
                                 <div class="relative product-in-cart-col-3" style="min-width: 110px;">
